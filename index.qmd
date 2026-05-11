@@ -14,62 +14,81 @@ library(yaml)
 # ---- Category + emoji mapping (11 groups) ----
 
 CATEGORIES <- list(
-  "Package Dev" = list(
-    icon = "📦",
-    prefixes = c("r-init-package", "r-pkg-add-", "r-pkg-check", "r-pkg-release",
-                 "r-pkgcheck-", "r-pkgdown-", "r-pak-")
-  ),
-  "Testing & QA" = list(
-    icon = "🧪",
-    prefixes = c("r-lint", "r-tdd-", "r-bdd-", "r-testthat-", "r-code-review")
-  ),
-  "Shiny Apps" = list(
-    icon = "✨",
-    prefixes = c("r-init-shiny", "r-shiny-module", "r-shiny-theme-", "r-shiny-e2e-", "r-rhino-")
-  ),
-  "Data Pipelines" = list(
-    icon = "🎯",
-    prefixes = c("r-init-targets", "r-targets-")
-  ),
-  "Deploy & DevOps" = list(
-    icon = "🚀",
-    prefixes = c("r-docker-", "r-connect-", "r-vetiver-", "r-ci-")
-  ),
-  "APIs" = list(
-    icon = "🔌",
-    prefixes = c("r-api-", "r-init-plumber")
-  ),
-  "Observability" = list(
-    icon = "📊",
-    prefixes = c("r-logger-", "r-otel-", "r-profile")
-  ),
-  "Data & Validation" = list(
-    icon = "🛡️",
-    prefixes = c("r-data-", "r-pointblank-")
-  ),
-  "Architecture" = list(
-    icon = "🏗️",
-    prefixes = c("r-box-", "r-s7-", "r-refactor", "r-async-")
-  ),
-  "Config & Security" = list(
-    icon = "🔒",
-    prefixes = c("r-config-", "r-security")
-  ),
-  "Reports" = list(
-    icon = "📄",
-    prefixes = c("r-quarto-")
-  )
+    "Package Dev" = list(
+        icon = "📦",
+        prefixes = c(
+            "r-init-package",
+            "r-pkg-add-",
+            "r-pkg-check",
+            "r-pkg-release",
+            "r-pkgcheck-",
+            "r-pkgdown-",
+            "r-pak-"
+        )
+    ),
+    "Testing & QA" = list(
+        icon = "🧪",
+        prefixes = c(
+            "r-lint",
+            "r-tdd-",
+            "r-bdd-",
+            "r-testthat-",
+            "r-code-review"
+        )
+    ),
+    "Shiny Apps" = list(
+        icon = "✨",
+        prefixes = c(
+            "r-init-shiny",
+            "r-shiny-module",
+            "r-shiny-theme-",
+            "r-shiny-e2e-",
+            "r-rhino-"
+        )
+    ),
+    "Data Pipelines" = list(
+        icon = "🎯",
+        prefixes = c("r-init-targets", "r-targets-")
+    ),
+    "Deploy & DevOps" = list(
+        icon = "🚀",
+        prefixes = c("r-docker-", "r-connect-", "r-vetiver-", "r-ci-")
+    ),
+    "APIs" = list(
+        icon = "🔌",
+        prefixes = c("r-api-", "r-init-plumber")
+    ),
+    "Observability" = list(
+        icon = "📊",
+        prefixes = c("r-logger-", "r-otel-", "r-profile")
+    ),
+    "Data & Validation" = list(
+        icon = "🛡️",
+        prefixes = c("r-data-", "r-pointblank-")
+    ),
+    "Architecture" = list(
+        icon = "🏗️",
+        prefixes = c("r-box-", "r-s7-", "r-refactor", "r-async-")
+    ),
+    "Config & Security" = list(
+        icon = "🔒",
+        prefixes = c("r-config-", "r-security")
+    ),
+    "Reports" = list(
+        icon = "📄",
+        prefixes = c("r-quarto-")
+    )
 )
 
 get_playbook_meta <- function(name) {
-  for (cat_name in names(CATEGORIES)) {
-    for (prefix in CATEGORIES[[cat_name]]$prefixes) {
-      if (startsWith(name, prefix)) {
-        return(c(CATEGORIES[[cat_name]]$icon, cat_name))
-      }
+    for (cat_name in names(CATEGORIES)) {
+        for (prefix in CATEGORIES[[cat_name]]$prefixes) {
+            if (startsWith(name, prefix)) {
+                return(c(CATEGORIES[[cat_name]]$icon, cat_name))
+            }
+        }
     }
-  }
-  c("📋", "Other")
+    c("📋", "Other")
 }
 
 # ---- Read all playbooks ----
@@ -78,36 +97,69 @@ playbook_dirs <- list.dirs("playbooks", recursive = FALSE)
 playbooks <- list()
 
 for (dir in playbook_dirs) {
-  md_file <- file.path(dir, "PLAYBOOK.md")
-  if (!file.exists(md_file)) next
+    md_file <- file.path(dir, "PLAYBOOK.md")
+    if (!file.exists(md_file)) {
+        next
+    }
 
-  content <- readLines(md_file, warn = FALSE)
-  dashes <- which(content == "---")
-  if (length(dashes) < 2) next
+    content <- readLines(md_file, warn = FALSE)
+    dashes <- which(content == "---")
+    if (length(dashes) < 2) {
+        next
+    }
 
-  yaml_text <- paste(content[(dashes[1] + 1):(dashes[2] - 1)], collapse = "\n")
-  meta <- tryCatch(yaml.load(yaml_text), error = function(e) NULL)
-  if (is.null(meta)) next
+    yaml_text <- paste(
+        content[(dashes[1] + 1):(dashes[2] - 1)],
+        collapse = "\n"
+    )
 
-  m <- get_playbook_meta(meta$name)
+    # Use regex to extract just the 4 fields we need (robust to YAML quirks)
+    get_yaml_field <- function(text, field) {
+        m <- grep(
+            sprintf("^\\s*%s:\\s*(\\S.*)$", field),
+            text,
+            value = TRUE,
+            perl = TRUE
+        )
+        if (length(m) == 0) {
+            return(NULL)
+        }
+        sub(sprintf("^\\s*%s:\\s*", field), "", m[1], perl = TRUE)
+    }
 
-  playbooks[[length(playbooks) + 1]] <- list(
-    name     = meta$name,
-    desc     = meta$description %||% "",
-    version  = meta$version %||% "1.0.0",
-    trigger  = meta$trigger %||% "manual",
-    dir      = basename(dir),
-    icon     = m[1],
-    category = m[2],
-    gh_url   = sprintf("https://github.com/davidrsch/r-playbooks/blob/main/playbooks/%s/PLAYBOOK.md", basename(dir))
-  )
+    lines <- content[(dashes[1] + 1):(dashes[2] - 1)]
+
+    name <- get_yaml_field(lines, "name")
+    desc <- get_yaml_field(lines, "description")
+    version <- get_yaml_field(lines, "version")
+    trigger <- get_yaml_field(lines, "trigger")
+
+    if (is.null(name)) {
+        next
+    }
+
+    m <- get_playbook_meta(name)
+
+    playbooks[[length(playbooks) + 1]] <- list(
+        name = name,
+        desc = desc %||% "",
+        version = version %||% "1.0.0",
+        trigger = trigger %||% "manual",
+        dir = basename(dir),
+        icon = m[1],
+        category = m[2],
+        gh_url = sprintf(
+            "https://github.com/davidrsch/r-playbooks/blob/main/playbooks/%s/PLAYBOOK.md",
+            basename(dir)
+        )
+    )
 }
 ```
 
 ```{r}
 #| echo: false
-n_total   <- length(playbooks)
-cats      <- sort(table(sapply(playbooks, `[[`, "category")), decreasing = TRUE)
+n_total <- length(playbooks)
+cats <- sort(table(sapply(playbooks, `[[`, "category")), decreasing = TRUE)
 init_show <- 12
 ```
 
@@ -142,23 +194,28 @@ A collection of **`r n_total`** AI-assisted playbooks for common R development w
 ```{r}
 #| echo: false
 #| results: asis
-
 cards <- character(length(playbooks))
 for (i in seq_along(playbooks)) {
-  pb <- playbooks[[i]]
-  trigger_class <- if (pb$trigger == "both") "both" else "manual"
-  trigger_label <- toupper(pb$trigger)
-  hidden_style <- if (i > init_show) '; display:none' else ''
+    pb <- playbooks[[i]]
+    trigger_class <- if (pb$trigger == "both") "both" else "manual"
+    trigger_label <- toupper(pb$trigger)
+    hidden_style <- if (i > init_show) '; display:none' else ''
 
-  cards[i] <- sprintf(
-    '<div class="playbook-card" data-name="%s" data-category="%s" style="--card-accent: var(--bs-primary)%s"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="%s" data-name="%s" title="Select this playbook"></label><a href="%s" class="card-body"><div class="card-header"><span class="card-icon">%s</span><span class="card-name">%s</span></div><div class="card-description">%s</div><div class="card-meta"><span class="badge badge-version">v%s</span><span class="badge badge-trigger %s">%s</span><span class="badge badge-link">📋 source</span></div></a></div>',
-    pb$name, pb$category, hidden_style,
-    pb$dir, pb$name,
-    pb$gh_url,
-    pb$icon, pb$name,
-    pb$desc,
-    pb$version, trigger_class, trigger_label
-  )
+    cards[i] <- sprintf(
+        '<div class="playbook-card" data-name="%s" data-category="%s" style="--card-accent: var(--bs-primary)%s"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="%s" data-name="%s" title="Select this playbook"></label><a href="%s" class="card-body"><div class="card-header"><span class="card-icon">%s</span><span class="card-name">%s</span></div><div class="card-description">%s</div><div class="card-meta"><span class="badge badge-version">v%s</span><span class="badge badge-trigger %s">%s</span><span class="badge badge-link">📋 source</span></div></a></div>',
+        pb$name,
+        pb$category,
+        hidden_style,
+        pb$dir,
+        pb$name,
+        pb$gh_url,
+        pb$icon,
+        pb$name,
+        pb$desc,
+        pb$version,
+        trigger_class,
+        trigger_label
+    )
 }
 
 knitr::asis_output(paste(cards, collapse = "\n"))
