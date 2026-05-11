@@ -1,38 +1,185 @@
 <script>
-// Client-side filtering for playbook cards
 (function() {
-  const filterInput = document.getElementById('playbook-filter');
-  const grid = document.getElementById('playbook-grid');
-  const tags = document.querySelectorAll('.category-tag');
-  
+  const filterInput  = document.getElementById('playbook-filter');
+  const grid         = document.getElementById('playbook-grid');
+  const tags         = document.querySelectorAll('.category-tag');
+  const btnSelectAll = document.getElementById('btn-select-all');
+  const btnDownload  = document.getElementById('btn-download');
+  const btnShowMore  = document.getElementById('btn-show-more');
+  const countSpan    = document.getElementById('selected-count');
+
   let activeCategory = 'all';
-  
-  function filterCards() {
-    const query = filterInput ? filterInput.value.toLowerCase() : '';
+  let allSelected    = false;
+  const BATCH_SIZE   = 12;
+
+  // ---- Helpers ----
+
+  function getVisibleCards() {
     const cards = grid.querySelectorAll('.playbook-card');
-    
-    cards.forEach(card => {
-      const name = card.dataset.name.toLowerCase();
-      const cat = card.dataset.category;
-      
-      const matchesSearch = !query || name.includes(query);
-      const matchesCategory = activeCategory === 'all' || cat === activeCategory;
-      
-      card.style.display = (matchesSearch && matchesCategory) ? '' : 'none';
+    return [...cards].filter(c => c.style.display !== 'none');
+  }
+
+  function getCheckboxes() {
+    return grid.querySelectorAll('.card-checkbox');
+  }
+
+  function updateSelectionUI() {
+    const checked = grid.querySelectorAll('.card-checkbox:checked');
+    const count   = checked.length;
+    countSpan.textContent = count;
+    btnDownload.disabled  = count === 0;
+    btnSelectAll.textContent = allSelected ? '☑ Deselect All' : '☐ Select All';
+
+    // Toggle .selected class on cards
+    grid.querySelectorAll('.playbook-card').forEach(card => {
+      const cb = card.querySelector('.card-checkbox');
+      card.classList.toggle('selected', cb && cb.checked);
     });
   }
-  
-  if (filterInput) {
-    filterInput.addEventListener('input', filterCards);
+
+  // ---- Filtering ----
+
+  function applyFilters() {
+    const query = filterInput ? filterInput.value.toLowerCase() : '';
+    const cards = grid.querySelectorAll('.playbook-card');
+
+    cards.forEach(card => {
+      const name = card.dataset.name.toLowerCase();
+      const cat  = card.dataset.category;
+      const matchesSearch   = !query || name.includes(query);
+      const matchesCategory = activeCategory === 'all' || cat === activeCategory;
+      card.style.display = (matchesSearch && matchesCategory) ? '' : 'none';
+    });
+
+    updateShowMoreButton();
   }
-  
+
+  if (filterInput) {
+    filterInput.addEventListener('input', applyFilters);
+  }
+
   tags.forEach(tag => {
     tag.addEventListener('click', function() {
       tags.forEach(t => t.classList.remove('active'));
       this.classList.add('active');
       activeCategory = this.dataset.cat;
-      filterCards();
+      applyFilters();
     });
   });
+
+  // ---- Checkbox selection ----
+
+  grid.addEventListener('change', function(e) {
+    if (e.target.classList.contains('card-checkbox')) {
+      updateSelectionUI();
+    }
+  });
+
+  btnSelectAll.addEventListener('click', function() {
+    allSelected = !allSelected;
+    const visibleCards = getVisibleCards();
+    visibleCards.forEach(card => {
+      const cb = card.querySelector('.card-checkbox');
+      if (cb) cb.checked = allSelected;
+    });
+    updateSelectionUI();
+  });
+
+  // ---- Download ----
+
+  btnDownload.addEventListener('click', async function() {
+    const checked = grid.querySelectorAll('.card-checkbox:checked');
+    if (checked.length === 0) return;
+
+    btnDownload.textContent = '⏳ Preparing...';
+    btnDownload.disabled = true;
+
+    let md = '# Selected R Playbooks\n\n';
+    md += `*Generated: ${new Date().toISOString().split('T')[0]}*\n\n`;
+    md += `---\n\n`;
+
+    for (const cb of checked) {
+      const file = cb.dataset.file;
+      const url  = `https://raw.githubusercontent.com/davidrsch/r-playbooks/main/playbooks/${file}/PLAYBOOK.md`;
+
+      try {
+        const resp = await fetch(url);
+        if (!resp.ok) {
+          md += `> ⚠️ Could not fetch: **${cb.dataset.name}**\n\n---\n\n`;
+          continue;
+        }
+        let text = await resp.text();
+        // Strip YAML frontmatter to keep download clean
+        text = text.replace(/^---[\s\S]*?---\n*/, '');
+        md += text.trim() + '\n\n---\n\n';
+      } catch {
+        md += `> ⚠️ Could not fetch: **${cb.dataset.name}**\n\n---\n\n`;
+      }
+    }
+
+    // Trigger download
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `r-playbooks-${checked.length}-selected.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+
+    btnDownload.innerHTML = '⬇ Download (<span id="selected-count">0</span>)';
+    btnDownload.disabled = false;
+    // Reset count span reference after innerHTML change
+    setTimeout(() => { updateSelectionUI(); }, 100);
+  });
+
+  // ---- Show More ----
+
+  let shownCount = BATCH_SIZE;
+
+  function updateShowMoreButton() {
+    const visible = getVisibleCards().length;
+    const total   = grid.querySelectorAll('.playbook-card').length;
+
+    if (shownCount >= total && activeCategory === 'all' && (!filterInput || !filterInput.value)) {
+      btnShowMore.style.display = 'none';
+    } else if (visible > shownCount) {
+      // In filtered view, show all matches — hide button
+      btnShowMore.style.display = 'none';
+    } else {
+      btnShowMore.style.display = '';
+      btnShowMore.querySelector('.arrow').classList.remove('up');
+      btnShowMore.querySelector('.arrow').textContent = '▼';
+    }
+  }
+
+  btnShowMore.addEventListener('click', function() {
+    btnShowMore.querySelector('.arrow').classList.add('up');
+    btnShowMore.querySelector('.arrow').textContent = '▲';
+
+    const allCards = [...grid.querySelectorAll('.playbook-card')];
+    let revealed = 0;
+
+    for (const card of allCards) {
+      // Only reveal cards hidden by show-more, not by filter
+      if (card.style.display === 'none') {
+        const cat  = card.dataset.category;
+        if (activeCategory !== 'all' && cat !== activeCategory) continue;
+        const name = card.dataset.name.toLowerCase();
+        const query = filterInput ? filterInput.value.toLowerCase() : '';
+        if (query && !name.includes(query)) continue;
+
+        card.style.display = '';
+        revealed++;
+        if (revealed >= BATCH_SIZE) break;
+      }
+    }
+
+    shownCount += revealed;
+    updateShowMoreButton();
+  });
+
+  // Initial state
+  updateSelectionUI();
 })();
 </script>

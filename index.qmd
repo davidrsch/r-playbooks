@@ -11,54 +11,65 @@ format:
 #| warning: false
 library(yaml)
 
-# ---- Helpers ----
+# ---- Category + emoji mapping (11 groups) ----
 
-# Assign emoji + category based on playbook name
+CATEGORIES <- list(
+  "Package Dev" = list(
+    icon = "📦",
+    prefixes = c("r-init-package", "r-pkg-add-", "r-pkg-check", "r-pkg-release",
+                 "r-pkgcheck-", "r-pkgdown-", "r-pak-")
+  ),
+  "Testing & QA" = list(
+    icon = "🧪",
+    prefixes = c("r-lint", "r-tdd-", "r-bdd-", "r-testthat-", "r-code-review")
+  ),
+  "Shiny Apps" = list(
+    icon = "✨",
+    prefixes = c("r-init-shiny", "r-shiny-module", "r-shiny-theme-", "r-shiny-e2e-", "r-rhino-")
+  ),
+  "Data Pipelines" = list(
+    icon = "🎯",
+    prefixes = c("r-init-targets", "r-targets-")
+  ),
+  "Deploy & DevOps" = list(
+    icon = "🚀",
+    prefixes = c("r-docker-", "r-connect-", "r-vetiver-", "r-ci-")
+  ),
+  "APIs" = list(
+    icon = "🔌",
+    prefixes = c("r-api-", "r-init-plumber")
+  ),
+  "Observability" = list(
+    icon = "📊",
+    prefixes = c("r-logger-", "r-otel-", "r-profile")
+  ),
+  "Data & Validation" = list(
+    icon = "🛡️",
+    prefixes = c("r-data-", "r-pointblank-")
+  ),
+  "Architecture" = list(
+    icon = "🏗️",
+    prefixes = c("r-box-", "r-s7-", "r-refactor", "r-async-")
+  ),
+  "Config & Security" = list(
+    icon = "🔒",
+    prefixes = c("r-config-", "r-security")
+  ),
+  "Reports" = list(
+    icon = "📄",
+    prefixes = c("r-quarto-")
+  )
+)
+
 get_playbook_meta <- function(name) {
-    mapping <- list(
-        "r-init-" = c("🚀", "Scaffolding"),
-        "r-lint" = c("🧹", "Code Quality"),
-        "r-tdd-" = c("🧪", "Testing"),
-        "r-bdd-" = c("🥒", "Testing"),
-        "r-testthat-" = c("📸", "Testing"),
-        "r-shiny-module" = c("🧩", "Shiny"),
-        "r-shiny-theme-" = c("🎨", "Shiny"),
-        "r-shiny-e2e-" = c("🔍", "Shiny"),
-        "r-docker-" = c("🐳", "DevOps"),
-        "r-ci-" = c("🔄", "DevOps"),
-        "r-pkg-check" = c("✅", "Packages"),
-        "r-pkg-add-" = c("➕", "Packages"),
-        "r-pkg-release" = c("🏷️", "Packages"),
-        "r-pkgcheck-" = c("🔎", "Packages"),
-        "r-pkgdown-" = c("📖", "Packages"),
-        "r-pak-" = c("🔐", "Packages"),
-        "r-security" = c("🔒", "Security"),
-        "r-connect-" = c("☁️", "Deployment"),
-        "r-vetiver-" = c("🏺", "Deployment"),
-        "r-config-" = c("⚙️", "Configuration"),
-        "r-logger-" = c("📋", "Observability"),
-        "r-otel-" = c("📊", "Observability"),
-        "r-profile" = c("⚡", "Performance"),
-        "r-refactor" = c("🔧", "Maintenance"),
-        "r-quarto-" = c("📄", "Reporting"),
-        "r-data-" = c("📊", "Data"),
-        "r-targets-" = c("🎯", "Pipelines"),
-        "r-box-" = c("📁", "Modules"),
-        "r-rhino-" = c("🦏", "Apps"),
-        "r-s7-" = c("🏗️", "OOP"),
-        "r-async-" = c("⏳", "Async"),
-        "r-api-" = c("🔌", "API"),
-        "r-code-review" = c("👀", "Review"),
-        "r-pointblank-" = c("🛡️", "Validation"),
-        "r-r-version" = c("📌", "Configuration")
-    )
-
-    for (prefix in names(mapping)) {
-        if (startsWith(name, prefix)) {
-            return(mapping[[prefix]])
-        }
+  for (cat_name in names(CATEGORIES)) {
+    for (prefix in CATEGORIES[[cat_name]]$prefixes) {
+      if (startsWith(name, prefix)) {
+        return(c(CATEGORIES[[cat_name]]$icon, cat_name))
+      }
     }
-    c("📋", "Other")
+  }
+  c("📋", "Other")
 }
 
 # ---- Read all playbooks ----
@@ -67,68 +78,59 @@ playbook_dirs <- list.dirs("playbooks", recursive = FALSE)
 playbooks <- list()
 
 for (dir in playbook_dirs) {
-    md_file <- file.path(dir, "PLAYBOOK.md")
-    if (!file.exists(md_file)) {
-        next
-    }
+  md_file <- file.path(dir, "PLAYBOOK.md")
+  if (!file.exists(md_file)) next
 
-    content <- readLines(md_file, warn = FALSE)
-    dashes <- which(content == "---")
-    if (length(dashes) < 2) {
-        next
-    }
+  content <- readLines(md_file, warn = FALSE)
+  dashes <- which(content == "---")
+  if (length(dashes) < 2) next
 
-    yaml_text <- paste(
-        content[(dashes[1] + 1):(dashes[2] - 1)],
-        collapse = "\n"
-    )
-    meta <- tryCatch(yaml.load(yaml_text), error = function(e) NULL)
-    if (is.null(meta)) {
-        next
-    }
+  yaml_text <- paste(content[(dashes[1] + 1):(dashes[2] - 1)], collapse = "\n")
+  meta <- tryCatch(yaml.load(yaml_text), error = function(e) NULL)
+  if (is.null(meta)) next
 
-    m <- get_playbook_meta(meta$name)
+  m <- get_playbook_meta(meta$name)
 
-    playbooks[[length(playbooks) + 1]] <- list(
-        name = meta$name,
-        desc = meta$description %||% "",
-        version = meta$version %||% "1.0.0",
-        trigger = meta$trigger %||% "manual",
-        dir = basename(dir),
-        icon = m[1],
-        category = m[2],
-        gh_url = sprintf(
-            "https://github.com/davidrsch/r-playbooks/blob/main/playbooks/%s/PLAYBOOK.md",
-            basename(dir)
-        )
-    )
+  playbooks[[length(playbooks) + 1]] <- list(
+    name     = meta$name,
+    desc     = meta$description %||% "",
+    version  = meta$version %||% "1.0.0",
+    trigger  = meta$trigger %||% "manual",
+    dir      = basename(dir),
+    icon     = m[1],
+    category = m[2],
+    gh_url   = sprintf("https://github.com/davidrsch/r-playbooks/blob/main/playbooks/%s/PLAYBOOK.md", basename(dir))
+  )
 }
 ```
 
 ```{r}
 #| echo: false
-# Stats
-n_total <- length(playbooks)
-cats <- sort(table(sapply(playbooks, `[[`, "category")), decreasing = TRUE)
+n_total   <- length(playbooks)
+cats      <- sort(table(sapply(playbooks, `[[`, "category")), decreasing = TRUE)
+init_show <- 12
 ```
 
 ::: {.page-header}
 # 🎯 R Playbooks
 
-:::{.subtitle}
-A collection of **`r n_total`** AI-assisted playbooks for common R development workflows —  
-from scaffolding packages to deploying APIs, with step-by-step guidance.
+::: {.subtitle}
+A collection of **`r n_total`** AI-assisted playbooks for common R development workflows
 :::
 
-:::{.stats-bar}
+::: {.stats-bar}
 <span>📚 **`r n_total`** playbooks</span>
 <span>📂 **`r length(cats)`** categories</span>
 <span>🔄 auto-updated from repo</span>
 :::
 :::
 
-::: {.filter-bar}
+::: {.toolbar}
+<div class="filter-bar">
 <input type="text" id="playbook-filter" placeholder="🔍  Filter playbooks..." autocomplete="off">
+<button id="btn-select-all" class="toolbar-btn">☐ Select All</button>
+<button id="btn-download" class="toolbar-btn download-btn" disabled>⬇ Download (<span id="selected-count">0</span>)</button>
+</div>
 :::
 
 ::: {.category-tags id="category-tags"}
@@ -140,26 +142,29 @@ from scaffolding packages to deploying APIs, with step-by-step guidance.
 ```{r}
 #| echo: false
 #| results: asis
+
 cards <- character(length(playbooks))
 for (i in seq_along(playbooks)) {
-    pb <- playbooks[[i]]
-    trigger_class <- if (pb$trigger == "both") "both" else "manual"
-    trigger_label <- toupper(pb$trigger)
+  pb <- playbooks[[i]]
+  trigger_class <- if (pb$trigger == "both") "both" else "manual"
+  trigger_label <- toupper(pb$trigger)
+  hidden <- if (i > init_show) ' style="display:none"' else ""
 
-    cards[i] <- sprintf(
-        '<a href="%s" class="playbook-card" data-name="%s" data-category="%s" style="--card-accent: var(--bs-primary);"><div class="card-header"><span class="card-icon">%s</span><span class="card-name">%s</span></div><div class="card-description">%s</div><div class="card-meta"><span class="badge badge-version">v%s</span><span class="badge badge-trigger %s">%s</span></div></a>',
-        pb$gh_url,
-        pb$name,
-        pb$category,
-        pb$icon,
-        pb$name,
-        pb$desc,
-        pb$version,
-        trigger_class,
-        trigger_label
-    )
+  cards[i] <- sprintf(
+    '<div class="playbook-card%s" data-name="%s" data-category="%s" style="--card-accent: var(--bs-primary);"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="%s" data-name="%s" title="Select this playbook"></label><a href="%s" class="card-body"><div class="card-header"><span class="card-icon">%s</span><span class="card-name">%s</span></div><div class="card-description">%s</div><div class="card-meta"><span class="badge badge-version">v%s</span><span class="badge badge-trigger %s">%s</span><span class="badge badge-link">📋 source</span></div></a></div>',
+    hidden, pb$name, pb$category,
+    pb$dir, pb$name,
+    pb$gh_url,
+    pb$icon, pb$name,
+    pb$desc,
+    pb$version, trigger_class, trigger_label
+  )
 }
 
 knitr::asis_output(paste(cards, collapse = "\n"))
 ```
+:::
+
+::: {.show-more-wrap}
+<button id="btn-show-more" class="btn-show-more">Show More <span class="arrow">▼</span></button>
 :::
