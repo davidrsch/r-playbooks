@@ -202,7 +202,7 @@ for (i in seq_along(playbooks)) {
     hidden_style <- if (i > init_show) '; display:none' else ''
 
     cards[i] <- sprintf(
-        '<div class="playbook-card" data-name="%s" data-category="%s" style="--card-accent: var(--bs-primary)%s"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="%s" data-name="%s" title="Select this playbook"></label><a href="%s" class="card-body"><div class="card-header"><span class="card-icon">%s</span><span class="card-name">%s</span></div><div class="card-description">%s</div><div class="card-meta"><span class="badge badge-version">v%s</span><span class="badge badge-trigger %s">%s</span><span class="badge badge-link">📋 source</span></div></a></div>',
+        '<div class="playbook-card" data-name="%s" data-category="%s" style="--card-accent: var(--bs-primary)%s"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="%s" data-name="%s" title="Select this playbook"></label><a href="%s" class="card-body"><div class="card-header"><span class="card-icon">%s</span><span class="card-name">%s</span></div><div class="card-description">%s</div><span class="badge badge-category">%s</span><div class="card-meta"><span class="badge badge-version">v%s</span><span class="badge badge-trigger %s">%s</span><span class="badge badge-link">📋 source</span></div></a></div>',
         pb$name,
         pb$category,
         hidden_style,
@@ -212,6 +212,7 @@ for (i in seq_along(playbooks)) {
         pb$icon,
         pb$name,
         pb$desc,
+        pb$category,
         pb$version,
         trigger_class,
         trigger_label

@@ -151,6 +151,16 @@
   color: var(--bs-primary-text-emphasis);
 }
 
+.badge-category {
+  background: var(--bs-tertiary-bg);
+  color: var(--bs-tertiary-color);
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 0.2em 0.65em;
+  border-radius: 6px;
+  align-self: flex-start;
+}
+
 .badge-trigger {
   font-size: 0.68rem;
   text-transform: uppercase;
