@@ -1,0 +1,22 @@
+# Quarto
+/.quarto/
+/_site/
+/_freeze/
+/docs/
+
+# R
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+renv/library/
+renv/local/
+renv/cellar/
+renv/lock/
+renv/python/
+
+# OS
+.DS_Store
+Thumbs.db
+
+**/*.quarto_ipynb
