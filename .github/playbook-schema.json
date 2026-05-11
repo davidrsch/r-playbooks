@@ -90,13 +90,13 @@
           },
           "output": {
             "type": "string",
-            "pattern": "^[a-z][a-z0-9_]*$",
+            "pattern": "^[a-z][a-z0-9_-]*$",
             "description": "Variable name to store this step's output"
           },
           "gate": {
             "type": "string",
-            "enum": ["Confirm"],
-            "description": "Whether this step requires user confirmation"
+            "enum": ["Confirm", "Review", "Approve"],
+            "description": "Copilot gate for this step"
           }
         }
       }

@@ -245,15 +245,15 @@ for (dir in sort(dirs)) {
         }
       }
 
-      # Validate output format
+      # Validate output format (snake_case or kebab-case)
       if (
         !is.null(step$output) &&
-          !grepl("^[a-z][a-z0-9_]*$", step$output)
+          !grepl("^[a-z][a-z0-9_-]*$", step$output)
       ) {
         errors[[playbook_name]] <- c(
           errors[[playbook_name]],
           sprintf(
-            "%s '%s': output '%s' must be snake_case",
+            "%s '%s': output '%s' must be snake_case or kebab-case",
             step_label,
             step$id,
             step$output
@@ -262,7 +262,8 @@ for (dir in sort(dirs)) {
       }
 
       # Validate gate value
-      if (!is.null(step$gate) && step$gate != "Confirm") {
+      valid_gates <- c("Confirm", "Review", "Approve")
+      if (!is.null(step$gate) && !step$gate %in% valid_gates) {
         errors[[playbook_name]] <- c(
           errors[[playbook_name]],
           sprintf(

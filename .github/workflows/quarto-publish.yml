@@ -24,7 +24,8 @@ jobs:
                   use-public-rspm: true
 
             - name: Install R dependencies
-              run: Rscript -e 'install.packages(c("yaml"), repos = "https://cloud.r-project.org")'
+              run: |
+                  Rscript -e 'install.packages(c("yaml", "knitr", "rmarkdown"), repos = "https://cloud.r-project.org")'
 
             - name: Render site
               run: quarto render
