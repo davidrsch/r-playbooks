@@ -485,7 +485,9 @@ Show More <span class="arrow">▼</span>
 
       btnDownload.disabled = false;
 
-      setTimeout(() => { updateSelectionUI(); }, 100);
+      countSpan = document.getElementById('selected-count');
+
+      updateSelectionUI();
 
       return;
 
@@ -517,7 +519,13 @@ Show More <span class="arrow">▼</span>
 
     btnDownload.disabled = false;
 
-    setTimeout(() => { updateSelectionUI(); }, 100);
+    countSpan = document.getElementById('selected-count');
+
+    updateSelectionUI();
+
+    countSpan = document.getElementById('selected-count');
+
+    updateSelectionUI();
 
   });
 

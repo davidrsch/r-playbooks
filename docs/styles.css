@@ -171,9 +171,11 @@
   font-size: 0.7rem;
   cursor: pointer;
   transition: background 0.15s;
+  color: var(--bs-body-color);
 }
 .badge-link:hover {
   background: var(--bs-tertiary-bg);
+  color: var(--bs-body-color);
 }
 
 /* ---- Page Header ---- */

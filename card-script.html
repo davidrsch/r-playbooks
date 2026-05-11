@@ -121,7 +121,8 @@
     if (success === 0) {
       btnDownload.innerHTML = '⬇ Download (<span id="selected-count">0</span>)';
       btnDownload.disabled = false;
-      setTimeout(() => { updateSelectionUI(); }, 100);
+      countSpan = document.getElementById('selected-count');
+      updateSelectionUI();
       return;
     }
 
@@ -137,7 +138,10 @@
 
     btnDownload.innerHTML = '⬇ Download (<span id="selected-count">0</span>)';
     btnDownload.disabled = false;
-    setTimeout(() => { updateSelectionUI(); }, 100);
+    countSpan = document.getElementById('selected-count');
+    updateSelectionUI();
+    countSpan = document.getElementById('selected-count');
+    updateSelectionUI();
   });
 
   // ---- Show More ----
