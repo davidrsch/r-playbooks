@@ -6,8 +6,8 @@ project:
 
 website:
   title: "R Playbooks"
-  site-url: https://davidxuang.github.io/r-playbooks/
-  repo-url: https://github.com/davidxuang/r-playbooks/
+  site-url: https://davidrsch.github.io/r-playbooks/
+  repo-url: https://github.com/davidrsch/r-playbooks/
   navbar:
     background: primary
     search: true
@@ -15,7 +15,7 @@ website:
       - text: "Playbooks"
         href: index.qmd
       - text: "GitHub"
-        href: https://github.com/davidxuang/r-playbooks/
+        href: https://github.com/davidrsch/r-playbooks/
         icon: github
 
   page-footer:
