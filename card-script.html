@@ -14,6 +14,22 @@
 
   // ---- Helpers ----
 
+  function resetCountSpan() {
+    countSpan = document.getElementById('selected-count');
+  }
+
+  function resetDownloadUI() {
+    // Uncheck every checkbox so count goes back to 0
+    grid.querySelectorAll('.card-checkbox').forEach(cb => { cb.checked = false; });
+    allSelected = false;
+    // Restore the button inner HTML so the <span id="selected-count"> reappears
+    btnDownload.innerHTML = '⬇ Download (<span id="selected-count">0</span>)';
+    btnDownload.disabled = false;
+    // Re-bind countSpan to the fresh element just re-created in btnDownload
+    resetCountSpan();
+    updateSelectionUI();
+  }
+
   function getVisibleCards() {
     const cards = grid.querySelectorAll('.playbook-card');
     return [...cards].filter(c => c.style.display !== 'none');
@@ -24,9 +40,11 @@
   }
 
   function updateSelectionUI() {
+    // Re-bind if countSpan was blown away by innerHTML
+    if (!countSpan || !countSpan.isConnected) resetCountSpan();
     const checked = grid.querySelectorAll('.card-checkbox:checked');
     const count   = checked.length;
-    countSpan.textContent = count;
+    if (countSpan) countSpan.textContent = count;
     btnDownload.disabled  = count === 0;
     btnSelectAll.textContent = allSelected ? '☑ Deselect All' : '☐ Select All';
 
@@ -119,10 +137,7 @@
     }
 
     if (success === 0) {
-      btnDownload.innerHTML = '⬇ Download (<span id="selected-count">0</span>)';
-      btnDownload.disabled = false;
-      countSpan = document.getElementById('selected-count');
-      updateSelectionUI();
+      resetDownloadUI();
       return;
     }
 
@@ -136,12 +151,7 @@
     document.body.removeChild(a);
     URL.revokeObjectURL(a.href);
 
-    btnDownload.innerHTML = '⬇ Download (<span id="selected-count">0</span>)';
-    btnDownload.disabled = false;
-    countSpan = document.getElementById('selected-count');
-    updateSelectionUI();
-    countSpan = document.getElementById('selected-count');
-    updateSelectionUI();
+    resetDownloadUI();
   });
 
   // ---- Show More ----
