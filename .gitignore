@@ -1,6 +1,8 @@
 # Quarto
 /.quarto/
 /_site/
+docs/
+_freeze/
 
 # R
 .Rproj.user/
