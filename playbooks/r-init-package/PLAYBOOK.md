@@ -1,4 +1,4 @@
----
+﻿---
 name: r-init-package
 version: 1.0.0
 context-mode: Fork
@@ -184,7 +184,7 @@ steps:
       If the user specified 'lintr' as true (value: {{params.lintr}}):
       Configure code style tools:
 
-      1. Run: `usethis::use_lintr()` — creates `.lintr` config with tidyverse defaults
+      1. Run: `usethis::use_lintr()`: creates `.lintr` config with tidyverse defaults
       2. Create or verify `.Rproj` file exists for the package
 
       Report: lintr configured.
@@ -198,9 +198,9 @@ steps:
     inline-prompt: |
       Set up community files for the package at {{state.pkg_path}}:
 
-      1. Run: `usethis::use_spell_check()` — configure spell checking for docs
-      2. Run: `usethis::use_tidy_contributing()` — create CONTRIBUTING.md
-      3. Run: `usethis::use_tidy_coc()` — create CODE_OF_CONDUCT.md
+      1. Run: `usethis::use_spell_check()`: configure spell checking for docs
+      2. Run: `usethis::use_tidy_contributing()`: create CONTRIBUTING.md
+      3. Run: `usethis::use_tidy_coc()`: create CODE_OF_CONDUCT.md
 
       Report: community files created.
     output: community_status
@@ -240,7 +240,7 @@ steps:
 
       1. Change to {{state.pkg_path}}
       2. Run `devtools::check(args = c("--no-manual", "--no-vignettes", "--as-cran"))`
-         — R CMD check MUST pass with 0 errors before commit
+        : R CMD check MUST pass with 0 errors before commit
       3. Fix any errors or warnings before proceeding
       4. Run: `pak::lockfile_create("pkg.lock")` to generate SBOM/manifest
       5. Make the initial git commit:
@@ -325,7 +325,7 @@ practices from the R Packages book (r-pkgs.org).
 ## Rules
 
 1. Always validate the package name before creating anything.
-2. Use `usethis` functions whenever available — never manually create
+2. Use `usethis` functions whenever available: never manually create
    files that usethis can generate.
 3. Every step that creates or modifies files should report what was
    created and where.
@@ -335,4 +335,4 @@ practices from the R Packages book (r-pkgs.org).
 6. The package at {{state.pkg_path}} must pass R CMD check with
    0 errors and 0 warnings before this playbook is complete.
 7. Use `here::here()` for all path construction within the package.
-8. Do NOT use `setwd()` — use `usethis::proj_set()` or pass paths explicitly.
+8. Do NOT use `setwd()`: use `usethis::proj_set()` or pass paths explicitly.

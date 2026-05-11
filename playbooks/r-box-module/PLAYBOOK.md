@@ -1,4 +1,4 @@
----
+﻿---
 name: r-box-module
 version: 1.0.0
 context-mode: Fork
@@ -115,11 +115,11 @@ and namespace isolation.
 
 ## Rules
 
-1. ALWAYS use `box::use()` for imports inside modules — NEVER `source()` or `library()`.
+1. ALWAYS use `box::use()` for imports inside modules: NEVER `source()` or `library()`.
 2. Selectively import only needed functions: `box::use(dplyr[filter, mutate])`.
 3. Use `#' @export` roxygen tags to declare public API; omit for private functions.
-4. Private functions cannot be accessed from outside the module — enforce this in tests.
-5. Each module has its own scope — no shared mutable state.
+4. Private functions cannot be accessed from outside the module: enforce this in tests.
+5. Each module has its own scope: no shared mutable state.
 6. The module namespace is the basename of the `.r` file.
 7. ALWAYS use snake_case for function and file names.
 8. ALWAYS validate inputs at the top of each exported function.
@@ -178,7 +178,7 @@ box::reexport(./R/utils, dplyr[filter])
 
 ## Anti-patterns to NEVER use
 
-- ❌ `source("R/utils.R")` — use `box::use(./R/utils)`
-- ❌ `library(tidyverse)` inside a module — use `box::use(dplyr[...], ggplot2[...])`
+- ❌ `source("R/utils.R")`: use `box::use(./R/utils)`
+- ❌ `library(tidyverse)` inside a module: use `box::use(dplyr[...], ggplot2[...])`
 - ❌ Assigning to global environment with `<<-` or `assign()`
-- ❌ `attach()` — never use
+- ❌ `attach()`: never use

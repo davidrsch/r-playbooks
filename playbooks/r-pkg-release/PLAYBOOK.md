@@ -1,8 +1,8 @@
----
+﻿---
 name: r-pkg-release
 version: 1.0.0
 context-mode: Fork
-description: Full release workflow — version bump, checks, tag, NEWS, and CRAN/ GitHub release preparation
+description: Full release workflow: version bump, checks, tag, NEWS, and CRAN/ GitHub release preparation
 trigger: manual
 argument-hint: "--bump patch|minor|major [--message <release msg>] [--dry-run true|false] [--push true|false]"
 parameters:
@@ -36,9 +36,9 @@ steps:
       Run pre-release safety checks:
 
       1. Verify we are in an R package directory (DESCRIPTION exists).
-      2. Run: `git status --porcelain` — the working tree MUST be clean.
+      2. Run: `git status --porcelain`: the working tree MUST be clean.
          If dirty, abort and tell the user to commit or stash changes.
-      3. Run: `git branch --show-current` — warn if not on main/master.
+      3. Run: `git branch --show-current`: warn if not on main/master.
       4. Read current version from DESCRIPTION: `desc::desc_get_version()`
       5. Read current NEWS.md if it exists.
       6. Report: package name, current version, branch, git status.
@@ -128,9 +128,9 @@ steps:
       spell checks, and pkgdown validation.
 
       Alternatively, run these checks manually:
-      1. `devtools::document()` — regenerate docs
-      2. `devtools::test()` — run all tests
-      3. `devtools::check(args = c("--as-cran", "--no-manual"))` — full check
+      1. `devtools::document()`: regenerate docs
+      2. `devtools::test()`: run all tests
+      3. `devtools::check(args = c("--as-cran", "--no-manual"))`: full check
 
       If any check fails:
       - Report the failure
@@ -219,8 +219,8 @@ steps:
       If the user specified 'push' as true (value: {{params.push}}):
       Push the release to remote:
 
-      1. Run: `git push origin HEAD` — push the commit
-      2. Run: `git push origin <tag>` — push the tag
+      1. Run: `git push origin HEAD`: push the commit
+      2. Run: `git push origin <tag>`: push the tag
       3. If pushing to main/master, add safety confirmation.
 
       WARNING: This pushes to the remote repository. Ensure all checks passed.
@@ -242,7 +242,7 @@ steps:
       Prepare for CRAN submission when `cran` is true.
 
       When cran is true:
-      1. Run: `devtools::build()` — create the source tarball (.tar.gz)
+      1. Run: `devtools::build()`: create the source tarball (.tar.gz)
       2. Run: `devtools::check_rhub()` or list the interactive URL.
       3. Run: `devtools::check_win_devel()` or list the URL.
       4. Run: `urlchecker::url_check()` to validate all URLs.
@@ -281,12 +281,12 @@ generation, git tagging, and optional CRAN submission.
 ## Rules
 
 1. NEVER proceed with a dirty working tree. Abort immediately.
-2. NEVER skip R CMD check — it must pass with 0 ERRORs and 0 WARNINGs.
+2. NEVER skip R CMD check: it must pass with 0 ERRORs and 0 WARNINGs.
 3. ALWAYS require user confirmation before git operations (commit, tag, push).
 4. NEVER push to remote without explicit user approval (gate: Approve).
 5. ALWAYS update NEWS.md before bumping the version.
 6. Release commits should use `chore:` conventional commit prefix.
-7. Annotated tags only — never lightweight tags.
+7. Annotated tags only: never lightweight tags.
 8. When preparing for CRAN, check all URLs are valid and accessible.
 9. The package must build without warnings on R release and R devel.
 10. Use `desc::desc_set_version()` not manual DESCRIPTION editing.

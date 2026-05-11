@@ -1,4 +1,4 @@
----
+﻿---
 name: r-init-plumber
 version: 1.0.0
 context-mode: Fork
@@ -34,7 +34,7 @@ steps:
 
       ```
       {{params.name}}/
-      ├── plumber.R          # Entrypoint — registers routes and middleware
+      ├── plumber.R          # Entrypoint: registers routes and middleware
       ├── R/
       │   ├── routes/
       │   │   ├── health.R  # Health check endpoint
@@ -63,7 +63,7 @@ steps:
              res$status <- 500
              list(error = "Internal server error")
            }) |>
-           # Filters — must be added BEFORE routes
+           # Filters: must be added BEFORE routes
            pr_filter("logger", function(req, res) {
              log_info("Request: {req$REQUEST_METHOD} {req$PATH_INFO}")
              forward()
@@ -156,7 +156,7 @@ steps:
          library(testthat)
 
          test_that("root endpoint returns API info", {
-           # Load the API as a plumber object — use pr() directly, not library(pkg)
+           # Load the API as a plumber object: use pr() directly, not library(pkg)
            pr <- plumber::pr("plumber.R")
 
            # Test the / endpoint via route execution
@@ -244,13 +244,13 @@ middleware, error handling, and testing.
 
 ## Rules
 
-1. Organize routes in `R/routes/` — one file per resource or endpoint group.
-2. Organize middleware in `R/middleware/` — filters for logging, auth, CORS, etc.
+1. Organize routes in `R/routes/`: one file per resource or endpoint group.
+2. Organize middleware in `R/middleware/`: filters for logging, auth, CORS, etc.
 3. Use `#* @serializer unboxedJSON` for JSON endpoints to avoid array wrapping.
 4. Use `#* @param` annotations to document all endpoint parameters.
 5. Use `#* @get`, `#* @post`, `#* @put`, `#* @delete` for HTTP method routing.
-6. Return structured lists (not data.frames) from endpoints — they serialize better.
+6. Return structured lists (not data.frames) from endpoints: they serialize better.
 7. Handle errors with `plumber::abort()` with appropriate HTTP status codes.
 8. Always include a `/health` endpoint for monitoring.
 9. Test endpoints with `plumber::pr()` + route execution in testthat.
-10. Use `{{params.port}}` as the default port — configurable via `PORT` env var.
+10. Use `{{params.port}}` as the default port: configurable via `PORT` env var.

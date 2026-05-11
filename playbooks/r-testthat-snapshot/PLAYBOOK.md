@@ -1,6 +1,6 @@
----
+﻿---
 name: r-testthat-snapshot
-description: Add snapshot tests to an R package with testthat edition 3 — output, value, error, and file snapshots
+description: Add snapshot tests to an R package with testthat edition 3: output, value, error, and file snapshots
 version: 1.0.0
 context-mode: Fork
 trigger: both
@@ -138,7 +138,7 @@ steps:
       ```
       This opens an interactive diff viewer. For each snapshot:
       1. Read the captured output carefully
-      2. Verify it matches expected behavior — correct values, format, error messages
+      2. Verify it matches expected behavior: correct values, format, error messages
       3. Confirm no PII, secrets, or environment-specific content leaked
       4. Accept ONLY if the output is correct:
          ```r
@@ -187,15 +187,15 @@ You are an expert in R testthat snapshot testing. Use testthat edition 3 (testth
 
 ## Snapshot Test Types
 
-### `expect_snapshot()` — Console Output
+### `expect_snapshot()`: Console Output
 
 Captures what the function prints, messages, warns, or errors. Use `local_reproducible_output()` for consistency.
 
-### `expect_snapshot_value()` — Return Values
+### `expect_snapshot_value()`: Return Values
 
 Captures the return value. Use `style = "json2"` for data frames, `style = "serialize"` for complex objects.
 
-### `expect_snapshot_file()` — File Output
+### `expect_snapshot_file()`: File Output
 
 For functions that generate files (plots, reports, data exports).
 
@@ -205,24 +205,24 @@ For functions that generate files (plots, reports, data exports).
 
 - ✅ Human-readable verification of behavior
 - ✅ Golden files that document expected output
-- ✅ Regression detection — did behavior change?
+- ✅ Regression detection: did behavior change?
 - ✅ Committed to git for version history
 
 ### What Snapshots ARE NOT
 
-- ❌ A replacement for unit tests — they complement, not replace
+- ❌ A replacement for unit tests: they complement, not replace
 - ❌ Generated automatically without review
 - ❌ To be blindly accepted on mismatch
 - ❌ For testing implementation details
 
 ### When NOT to use snapshots
 
-- ❌ **Random/unseeded output** — snapshot will change every run
-- ❌ **Large data frames** — snapshots over 20 rows are unreadable; use `expect_equal()` instead
-- ❌ **Timestamps that can't be fully normalized** — CI timezone differences cause flaky failures
-- ❌ **External API responses** — mock the API, snapshot the mock
-- ❌ **Performance-critical code paths** — snapshot serialization adds overhead
-- ❌ **Functions where exact output format is NOT a contract** — snapshots freeze format; use `expect_equal()` for logic-only checks
+- ❌ **Random/unseeded output**: snapshot will change every run
+- ❌ **Large data frames**: snapshots over 20 rows are unreadable; use `expect_equal()` instead
+- ❌ **Timestamps that can't be fully normalized**: CI timezone differences cause flaky failures
+- ❌ **External API responses**: mock the API, snapshot the mock
+- ❌ **Performance-critical code paths**: snapshot serialization adds overhead
+- ❌ **Functions where exact output format is NOT a contract**: snapshots freeze format; use `expect_equal()` for logic-only checks
 
 **Rule of thumb**: If you wouldn't want a PR review comment every time the output changes by a single space, don't snapshot it.
 
@@ -270,4 +270,4 @@ options(
 )
 ```
 
-NEVER set `testthat.snapshot_accept = TRUE` on CI — it silently overwrites snapshots.
+NEVER set `testthat.snapshot_accept = TRUE` on CI: it silently overwrites snapshots.

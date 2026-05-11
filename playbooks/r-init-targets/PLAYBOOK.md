@@ -1,4 +1,4 @@
----
+﻿---
 name: r-init-targets
 version: 1.0.0
 context-mode: Fork
@@ -194,13 +194,13 @@ data analysis workflows with the targets and tarchetypes packages.
 ## Rules
 
 1. ALWAYS define targets in `_targets.R` at the project root.
-2. Keep target functions in `R/functions/` — one file per domain (data, process, plot).
+2. Keep target functions in `R/functions/`: one file per domain (data, process, plot).
 3. Use `tar_source()` to source all function files.
 4. Target names must be valid R variable names (snake_case, no dots).
 5. NEVER use `setwd()`; rely on targets' project-relative paths.
 6. Always specify `format = "file"` for targets that produce file output.
 7. Use `tar_manifest()` and `tar_visnetwork()` to validate pipeline structure.
-8. The `_targets/` directory stores metadata — add it to `.gitignore`.
+8. The `_targets/` directory stores metadata: add it to `.gitignore`.
 9. Use `tar_option_set()` for global settings (packages, error mode, memory).
 10. Use `tarchetypes::tar_plan()` for a cleaner pipeline definition syntax.
 11. For large data, use `format = "parquet"` or `"fst"` instead of default rds.

@@ -1,4 +1,4 @@
----
+﻿---
 name: r-init-shiny
 version: 1.0.0
 context-mode: Fork
@@ -44,11 +44,11 @@ steps:
 
       1. Run: `golem::create_golem("{{params.name}}", open = FALSE)`
       2. Verify the directory structure:
-         - `R/` — modules (mod_*.R), app_server.R, app_ui.R, run_app.R
-         - `inst/` — www/, app/www/
-         - `dev/` — run_dev.R, 01_start.R, 02_dev.R, 03_deploy.R
+         - `R/`: modules (mod_*.R), app_server.R, app_ui.R, run_app.R
+         - `inst/`: www/, app/www/
+         - `dev/`: run_dev.R, 01_start.R, 02_dev.R, 03_deploy.R
          - `DESCRIPTION` and `NAMESPACE`
-      3. The golem app is also an R package — verify it can be loaded.
+      3. The golem app is also an R package: verify it can be loaded.
       4. Run: `golem::add_module("main")` to create the default module.
       5. Run: `golem::add_external_resources()` to configure external resources.
 
@@ -96,7 +96,7 @@ steps:
       Initialize renv in the app directory:
 
       1. Run: `renv::init(project = "{{params.name}}")`
-      2. If golem, the DESCRIPTION already has dependencies — run `renv::hydrate()`.
+      2. If golem, the DESCRIPTION already has dependencies: run `renv::hydrate()`.
       3. Verify renv.lock and .Rprofile were created.
       4. Run: `renv::snapshot(type = "explicit")` to lock exact package versions.
 
@@ -221,12 +221,12 @@ Production-Grade Shiny Apps conventions.
 
 ## Rules
 
-1. PREFER golem for production applications — it provides package structure,
+1. PREFER golem for production applications: it provides package structure,
    testing, and deployment tooling.
 2. Use Shiny modules (`moduleServer()` + `NS()`) to organize complex apps.
 3. ALWAYS set up testing (testthat + shinytest2) from the start.
 4. Use `renv` for reproducible dependency management.
-5. Keep `app.R` or `run_app.R` minimal — delegate logic to modules.
+5. Keep `app.R` or `run_app.R` minimal: delegate logic to modules.
 6. Use `bslib` for theming (Bootstrap 5) in new applications.
 7. NEVER use `<<-` in Shiny reactive contexts.
 8. PREFER `reactive()` + `observe()` over `reactiveValues()` for state.

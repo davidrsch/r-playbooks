@@ -1,8 +1,8 @@
----
+﻿---
 name: r-ci-gha
 version: 1.0.0
 context-mode: Fork
-description: Set up GitHub Actions CI for an R package — R CMD check, test coverage, pkgdown, and linting
+description: Set up GitHub Actions CI for an R package: R CMD check, test coverage, pkgdown, and linting
 trigger: manual
 argument-hint: "[--r-versions release,devel,oldrel] [--coverage true|false] [--pkgdown true|false] [--lint true|false] [--multiversion true|false]"
 parameters:
@@ -38,7 +38,7 @@ steps:
 
       1. Read DESCRIPTION:
          - Package name
-         - SystemRequirements (if any — these need apt/pacman/brew packages)
+         - SystemRequirements (if any: these need apt/pacman/brew packages)
          - Imports/Suggests
          - Is renv in use?
       2. Check if tests exist: `tests/testthat/` directory.

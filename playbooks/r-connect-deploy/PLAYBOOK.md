@@ -1,4 +1,4 @@
----
+﻿---
 name: r-connect-deploy
 version: 1.0.0
 context-mode: Fork
@@ -72,7 +72,7 @@ steps:
       rsconnect::writeManifest(appDir = "{{params.app}}")
 
       manifest <- jsonlite::read_json("{{params.app}}/manifest.json")
-      cat("App mode:", manifest$metadata$appmode %||% "not set — Connect will auto-detect")
+      cat("App mode:", manifest$metadata$appmode %||% "not set: Connect will auto-detect")
       ```
 
       This creates `{{params.app}}/manifest.json` containing:
@@ -91,7 +91,7 @@ steps:
       for (pkg in names(manifest$packages)) {
         pkg_info <- manifest$packages[[pkg]]
         if (is.null(pkg_info$Repository)) {
-          message("WARNING: ", pkg, " has no Repository — may fail on Connect")
+          message("WARNING: ", pkg, " has no Repository: may fail on Connect")
         }
       }
       ```
@@ -149,7 +149,7 @@ steps:
            {{params.server}}/__api__/v1/content | grep {{params.title}}
          ```
 
-      2. Visit the app URL in browser — confirm it loads without errors.
+      2. Visit the app URL in browser: confirm it loads without errors.
 
       3. Check logs on Connect:
          - Visit `{{params.server}}/connect/#/apps/<app-id>/logs`
@@ -192,9 +192,9 @@ You are an expert in deploying R applications to Posit Connect. Use rsconnect fo
 
 ### Deployment Modes
 
-1. **Push-button** (`rsconnect::deployApp()`) — Direct upload from local
-2. **Git-backed** — Connect polls git repo; on push, auto-deploys
-3. **Programmatic** — Connect API for automated CI/CD deployment
+1. **Push-button** (`rsconnect::deployApp()`): Direct upload from local
+2. **Git-backed**: Connect polls git repo; on push, auto-deploys
+3. **Programmatic**: Connect API for automated CI/CD deployment
 
 ### Connect URL Structure
 
@@ -208,11 +208,11 @@ https://<server>/connect/#/apps/<app-id>/   → Admin dashboard
 
 ### Before Deploying
 
-1. **Write manifest.json** — always update before deploying
-2. **Commit manifest.json** — for git-backed deployment
-3. **Test locally** — verify app runs correctly
-4. **Check renv.lock** — dependencies should be reproducible
-5. **Set R_CONFIG_ACTIVE** — for environment-specific config
+1. **Write manifest.json**: always update before deploying
+2. **Commit manifest.json**: for git-backed deployment
+3. **Test locally**: verify app runs correctly
+4. **Check renv.lock**: dependencies should be reproducible
+5. **Set R_CONFIG_ACTIVE**: for environment-specific config
 
 ### Security
 

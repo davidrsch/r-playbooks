@@ -1,8 +1,8 @@
----
+﻿---
 name: r-pointblank-agent
 version: 1.0.0
 context-mode: Fork
-description: Set up automated data validation with pointblank agents — create validation rules, generate reports, and integrate with CI
+description: Set up automated data validation with pointblank agents: create validation rules, generate reports, and integrate with CI
 trigger: both
 trigger-patterns:
   - "pointblank *"
@@ -37,10 +37,10 @@ steps:
       2. Verify installation: `library(pointblank)`
       3. Report the version: `packageVersion("pointblank")`
       4. Verify key features are available:
-         - `create_agent()` — agent creation
-         - `interrogate()` — running validation
-         - `draft_validation()` — AI-assisted rule generation
-         - `get_sundered_data()` — extracting failed rows
+         - `create_agent()`: agent creation
+         - `interrogate()`: running validation
+         - `draft_validation()`: AI-assisted rule generation
+         - `get_sundered_data()`: extracting failed rows
       5. Check optional dependencies for rich output:
          - `gt` for table output
          - `ggplot2` for visual reports
@@ -100,7 +100,7 @@ steps:
          pointblank::draft_validation({{params.data}})
          ```
          This generates initial rule suggestions based on data patterns.
-         Review the suggestions and report them — they'll drive rule creation.
+         Review the suggestions and report them: they'll drive rule creation.
 
       8. Report a comprehensive data profile:
          - Dimensions
@@ -131,7 +131,7 @@ steps:
 
       **Type validation:**
       ```r
-        # 2. Column types — one rule per typed column
+        # 2. Column types: one rule per typed column
         col_is_numeric(columns = vars(<numeric_cols>)) |>
         col_is_character(columns = vars(<char_cols>)) |>
         col_is_logical(columns = vars(<lgl_cols>)) |>
@@ -157,7 +157,7 @@ steps:
 
       **Value range validation (numeric columns):**
       ```r
-        # 7. Value ranges — one per numeric column, use data profile for bounds
+        # 7. Value ranges: one per numeric column, use data profile for bounds
         col_vals_between(
           columns = vars(<col>), left = <min>, right = <max>
         )
@@ -228,7 +228,7 @@ steps:
       ```
 
       Use the exact column names and value ranges from the data profile.
-      Be SPECIFIC — no placeholder text in final output.
+      Be SPECIFIC: no placeholder text in final output.
       Every column should have at least one validation step.
       Document what each step checks with `label = "..."` in each step function.
 
@@ -524,14 +524,14 @@ yaml_write(agent, "plan.yaml")
 agent <- yaml_read_agent("plan.yaml")
 ```
 
-## draft_validation() — AI-Assisted Rules
+## draft_validation(): AI-Assisted Rules
 
 ```r
 draft_validation(data)
 ```
 
 This inspects the data and suggests validation rules based on
-column types, ranges, and patterns. It's a starting point —
+column types, ranges, and patterns. It's a starting point ;
 always review and customize the suggestions.
 
 ## The Six Validation Workflows (VALID-I through VALID-VI)

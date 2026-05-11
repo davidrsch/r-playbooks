@@ -1,6 +1,6 @@
-# 🎯 R Playbooks
+﻿# 🎯 R Playbooks
 
-A collection of **40+ AI-assisted playbooks** for common R development workflows — package development, testing, Shiny apps, data pipelines, deployment, APIs, observability, and more.
+A collection of **40+ AI-assisted playbooks** for common R development workflows: package development, testing, Shiny apps, data pipelines, deployment, APIs, observability, and more.
 
 > [**Browse the playbook gallery**](https://davidrsch.github.io/r-playbooks/)
 
@@ -56,4 +56,4 @@ See the [playbook schema](.github/playbook-schema.json) for the expected format.
 
 ## License
 
-MIT — see individual playbooks for details.
+MIT: see individual playbooks for details.

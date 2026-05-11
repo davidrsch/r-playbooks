@@ -1,8 +1,8 @@
----
+﻿---
 name: r-docker-build
 version: 1.0.0
 context-mode: Fork
-description: Build a Docker image for an R project — package, Shiny app, or Plumber API
+description: Build a Docker image for an R project: package, Shiny app, or Plumber API
 trigger: manual
 argument-hint: "--type package|shiny|plumber|quarto [--image-name <name>] [--r-version 4.4] [--port <8080>]"
 parameters:
@@ -259,12 +259,12 @@ You use the Rocker project's Docker images for R.
 ## Rules
 
 1. ALWAYS use Rocker images: `rocker/r-ver` (base), `rocker/shiny`, `rocker/plumber`.
-2. NEVER use `:latest` tag — always pin the R version (e.g., `:4.4`).
+2. NEVER use `:latest` tag: always pin the R version (e.g., `:4.4`).
 3. Combine `apt-get update && install && rm -rf /var/lib/apt/lists/*` in one RUN.
 4. Install system dependencies before R packages.
 5. Use `.dockerignore` to keep images small.
 6. Set `RENV_CONFIG_CACHE_ENABLED = FALSE` in CI builds.
-7. Never copy `renv/library/` into the image — let renv restore it.
+7. Never copy `renv/library/` into the image: let renv restore it.
 8. For Shiny, use `rocker/shiny` which has Shiny Server pre-configured.
 9. For Plumber, use `rocker/r-ver` and install plumber via renv or install.packages.
 10. Always EXPOSE the correct port and document it.

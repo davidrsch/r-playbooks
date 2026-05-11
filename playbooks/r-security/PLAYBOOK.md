@@ -1,8 +1,8 @@
----
+﻿---
 name: r-security
 version: 1.0.0
 context-mode: Fork
-description: Scan R code for security vulnerabilities — hardcoded secrets, unsafe eval, path traversal, injection risks
+description: Scan R code for security vulnerabilities: hardcoded secrets, unsafe eval, path traversal, injection risks
 trigger: both
 trigger-patterns:
   - "security scan *"
@@ -60,7 +60,7 @@ steps:
       Scan for unsafe code execution patterns.
 
       Search for:
-      1. `eval(parse(text = ...))` — code injection risk
+      1. `eval(parse(text = ...))`: code injection risk
       2. `eval(..., envir = ...)` with non-standard envir
       3. `source()` with dynamic file paths
       4. `system()` / `system2()` / `shell()` with unsanitized input
@@ -87,22 +87,22 @@ steps:
       Search for:
 
       **SQL Injection via DBI:**
-      1. `DBI::dbGetQuery(conn, paste(...))` — user input concatenated into SQL
-      2. `DBI::dbGetQuery(conn, sprintf(...))` — format string SQL injection
+      1. `DBI::dbGetQuery(conn, paste(...))`: user input concatenated into SQL
+      2. `DBI::dbGetQuery(conn, sprintf(...))`: format string SQL injection
       3. `DBI::dbExecute()` / `DBI::dbSendQuery()` with string-built SQL
       4. `RMySQL::dbGetQuery()` / `RPostgres::dbGetQuery()` with dynamic SQL
       5. `glue::glue_sql()` used WITHOUT `.con` parameter (still injectable!)
 
       **glue Injection:**
-      6. `glue::glue()` with unsanitized user input — can inject R expressions
+      6. `glue::glue()` with unsanitized user input: can inject R expressions
       7. `glue::glue()` used to build code strings that get evaluated
 
       **do.call() Injection:**
-      8. `do.call(user_input, args = ...)` — attacker controls the function name
-      9. `match.fun(user_input)` — user-controlled function dispatch
+      8. `do.call(user_input, args = ...)`: attacker controls the function name
+      9. `match.fun(user_input)`: user-controlled function dispatch
 
       **Formula Injection:**
-      10. `as.formula(paste("~", user_input))` — user input in formula strings
+      10. `as.formula(paste("~", user_input))`: user input in formula strings
       11. `model.frame()` / `model.matrix()` with user-supplied formulas
 
       **Shiny SQL Injection (from Shiny inputs):**
@@ -174,7 +174,7 @@ steps:
          This creates a JSON lockfile with exact versions of all recursive dependencies.
 
       2. **renv lockfile (if using renv)**:
-         The existing `renv.lock` already serves as an SBOM — verify it's up to date:
+         The existing `renv.lock` already serves as an SBOM: verify it's up to date:
          ```r
          renv::status()
          ```
@@ -348,8 +348,8 @@ following OWASP and CRAN security best practices.
 
 ## Rules
 
-1. NEVER ignore a CRITICAL finding — report it prominently.
-2. Use grep/regex patterns to scan efficiently — don't read every file manually.
+1. NEVER ignore a CRITICAL finding: report it prominently.
+2. Use grep/regex patterns to scan efficiently: don't read every file manually.
 3. Focus on R-specific vulnerabilities:
    - `eval(parse(text = ...))` is the #1 R injection vector
    - `system()` with user input is #2
@@ -361,13 +361,13 @@ following OWASP and CRAN security best practices.
 6. For path traversal, recommend `fs::path_real()` or `normalizePath()`.
 7. Dependencies should be pinned in renv.lock.
 8. CRAN submission prohibits downloading files during checks.
-9. Respect `.Rbuildignore` — don't scan files excluded from the package,
+9. Respect `.Rbuildignore`: don't scan files excluded from the package,
    BUT ALSO warn that files excluded by `.Rbuildignore` may still contain
    secrets (e.g., `.Renviron` templates). ALWAYS check `.Rbuildignore`
    entries individually for potential credential leaks.
 10. The final report should be actionable, not just a list of issues.
-11. ALWAYS run `renv::status()` before auditing dependencies — an unclean
+11. ALWAYS run `renv::status()` before auditing dependencies: an unclean
     lockfile may mask vulnerabilities.
-12. Use `DBI::sqlInterpolate()` or parameterized queries — NEVER build SQL
+12. Use `DBI::sqlInterpolate()` or parameterized queries: NEVER build SQL
     with `paste()` or `sprintf()` from user input.
 13. Use `glue::glue_sql()` with `.con` parameter for safe SQL in glue.

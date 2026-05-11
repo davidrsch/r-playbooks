@@ -1,4 +1,4 @@
----
+﻿---
 name: r-config-env
 version: 1.0.0
 context-mode: Fork
@@ -28,7 +28,7 @@ steps:
       1. `default` section: base configuration inherited by all environments
       2. Environment-specific sections override defaults
       3. Use `!expr` for R code evaluation
-      4. Use `Sys.getenv()` for secrets — NEVER hardcode credentials
+      4. Use `Sys.getenv()` for secrets: NEVER hardcode credentials
       5. Nested YAML structure for organized settings
 
       Generate a config.yml tailored for {{params.target}}:
@@ -162,7 +162,7 @@ steps:
       4. Check that `!expr` values evaluate correctly
       5. Confirm no hardcoded secrets in the config file
 
-      Run: `grep -i "password\|secret\|token\|api_key" config.yml` — there should be NO matches (only `!expr Sys.getenv()` references).
+      Run: `grep -i "password\|secret\|token\|api_key" config.yml`: there should be NO matches (only `!expr Sys.getenv()` references).
 
       Production config validation checklist:
       - [ ] `R_CONFIG_ACTIVE=production` is set in deployment environment
@@ -195,17 +195,17 @@ Use the `config` package (r-lib) to manage environment-specific settings.
 
 ## Rules
 
-1. `default` is the base — all other environments inherit from it.
-2. Environment sections override — `production` overrides only what differs from `default`.
-3. Nest related settings — group by domain (database._, api._, logging.\*).
-4. Use `!expr` for dynamic values — R code that runs at config load time.
-5. Secrets via env vars ONLY — `password: !expr Sys.getenv("DB_PASS")`.
+1. `default` is the base: all other environments inherit from it.
+2. Environment sections override: `production` overrides only what differs from `default`.
+3. Nest related settings: group by domain (database._, api._, logging.\*).
+4. Use `!expr` for dynamic values: R code that runs at config load time.
+5. Secrets via env vars ONLY: `password: !expr Sys.getenv("DB_PASS")`.
 6. `R_CONFIG_ACTIVE` controls which environment config is loaded.
 7. Set `R_CONFIG_ACTIVE` in .Renviron, Dockerfile, or deployment platform.
-8. NEVER hardcode credentials in config.yml — use `!expr Sys.getenv()`.
-9. NEVER use different config files per environment — use one file with sections.
-10. NEVER use `source()` to load config — use `config::get()`.
-11. NEVER use `.Rprofile` for config values — use `.Renviron`.
+8. NEVER hardcode credentials in config.yml: use `!expr Sys.getenv()`.
+9. NEVER use different config files per environment: use one file with sections.
+10. NEVER use `source()` to load config: use `config::get()`.
+11. NEVER use `.Rprofile` for config values: use `.Renviron`.
 
 ## Access Pattern
 
@@ -217,7 +217,7 @@ api_key <- Sys.getenv("API_KEY")  # Secrets from env, NOT config
 
 ## Environment Strategy
 
-- `default` — local development (localhost, debug logging)
-- `development` — shared dev environment
-- `staging` — pre-production testing
-- `production` — live deployment (INFO+ logging, real credentials from env vars)
+- `default`: local development (localhost, debug logging)
+- `development`: shared dev environment
+- `staging`: pre-production testing
+- `production`: live deployment (INFO+ logging, real credentials from env vars)

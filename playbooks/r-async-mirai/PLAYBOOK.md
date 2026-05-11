@@ -1,4 +1,4 @@
----
+﻿---
 name: r-async-mirai
 version: 1.0.0
 context-mode: Fork
@@ -97,11 +97,11 @@ steps:
     inline-prompt: |
       Implement async patterns for {{params.target}}.
 
-      **shiny** — Non-blocking computation:
+      **shiny**: Non-blocking computation:
       ```r
       # In server function
       output$result <- renderTable({
-        # Launch async task — returns immediately
+        # Launch async task: returns immediately
         m <- mirai({
           # Heavy computation runs in separate process
           Sys.sleep(2)  # Simulating work
@@ -125,7 +125,7 @@ steps:
       results <- lapply(tasks, call_mirai)
       ```
 
-      **targets** — Use crew (mirai-native):
+      **targets**: Use crew (mirai-native):
       ```r
       tar_option_set(
         controller = crew::crew_controller_local(workers = {{params.workers}})
@@ -134,7 +134,7 @@ steps:
       # tar_make() runs targets in parallel via mirai daemons
       ```
 
-      **script** — Parallel map pattern:
+      **script**: Parallel map pattern:
       ```r
       library(mirai)
       daemons({{params.workers}})
@@ -198,7 +198,7 @@ allowed-tools:
 
 # R Mirai Async Playbook
 
-You are an expert in async/parallel R programming. Use `mirai` — the modern, lightweight async framework that replaces `future`/`promises` for new R code.
+You are an expert in async/parallel R programming. Use `mirai`: the modern, lightweight async framework that replaces `future`/`promises` for new R code.
 
 ## Mirai vs Future
 
@@ -220,16 +220,16 @@ You are an expert in async/parallel R programming. Use `mirai` — the modern, l
 ### When to bridge from future
 
 - Existing code using `future`/`promises` → use `future.mirai` as drop-in
-- `plan(mirai_multisession)` — keeps future API, uses mirai workers
+- `plan(mirai_multisession)`: keeps future API, uses mirai workers
 
 ## Safety Rules
 
 1. **Always shut down daemons** when done: `daemons(0)`
-2. **Never share mutable state** between tasks — mirai runs in isolated processes
+2. **Never share mutable state** between tasks: mirai runs in isolated processes
 3. **Set reasonable timeouts** for call_mirai() calls in Shiny
 4. **Use `is_error_value()`** to check for task failures
 5. **Set a reproducible RNG seed** in each mirai task if randomness matters
-6. **mirai inherits NO packages** from the parent — include library() calls inside tasks
+6. **mirai inherits NO packages** from the parent: include library() calls inside tasks
 
 ## OpenTelemetry
 

@@ -1,4 +1,4 @@
----
+﻿---
 name: r-lint
 version: 1.0.0
 context-mode: Fork
@@ -87,7 +87,7 @@ steps:
     requires: [run-lintr]
     inline-prompt: |
       If the user specified 'auto-fix' as true (value: {{params.auto-fix}}):
-      **GATE: Review** — Review and confirm auto-fix changes before applying.
+      **GATE: Review**: Review and confirm auto-fix changes before applying.
       Auto-fix style issues with styler.
 
       Lint results: {{state.lint_results}}
@@ -154,7 +154,7 @@ You use lintr and styler to enforce tidyverse style conventions.
 ## Rules
 
 1. ALWAYS detect and respect the project's `.lintr` configuration.
-2. PREFER `styler::style_pkg()` over manual formatting — it's reproducible.
+2. PREFER `styler::style_pkg()` over manual formatting: it's reproducible.
 3. NEVER modify `.lintr` without user confirmation.
 4. Report lints with file:line:column for easy IDE navigation.
 5. Group lints by type for readability.

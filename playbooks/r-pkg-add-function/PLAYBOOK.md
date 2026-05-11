@@ -1,8 +1,8 @@
----
+﻿---
 name: r-pkg-add-function
 version: 1.0.0
 context-mode: Fork
-description: Add an exported function to an R package with roxygen2 docs and testthat tests — TDD-ready
+description: Add an exported function to an R package with roxygen2 docs and testthat tests: TDD-ready
 trigger: both
 trigger-patterns:
   - "add function *"
@@ -64,7 +64,7 @@ steps:
       Description provided: {{params.description}}
 
       Design and report:
-      1. Function signature: `{{params.name}}(<args>)` — parameter names, types, defaults
+      1. Function signature: `{{params.name}}(<args>)`: parameter names, types, defaults
       2. Return value: what it returns (type, structure)
       3. Side effects: any (files written, plots, messages, etc.)
       4. Error conditions: what inputs should cause errors
@@ -114,7 +114,7 @@ steps:
       ```
 
       After writing, run: `devtools::test(filter = "{{params.name}}")` 
-      Tests SHOULD FAIL at this point if TDD mode is on — that's expected (Red phase).
+      Tests SHOULD FAIL at this point if TDD mode is on: that's expected (Red phase).
 
       Report: number of tests written, which pass/fail.
     gate: Review
@@ -132,14 +132,14 @@ steps:
 
       Implementation checklist:
       1. Use `roxygen2` documentation above the function:
-         - `#' @title` — one-line description
-         - `#' @description` — detailed description
-         - `#' @param <name>` — for each parameter
-         - `#' @returns` — what it returns
-         - `#' @family` — related functions group (e.g., "data-transform", "plotting")
-         - `#' @examples` — working examples
-         - `#' @examplesIf` — conditional examples (e.g., `@examplesIf interactive()`)
-         - `#' @export` — if {{params.export}}
+         - `#' @title`: one-line description
+         - `#' @description`: detailed description
+         - `#' @param <name>`: for each parameter
+         - `#' @returns`: what it returns
+         - `#' @family`: related functions group (e.g., "data-transform", "plotting")
+         - `#' @examples`: working examples
+         - `#' @examplesIf`: conditional examples (e.g., `@examplesIf interactive()`)
+         - `#' @export`: if {{params.export}}
       2. Use input validation at the top of the function
       3. Follow existing package conventions for error handling
       4. Handle edge cases from the design
@@ -159,12 +159,12 @@ steps:
       Verify the new function integrates correctly:
 
       1. Run: `devtools::load_all()`
-      2. Run: `devtools::test()` — all tests, not just the new ones
-      3. Run: `devtools::check(args = c("--no-manual", "--no-vignettes"))` — quick check
+      2. Run: `devtools::test()`: all tests, not just the new ones
+      3. Run: `devtools::check(args = c("--no-manual", "--no-vignettes"))`: quick check
       4. Verify NAMESPACE was updated correctly by roxygen2
       5. If {{params.export}} is true, confirm the function appears in NAMESPACE exports
       6. Check for any NOTE/WARNING/ERROR from R CMD check
-      7. Verify all `@param` tags match function signature — no missing or extra params
+      7. Verify all `@param` tags match function signature: no missing or extra params
       8. Verify `@examples` are self-contained and run without error:
          run the examples manually or via `devtools::run_examples()`
       9. If lintr is configured, run: `lintr::lint_package()` and fix any issues
@@ -196,7 +196,7 @@ function design following tidyverse conventions.
 3. PREFER `rlang::abort()` or `cli::cli_abort()` over `stop()` for error messages.
    `cli::cli_abort()` supports rich formatting: `cli::cli_abort("Bad value {.val {x}}")`.
 4. PREFER `cli::cli_alert_info()` for informational messages.
-5. NEVER use `return()` explicitly at the end of a function — R returns the
+5. NEVER use `return()` explicitly at the end of a function: R returns the
    last expression by default. Only use `return()` for early exits.
 6. ALWAYS run `devtools::document()` after modifying roxygen comments.
 7. Follow the R Packages book style: https://r-pkgs.org

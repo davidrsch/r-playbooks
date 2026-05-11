@@ -1,4 +1,4 @@
----
+﻿---
 name: r-targets-crew
 version: 1.0.0
 context-mode: Fork
@@ -134,7 +134,7 @@ steps:
          - Any `future::plan(multisession)` or similar.
       2. Remove or comment out:
          - `library(future)` and `library(future.callr)`
-         - `tar_option_set(backends = ...)` — replaced by crew controller.
+         - `tar_option_set(backends = ...)`: replaced by crew controller.
       3. The crew controller from the previous step already handles parallel execution.
          No further changes needed.
       4. Clean up the targets store from old future artifacts:

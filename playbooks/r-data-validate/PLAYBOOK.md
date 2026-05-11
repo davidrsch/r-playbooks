@@ -1,8 +1,8 @@
----
+﻿---
 name: r-data-validate
 version: 1.0.0
 context-mode: Fork
-description: Validate data quality with pointblank/validate — schema checks, value ranges, completeness, uniqueness
+description: Validate data quality with pointblank/validate: schema checks, value ranges, completeness, uniqueness
 trigger: both
 trigger-patterns:
   - "validate data *"
@@ -270,11 +270,11 @@ or validate frameworks to ensure data meets quality standards.
 ## Rules
 
 1. ALWAYS profile the data FIRST before writing validation rules.
-2. Generate checks for EVERY column — don't skip any.
+2. Generate checks for EVERY column: don't skip any.
 3. Use the appropriate framework:
    - `pointblank` for rich HTML/email reports and pipelines (preferred)
    - `validate` for rule-based validation in ETL/CI contexts
-4. Be specific about expected values — don't just check for "not NULL".
+4. Be specific about expected values: don't just check for "not NULL".
 5. Use `pointblank::draft_validation()` to get AI-assisted rule suggestions.
 6. Extract failed rows with `pointblank::get_sundered_data()` for remediation.
 7. Store reusable rules as YAML config for repeatable CI validation.
@@ -283,7 +283,7 @@ or validate frameworks to ensure data meets quality standards.
    - Which column/rule failed
    - How many rows are affected
    - What the expected range/value is
-10. NEVER assume a column's type — verify it.
+10. NEVER assume a column's type: verify it.
 11. For date columns, always check chronological consistency.
 12. For ID columns, always check uniqueness.
 13. The validation script should be reproducible and re-runnable.

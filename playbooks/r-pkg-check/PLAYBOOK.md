@@ -1,8 +1,8 @@
----
+﻿---
 name: r-pkg-check
 version: 1.0.0
 context-mode: Fork
-description: Run R CMD check and auto-remediate issues — the universal quality gate
+description: Run R CMD check and auto-remediate issues: the universal quality gate
 trigger: both
 trigger-patterns:
   - "check package *"
@@ -40,8 +40,8 @@ steps:
 
       1. Check if the working directory is an R package (has DESCRIPTION).
          If not, abort and tell the user to navigate to a package directory.
-      2. Run: `git status --porcelain` — warn if there are uncommitted changes.
-      3. Run: `renv::status()` if renv is in use — warn if lockfile is out of sync.
+      2. Run: `git status --porcelain`: warn if there are uncommitted changes.
+      3. Run: `renv::status()` if renv is in use: warn if lockfile is out of sync.
       4. If pak is used, verify lockfile: `pak::lockfile_verify()` or check that
          `pkg.lock` is in sync with DESCRIPTION.
       5. Read the DESCRIPTION to identify the package name and version.
@@ -79,12 +79,12 @@ steps:
     inline-prompt: |
       Run the full test suite:
 
-      1. Run: `devtools::test()` — capture all test results.
+      1. Run: `devtools::test()`: capture all test results.
       2. For CRAN-mode testing, run key tests with:
          `testthat::test_file("tests/testthat/test-<name>.R", cran = TRUE)`
       3. If any tests fail, list each failure with file, line, and message.
       4. IMPORTANT: Do NOT auto-modify test expectations. Auto-fix is for
-         style and infrastructure only — never change test assertions.
+         style and infrastructure only: never change test assertions.
          Report test failures for manual review.
       5. Report: number of tests, passed, failed, skipped, warnings.
 
@@ -208,6 +208,6 @@ comprehensive checks on an R package and produce actionable reports.
 8. Never modify `.Rbuildignore` to mask check failures.
 9. Use `here::here()` for paths; never `setwd()`.
 10. If renv is in use, always report the renv status.
-11. Be specific in error messages — cite exact file paths and line numbers.
+11. Be specific in error messages: cite exact file paths and line numbers.
 12. Step execution order is: document → lint → test → coverage → check → extra-checks → summary.
 13. As an optional final step, run `rhub::check_for_cran()` for CRAN readiness validation.

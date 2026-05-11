@@ -1,4 +1,4 @@
----
+﻿---
 name: r-targets-add-target
 version: 1.0.0
 context-mode: Fork
@@ -191,12 +191,12 @@ to define dependency-driven computation graphs.
 2. Target names must be snake_case and unique within the pipeline.
 3. Every target function must be in `R/functions/<domain>.R`.
 4. Use `tar_source()` to load functions in `_targets.R`.
-5. Never use `source()` in target commands — use `tar_source()` before the list.
+5. Never use `source()` in target commands: use `tar_source()` before the list.
 6. Use `tar_manifest()` to validate the pipeline structure after changes.
 7. Use appropriate `format` for each target:
    - `"rds"` for most R objects (default)
    - `"file"` for targets that produce files (plots, reports)
    - `"parquet"` / `"fst"` for large tabular data
 8. Use `tar_option_set(seed = TRUE)` for reproducibility.
-9. Commands in targets are quoted expressions — use `!!` for tidy eval if needed.
+9. Commands in targets are quoted expressions: use `!!` for tidy eval if needed.
 10. Branch targets with `tarchetypes::tar_group_by()` for grouped operations.

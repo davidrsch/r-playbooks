@@ -1,4 +1,4 @@
----
+﻿---
 name: r-shiny-theme-bslib
 version: 1.0.0
 context-mode: Fork
@@ -171,7 +171,7 @@ steps:
       ## Modern page layouts (recommended)
       Choose the appropriate modern layout:
 
-      ### page_navbar() — Multi-page app with top nav
+      ### page_navbar(): Multi-page app with top nav
       ```r
       library(bslib)
       library(shiny)
@@ -210,7 +210,7 @@ steps:
       )
       ```
 
-      ### page_sidebar() — Dashboard with sidebar
+      ### page_sidebar(): Dashboard with sidebar
       ```r
       ui <- page_sidebar(
         theme = my_theme,
@@ -314,8 +314,8 @@ steps:
       ## Considerations:
       1. Use `bs_add_rules()` for CSS overrides that don't map to Bootstrap variables.
       2. Use `bs_add_variables()` for Bootstrap-specific Sass variables.
-      3. Keep custom rules minimal — prefer Bootstrap utilities and variables.
-      4. Test dark mode with custom rules — use data attribute selectors:
+      3. Keep custom rules minimal: prefer Bootstrap utilities and variables.
+      4. Test dark mode with custom rules: use data attribute selectors:
          ```css
          [data-bs-theme="dark"] .custom-class { ... }
          ```
@@ -414,18 +414,18 @@ with Bootstrap 5, Sass customization, and Bootswatch presets.
 
 ## Rules
 
-1. ALWAYS use `bs_theme(version = 5)` — Bootstrap 5 is the current standard.
+1. ALWAYS use `bs_theme(version = 5)`: Bootstrap 5 is the current standard.
 2. ALWAYS use `page_navbar()` or `page_sidebar()` for new apps instead of `fluidPage()`.
 3. ALWAYS use `value_box()` for KPI/metric cards instead of `shinydashboard::valueBox()`.
 4. ALWAYS use `card()` and `card_header()` instead of `shinydashboard::box()`.
 5. ALWAYS add `input_dark_mode()` when dark mode support is needed.
-6. ALWAYS use `font_google()` for heading/code fonts — it auto-handles Google Fonts imports.
+6. ALWAYS use `font_google()` for heading/code fonts: it auto-handles Google Fonts imports.
 7. ALWAYS use `bs_add_rules()` for custom CSS, not inline `tags$style()`.
 8. ALWAYS use `bs_add_variables()` for Bootstrap Sass variable overrides.
 9. ALWAYS run `bs_themer()` to interactively tune the theme before finalizing.
-10. PREFER `preset = "shiny"` (the bslib default) for general apps — it's already polished.
+10. PREFER `preset = "shiny"` (the bslib default) for general apps: it's already polished.
 11. USE Bootswatch presets for quick alternative looks without custom CSS.
-12. NEVER use `shinythemes` alongside bslib — bslib replaces it entirely.
-13. ALWAYS test dark mode with all custom rules — CSS must use `[data-bs-theme="dark"]` selectors.
+12. NEVER use `shinythemes` alongside bslib: bslib replaces it entirely.
+13. ALWAYS test dark mode with all custom rules: CSS must use `[data-bs-theme="dark"]` selectors.
 14. ALWAYS verify Google Fonts load correctly (internet required at render time).
 15. PREFER `layout_column_wrap()` over `fluidRow()` + `column()` for responsive grids.

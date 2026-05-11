@@ -1,4 +1,4 @@
-project:
+﻿project:
   type: website
   output-dir: docs
   render:
@@ -19,7 +19,7 @@ website:
         icon: github
 
   page-footer:
-    left: "R Playbooks — curated AI coding playbooks for R development"
+    left: "R Playbooks: curated AI coding playbooks for R development"
     right: "Built with [Quarto](https://quarto.org/)"
 
 format:

@@ -1,8 +1,8 @@
----
+﻿---
 name: r-refactor
 version: 1.0.0
 context-mode: Fork
-description: Safe refactoring with a test safety net — snapshot current behavior, refactor, verify nothing breaks
+description: Safe refactoring with a test safety net: snapshot current behavior, refactor, verify nothing breaks
 trigger: both
 trigger-patterns:
   - "refactor *"
@@ -111,8 +111,8 @@ steps:
          - Remove dead code
          - Introduce parameter object
          - Replace loop with vectorized operation
-      3. **Order of operations** — what to do first, second, etc.
-      4. **Risk assessment** — which changes are low-risk vs. high-risk
+      3. **Order of operations**: what to do first, second, etc.
+      4. **Risk assessment**: which changes are low-risk vs. high-risk
 
       Report the refactoring plan with estimated impact.
     gate: Confirm
@@ -129,21 +129,21 @@ steps:
       1. Make the change
       2. Run tests: `devtools::test()` (or targeted tests)
       3. If any test fails:
-         - If it's a snapshot test: the behavior changed — REVERT and reconsider
+         - If it's a snapshot test: the behavior changed: REVERT and reconsider
          - If it's a regular test: fix the refactored code, not the test
          - If you can't fix within 1 minute, REVERT the last change
       4. If all tests pass, move to the next step.
 
       Report progress after each step:
       ```
-      ✅ Step 1: <description> — Tests: PASS
-      ✅ Step 2: <description> — Tests: PASS
+      ✅ Step 1: <description>: Tests: PASS
+      ✅ Step 2: <description>: Tests: PASS
       ...
       ```
 
       After all steps:
       - Run: `devtools::document()` if any roxygen comments changed
-      - Run: `devtools::test()` — full suite
+      - Run: `devtools::test()`: full suite
       - Run: `lintr::lint_package()` to check style didn't regress
 
       If at any point you're unsure, STOP and ask for guidance.
@@ -199,7 +199,7 @@ without changing external behavior, protected by a test safety net.
 ## Refactoring Rules
 
 1. **NEVER CHANGE BEHAVIOR**: Refactoring changes structure, NOT output.
-   If a snapshot test fails, you changed behavior — REVERT.
+   If a snapshot test fails, you changed behavior: REVERT.
 2. **SMALL STEPS**: Make one change at a time, test, then proceed.
 3. **TEST AFTER EVERY CHANGE**: Run tests after each micro-change.
 4. **REVERT ON FAILURE**: If tests break and you can't fix in 1 minute, revert.
@@ -217,4 +217,4 @@ without changing external behavior, protected by a test safety net.
 - `stopifnot()` / `rlang::arg_match()` for argument validation.
 - `with()` / `within()` for repeated data.frame column access.
 - `Recall()` for recursive functions (instead of repeating the function name).
-- Avoid `attach()` / `detach()` — use `with()` or explicit references.
+- Avoid `attach()` / `detach()`: use `with()` or explicit references.

@@ -183,6 +183,7 @@
   cursor: pointer;
   transition: background 0.15s;
   color: var(--bs-body-color);
+  text-decoration: none;
 }
 .badge-link:hover {
   background: var(--bs-tertiary-bg);

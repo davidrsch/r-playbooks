@@ -1,8 +1,8 @@
----
+﻿---
 name: r-tdd-bugfix
 version: 1.0.0
 context-mode: Fork
-description: TDD bugfix workflow — reproduce the bug with a failing test, fix it, verify no regression
+description: TDD bugfix workflow: reproduce the bug with a failing test, fix it, verify no regression
 trigger: both
 trigger-patterns:
   - "fix bug *"
@@ -70,13 +70,13 @@ steps:
          })
          ```
       2. Run: `devtools::test(filter = "{{params.function}}")`
-      3. The test MUST FAIL — this confirms the bug exists.
+      3. The test MUST FAIL: this confirms the bug exists.
       4. If the test PASSES, either:
          - The bug is already fixed (check git log)
          - The reproduction is wrong (re-examine the bug)
       5. Report:
          ```
-         🔴 REPRODUCTION TEST — FAILING (confirms bug):
+         🔴 REPRODUCTION TEST: FAILING (confirms bug):
          Test name: <test name>
          Expected: <expected output>
          Actual: <actual output>
@@ -93,10 +93,10 @@ steps:
       Bug analysis: {{state.bug_analysis}}
 
       1. Implement the MINIMUM change to fix the bug.
-      2. Do NOT refactor, optimize, or add features — just fix.
+      2. Do NOT refactor, optimize, or add features: just fix.
       3. Run: `devtools::test(filter = "{{params.function}}")`
       4. The reproduction test MUST now pass.
-      5. Run ALL tests: `devtools::test()` — ensure no regressions.
+      5. Run ALL tests: `devtools::test()`: ensure no regressions.
       6. Report:
          ```
          🟢 FIX APPLIED:

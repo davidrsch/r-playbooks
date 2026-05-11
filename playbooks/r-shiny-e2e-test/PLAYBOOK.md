@@ -1,8 +1,8 @@
----
+﻿---
 name: r-shiny-e2e-test
 version: 1.0.0
 context-mode: Fork
-description: Add end-to-end tests for a Shiny app — shinytest2 for R-native testing or Cypress for JS-based testing
+description: Add end-to-end tests for a Shiny app: shinytest2 for R-native testing or Cypress for JS-based testing
 trigger: auto
 trigger-patterns:
   - "e2e test *"
@@ -144,9 +144,9 @@ steps:
       ### Selector Best Practices
 
       - ✅ Use `data-cy` or `data-testid` attributes: `cy.get('[data-cy="submit-btn"]')`
-      - ❌ CSS IDs: `cy.get('#submit')` — IDs change with UI refactors
-      - ❌ CSS classes: `cy.get('.btn-primary')` — classes are for styling
-      - ❌ XPath or complex DOM traversal — fragile to DOM changes
+      - ❌ CSS IDs: `cy.get('#submit')`: IDs change with UI refactors
+      - ❌ CSS classes: `cy.get('.btn-primary')`: classes are for styling
+      - ❌ XPath or complex DOM traversal: fragile to DOM changes
 
       To add `data-cy` attributes in Shiny:
       ```r
@@ -167,7 +167,7 @@ steps:
       })
       ```
 
-      NEVER let E2E tests hit live external APIs — they become flaky and non-deterministic.
+      NEVER let E2E tests hit live external APIs: they become flaky and non-deterministic.
     output: recorded-tests
     gate: Review
   - id: run-tests
@@ -193,7 +193,7 @@ steps:
       ```
 
       Interpret results:
-      - shinytest2: snapshot comparison — new snapshots need review
+      - shinytest2: snapshot comparison: new snapshots need review
       - cypress: pass/fail assertions with screenshots on failure
 
       If shinytest2 tests show snapshot differences:
@@ -205,7 +205,7 @@ steps:
       testthat::snapshot_accept("test-name")
       ```
 
-      NEVER blindly accept all snapshots — review each one.
+      NEVER blindly accept all snapshots: review each one.
     output: test-results
   - id: add-ci-config
     requires:
@@ -290,7 +290,7 @@ You are an expert in end-to-end testing for R Shiny applications. Use `shinytest
 ### Anti-patterns
 
 - ❌ Testing implementation details (test user-visible behavior)
-- ❌ Hardcoded wait times (`cy.wait(5000)`) — flaky and slow
+- ❌ Hardcoded wait times (`cy.wait(5000)`): flaky and slow
 - ✅ Wait for DOM state: `cy.get('[data-cy="spinner"]').should('not.exist')`
 - ✅ Wait for network: `cy.intercept('POST', '/api/*').as('apiCall'); cy.wait('@apiCall')`
 - ❌ Blindly accepting all snapshot changes

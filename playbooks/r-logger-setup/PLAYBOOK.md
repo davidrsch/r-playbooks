@@ -1,4 +1,4 @@
----
+﻿---
 name: r-logger-setup
 version: 1.0.0
 context-mode: Fork
@@ -55,7 +55,7 @@ steps:
          This produces structured JSON output with fields: level, time, msg, ns, and any custom fields
          Compatible with ELK stack, Grafana Loki, Datadog, OpenTelemetry collectors
       3. For colored format (`colored`): use `logger::log_layout(logger::layout_glue_colors)`
-         Best for local development — color-coded by severity
+         Best for local development: color-coded by severity
       4. For plain format (`plain`): use `logger::log_layout(logger::layout_glue)`
          Best for CI logs or file output
 
@@ -165,13 +165,13 @@ application type.
 
 ## Rules
 
-1. ALWAYS log in JSON for production — enables log aggregation and search.
-2. Include correlation IDs — session_id, request_id, pipeline_run_id.
-3. Log meaningful context — user_id, input sizes, operation duration.
-4. NEVER log secrets — filter out passwords, tokens, API keys.
-5. Use log sampling for high-volume paths — `runif(1) <= rate` pattern.
-6. Log at boundaries — application entry/exit, external service calls, error handlers.
-7. Log pipeline progress in targets — target start/completion/failure.
+1. ALWAYS log in JSON for production: enables log aggregation and search.
+2. Include correlation IDs: session_id, request_id, pipeline_run_id.
+3. Log meaningful context: user_id, input sizes, operation duration.
+4. NEVER log secrets: filter out passwords, tokens, API keys.
+5. Use log sampling for high-volume paths: `runif(1) <= rate` pattern.
+6. Log at boundaries: application entry/exit, external service calls, error handlers.
+7. Log pipeline progress in targets: target start/completion/failure.
 8. JSON logs can be ingested directly by ELK, Grafana Loki, Datadog.
 9. Use `logger::layout_json()` for structured output.
 10. Include `ns` (namespace) field for log source identification.

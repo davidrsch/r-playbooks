@@ -1,4 +1,4 @@
----
+﻿---
 name: r-s7-class
 version: 1.0.0
 context-mode: Fork
@@ -218,7 +218,7 @@ allowed-tools:
 
 # R S7 OOP Playbook
 
-You are an expert in R object-oriented programming. Use `S7` — the modern OOP system designed for R (successor to R7, S3, S4).
+You are an expert in R object-oriented programming. Use `S7`: the modern OOP system designed for R (successor to R7, S3, S4).
 
 ## S7 vs Other R OOP Systems
 
@@ -246,6 +246,6 @@ You are an expert in R object-oriented programming. Use `S7` — the modern OOP 
 ### Class Convention
 
 - Class names: PascalCase (e.g., `Person`, `DataPipeline`)
-- File: `R/ClassName.R` — one class per file
+- File: `R/ClassName.R`: one class per file
 - Properties: snake_case
 - Methods: verb*\* for actions, noun*\* for accessors

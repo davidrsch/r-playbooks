@@ -1,8 +1,8 @@
----
+﻿---
 name: r-code-review
 version: 1.0.0
 context-mode: Fork
-description: Perform a structured code review for R code — check style, correctness, safety, performance, and documentation
+description: Perform a structured code review for R code: check style, correctness, safety, performance, and documentation
 trigger: both
 trigger-patterns:
   - "review * code"
@@ -76,7 +76,7 @@ steps:
       16. Use double quotes `"..."` for character strings (consistent within project).
       17. Use `TRUE`/`FALSE`, never `T`/`F`.
       18. Use `seq_along(x)` or `seq_len(n)`, never `1:length(x)` or `1:nrow(df)`.
-      19. No commented-out code blocks — remove them.
+      19. No commented-out code blocks: remove them.
 
       Report each violation with:
       - Line number
@@ -151,12 +151,12 @@ steps:
       Scope: {{params.scope}}
 
       **Code execution risks (CRITICAL):**
-      1. `eval(parse(text = ...))` — arbitrary code execution. Flag as BLOCKER.
-      2. `eval()` with any user-controllable input — BLOCKER.
-      3. `source()` with user-provided paths — BLOCKER.
-      4. `system()` or `system2()` with user-controllable arguments — BLOCKER.
+      1. `eval(parse(text = ...))`: arbitrary code execution. Flag as BLOCKER.
+      2. `eval()` with any user-controllable input: BLOCKER.
+      3. `source()` with user-provided paths: BLOCKER.
+      4. `system()` or `system2()` with user-controllable arguments: BLOCKER.
          If used with hardcoded commands, flag as CRITICAL and verify the command.
-      5. `shell()` on Windows with user input — BLOCKER.
+      5. `shell()` on Windows with user input: BLOCKER.
 
       **Secret management (CRITICAL):**
       6. Hardcoded API keys, tokens, passwords, or credentials in source code.
@@ -166,23 +166,23 @@ steps:
          `Sys.getenv("API_KEY")` without checking for `""`.
 
       **State and side effects (MAJOR):**
-      8. `<<-` (superassignment) — modifies parent environment. Flag as MAJOR.
+      8. `<<-` (superassignment): modifies parent environment. Flag as MAJOR.
          If present, check if it's justified and documented.
-      9. `assign()` with `envir = .GlobalEnv` — modifies global state. MAJOR.
-      10. `setwd()` — changes working directory globally. MAJOR.
+      9. `assign()` with `envir = .GlobalEnv`: modifies global state. MAJOR.
+      10. `setwd()`: changes working directory globally. MAJOR.
           Should use `withr::with_dir()` or `here::here()` instead.
-      11. `rm(list = ls())` — destroys user workspace. BLOCKER in any shared code.
+      11. `rm(list = ls())`: destroys user workspace. BLOCKER in any shared code.
       12. `options()` modified without restoring previous values.
           Should use `withr::with_options()`.
-      13. `par()` modified without restoring — use `withr::with_par()`.
+      13. `par()` modified without restoring: use `withr::with_par()`.
       14. `on.exit()` used correctly to restore state? Check for missing cleanup.
 
       **Package installation (MAJOR):**
-      15. `install.packages()` in scripts or .Rprofile — should use renv or DESCRIPTION.
-      16. `devtools::install_github()` without version pinning — reproducibility risk.
+      15. `install.packages()` in scripts or .Rprofile: should use renv or DESCRIPTION.
+      16. `devtools::install_github()` without version pinning: reproducibility risk.
 
       **File system safety (MINOR/MAJOR):**
-      17. Hardcoded absolute file paths — should use `here::here()` or relative paths.
+      17. Hardcoded absolute file paths: should use `here::here()` or relative paths.
       18. File reads/writes without path validation (directory traversal).
       19. Temporary files: used `tempfile()` instead of hardcoded /tmp paths?
 
@@ -218,14 +218,14 @@ steps:
          Use `dplyr::mutate()` with vectorized functions instead of `rowwise()`.
 
       **Data structures (MINOR/MAJOR):**
-      4. `rbind()` in a loop — exponential slowdown. Collect in list, `do.call(rbind, ...)` once.
-      5. `cbind()` in a loop — same issue.
+      4. `rbind()` in a loop: exponential slowdown. Collect in list, `do.call(rbind, ...)` once.
+      5. `cbind()` in a loop: same issue.
       6. Using `data.frame()` where `data.table` or `tibble` would be faster for large data.
       7. StringsAsFactors not set consistently.
 
       **Unnecessary computation (MINOR):**
-      8. Repeated computation in loops — hoist invariant calculations outside.
-      9. `unique()` called multiple times on same data — cache the result.
+      8. Repeated computation in loops: hoist invariant calculations outside.
+      9. `unique()` called multiple times on same data: cache the result.
       10. Redundant type conversions: `as.data.frame(as.matrix(df))`.
 
       **Memory (MAJOR):**
@@ -236,7 +236,7 @@ steps:
           df2 <- df  # copy
           ```
           Use `data.table` for in-place modification if data is large.
-      12. Keeping intermediate results that aren't needed — clean up large objects.
+      12. Keeping intermediate results that aren't needed: clean up large objects.
       13. Loading entire dataset when only a subset is needed.
 
       **Package choices:**
@@ -266,7 +266,7 @@ steps:
 
       **Summary structure:**
 
-      1. **Overall assessment** — 1-2 sentences: Is this code ready? What's the biggest concern?
+      1. **Overall assessment**: 1-2 sentences: Is this code ready? What's the biggest concern?
 
       2. **Issue count by severity:**
          | Severity   | Count | Category breakdown               |
@@ -304,12 +304,12 @@ steps:
          - Are there tests for all exported functions?
 
       8. **Recommendation:**
-         - APPROVE — code is ready to merge
-         - APPROVE WITH COMMENTS — minor issues only, can fix later
-         - REQUEST CHANGES — major issues need fixing
-         - BLOCK — blocker issues must be addressed first
+         - APPROVE: code is ready to merge
+         - APPROVE WITH COMMENTS: minor issues only, can fix later
+         - REQUEST CHANGES: major issues need fixing
+         - BLOCK: blocker issues must be addressed first
 
-      9. **Action items** — concrete list of what to do, ordered by priority.
+      9. **Action items**: concrete list of what to do, ordered by priority.
     gate: Approve
     output: review_summary
 
@@ -333,13 +333,13 @@ performance with pragmatic, actionable feedback.
 
 ## Review Philosophy
 
-A code review is not a style enforcement exercise — it's a collaborative
+A code review is not a style enforcement exercise: it's a collaborative
 quality improvement process. Focus on what matters:
 
-1. **Does the code work correctly?** — Correctness first.
-2. **Is it safe?** — Security and reproducibility.
-3. **Is it maintainable?** — Readability, naming, structure.
-4. **Is it fast enough?** — Performance only where it matters.
+1. **Does the code work correctly?**: Correctness first.
+2. **Is it safe?**: Security and reproducibility.
+3. **Is it maintainable?**: Readability, naming, structure.
+4. **Is it fast enough?**: Performance only where it matters.
 
 ## Tidyverse Style Guide Checklist
 
@@ -352,7 +352,7 @@ Reference: https://style.tidyverse.org
 - [ ] 2-space indentation, 80-char line limit
 - [ ] `{` on same line, `}` on own line
 - [ ] `seq_along()` / `seq_len()` instead of `1:length(x)`
-- [ ] Double quotes for strings (or single — be consistent)
+- [ ] Double quotes for strings (or single: be consistent)
 - [ ] No commented-out code
 
 ## Common R Anti-Patterns
@@ -384,17 +384,17 @@ Always flag as BLOCKER:
 - Vectorization over explicit loops
 - `data.table` or `collapse` for large data (> 1M rows)
 - Avoid unnecessary copies of large objects
-- Profile before optimizing — don't guess
+- Profile before optimizing: don't guess
 
 ## Review Rubric
 
 | Level    | Meaning                                      | Action           |
 | -------- | -------------------------------------------- | ---------------- |
-| Blocker  | Must not merge — security, data loss, crash  | Fix now          |
-| Critical | Must fix before release — incorrect behavior | Fix before merge |
-| Major    | Should fix — maintainability, edge cases     | Fix in this PR   |
-| Minor    | Nice to fix — style, minor perf              | Fix or add TODO  |
-| Nitpick  | Optional — personal preference               | Consider         |
+| Blocker  | Must not merge: security, data loss, crash  | Fix now          |
+| Critical | Must fix before release: incorrect behavior | Fix before merge |
+| Major    | Should fix: maintainability, edge cases     | Fix in this PR   |
+| Minor    | Nice to fix: style, minor perf              | Fix or add TODO  |
+| Nitpick  | Optional: personal preference               | Consider         |
 
 ALWAYS provide a suggested fix, not just criticism.
 ALWAYS explain WHY something is a problem, not just that it breaks a rule.

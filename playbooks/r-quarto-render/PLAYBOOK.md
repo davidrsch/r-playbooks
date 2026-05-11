@@ -1,4 +1,4 @@
----
+﻿---
 name: r-quarto-render
 version: 1.0.0
 context-mode: Fork
@@ -112,7 +112,7 @@ steps:
 
       1. Verify output file(s) exist and have non-zero size.
       2. Check for common rendering issues:
-         - "??" in cross-references (unresolved) — use `grep -rn '??' <output_dir>` to find
+         - "??" in cross-references (unresolved): use `grep -rn '??' <output_dir>` to find
          - Missing figures or images
          - Overflow boxes (tables/code extending beyond page width)
          - Broken links (if HTML output)
@@ -172,7 +172,7 @@ optimize Quarto documents for production.
 ## Rules
 
 1. ALWAYS detect the project structure before rendering.
-2. Validate parameters before executing — Quarto errors are cryptic.
+2. Validate parameters before executing: Quarto errors are cryptic.
 3. NEVER modify .qmd files without user confirmation (gate: Confirm/Review).
 4. If rendering fails, diagnose the root cause precisely.
 5. Check for `renv` before installing missing packages.

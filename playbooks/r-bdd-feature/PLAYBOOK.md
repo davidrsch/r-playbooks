@@ -1,8 +1,8 @@
----
+﻿---
 name: r-bdd-feature
 version: 1.0.0
 context-mode: Fork
-description: BDD (Behavior-Driven Development) — define a feature with Gherkin scenarios, then implement with testthat
+description: BDD (Behavior-Driven Development): define a feature with Gherkin scenarios, then implement with testthat
 trigger: manual
 argument-hint: "--feature <description> [--gherkin true|false]"
 parameters:
@@ -129,7 +129,7 @@ steps:
          - Logic for "Then" assertions to pass
       6. Report for each scenario:
          ```
-         ✅ Scenario: <name> — PASSING
+         ✅ Scenario: <name>: PASSING
             Implementation: <what was added/modified>
          ```
       7. Final report: M/N scenarios passing.
@@ -149,9 +149,9 @@ steps:
       1. Re-read the feature specification: {{state.feature_spec}}
       2. For each acceptance criterion, confirm it is implemented and tested.
       3. Run full quality checks:
-         - `devtools::test()` — all tests
-         - `devtools::check(args = c("--as-cran", "--no-manual"))` — R CMD check
-         - `lintr::lint_package()` — style (if configured)
+         - `devtools::test()`: all tests
+         - `devtools::check(args = c("--as-cran", "--no-manual"))`: R CMD check
+         - `lintr::lint_package()`: style (if configured)
       4. Generate acceptance report:
          ```
          ✅ FEATURE ACCEPTANCE REPORT:

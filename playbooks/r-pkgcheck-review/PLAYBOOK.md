@@ -1,8 +1,8 @@
----
+﻿---
 name: r-pkgcheck-review
 version: 1.0.0
 context-mode: Fork
-description: Run rOpenSci automated package checks with pkgcheck — comprehensive pre-submission validation including goodpractice, R CMD check, and pkgstats
+description: Run rOpenSci automated package checks with pkgcheck: comprehensive pre-submission validation including goodpractice, R CMD check, and pkgstats
 trigger: both
 trigger-patterns:
   - "pkgcheck *"
@@ -57,7 +57,7 @@ steps:
 
       2. Run: `pkgcheck::pkgcheck()` and capture the full output object.
 
-      3. The pkgcheck object contains these key sections — extract each:
+      3. The pkgcheck object contains these key sections: extract each:
          - **info**: Package metadata (name, version, license, authors)
          - **checks**: List of all checks run, each with a result
          - **goodpractice**: GP check results (if enabled/available)
@@ -76,7 +76,7 @@ steps:
          saveRDS(pkgcheck_results, "pkgcheck-results.rds")
          ```
 
-      Do NOT attempt to fix anything in this step — only capture and report.
+      Do NOT attempt to fix anything in this step: only capture and report.
     gate: Review
     output: check_output
 
@@ -91,18 +91,18 @@ steps:
          - Run: `pkgcheck::pkgcheck()` again and check the "Ready to Submit" indicator
          - OR check the `summary` element of the saved results for the readiness flag
 
-      1. Check for `@return` vs `@returns` in roxygen documentation — prefer `@returns` (newer convention).
+      1. Check for `@return` vs `@returns` in roxygen documentation: prefer `@returns` (newer convention).
 
       2. Categorize every issue by severity:
 
-         **CRITICAL (BLOCKER) — must fix before submission:**
+         **CRITICAL (BLOCKER): must fix before submission:**
          - Missing required fields in DESCRIPTION (Authors@R, License, Title, Description)
          - Undeclared package dependencies (Imports/Suggests missing)
          - Non-standard license
          - R CMD check errors
          - Missing ORCID for authors
 
-         **IMPORTANT — should fix:**
+         **IMPORTANT: should fix:**
          - goodpractice violations:
            - Long function code (T/F lintr: undesirable_function_linter)
            - Missing or incomplete documentation
@@ -113,7 +113,7 @@ steps:
          - srr (Software Review Roclets) issues if this is statistical software
          - Missing examples in documentation
 
-         **MINOR — can defer:**
+         **MINOR: can defer:**
          - R CMD check notes
          - Style inconsistencies (not covered by goodpractice)
          - Suggested best practices that are not mandatory
@@ -138,7 +138,7 @@ steps:
 
       Auto-fix mode: {{params.auto-fix}}
 
-      **CRITICAL issues — fix immediately (with or without auto-fix):**
+      **CRITICAL issues: fix immediately (with or without auto-fix):**
 
       1. Create or update the `.lintr` config: run `usethis::use_lintr()` if no `.lintr` exists.
 
@@ -159,7 +159,7 @@ steps:
          - Fix code errors: correct the R code
          - Re-run: `devtools::check(args = c("--no-manual"))` to verify
 
-      **IMPORTANT issues — fix if auto-fix is enabled:**
+      **IMPORTANT issues: fix if auto-fix is enabled:**
 
       4. goodpractice violations:
          - Long functions: refactor into smaller helper functions
@@ -187,7 +187,7 @@ steps:
     inline-prompt: |
       Re-run pkgcheck to confirm all issues are resolved:
 
-      1. Run a fresh `pkgcheck::pkgcheck()` — do NOT use cached results.
+      1. Run a fresh `pkgcheck::pkgcheck()`: do NOT use cached results.
 
       2. Compare with the original results from the analyze-results step:
          Original: {{state.analysis}}
@@ -241,14 +241,14 @@ rOpenSci pre-submission review process locally.
 
 pkgcheck is the primary automated review tool used by rOpenSci. It runs:
 
-- **goodpractice** — Code quality checks: code style, function complexity,
+- **goodpractice**: Code quality checks: code style, function complexity,
   test coverage, naming conventions, best practices for R packages
-- **R CMD check** — Standard CRAN checks with `--as-cran` strictness:
+- **R CMD check**: Standard CRAN checks with `--as-cran` strictness:
   package structure, documentation completeness, examples that run,
   NAMESPACE correctness, dependency declarations
-- **pkgstats** — Package statistics: number of functions, files, lines of code,
+- **pkgstats**: Package statistics: number of functions, files, lines of code,
   dependency analysis, exported vs internal function ratio
-- **srr** — Software Review Roclets: standards compliance for statistical
+- **srr**: Software Review Roclets: standards compliance for statistical
   software packages (if applicable; checks that statistical methods are
   properly documented and tested)
 
@@ -316,5 +316,5 @@ rOpenSci standards before human review.
 5. Recheck until "Ready to Submit"
 
 ALWAYS prioritize CRITICAL over IMPORTANT over MINOR issues.
-NEVER modify package logic during auto-fix — only fix infrastructure
+NEVER modify package logic during auto-fix: only fix infrastructure
 (dependencies, documentation, style, license).

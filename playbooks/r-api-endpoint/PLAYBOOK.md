@@ -1,4 +1,4 @@
----
+﻿---
 name: r-api-endpoint
 version: 1.0.0
 context-mode: Fork
@@ -107,7 +107,7 @@ steps:
       function(req, res, param1, param2 = "default") {
         log_info("Request received", path = "{{params.path}}")
 
-        # Input validation — MANDATORY on every endpoint
+        # Input validation: MANDATORY on every endpoint
         # schema <- json_validator(schema = "validation_schema.json")
         # if (!schema(req$postBody)) { ... }
 
@@ -207,16 +207,16 @@ and serialization.
    use JSON schema validation via `jsonvalidate` or `pointblank`.
 4. Use structured logging with `logger::log_info()`, `logger::log_error()`,
    and `logger::log_warn()` at entry and exit of each endpoint.
-5. Return structured lists, not data.frames — they serialize more predictably.
+5. Return structured lists, not data.frames: they serialize more predictably.
 6. For JSON responses, use `@serializer unboxedJSON list` to avoid array
    wrapping of single-element lists. For CSV, use `@serializer csv`.
    For HTML, use `@serializer html`. For images, use `@serializer png` or `@serializer pdf`.
 7. For dynamic paths (`/items/<id>`), use `<id>` in the path annotation.
 8. Route files should group related endpoints under the same resource.
-9. NEVER do heavy computation in the endpoint handler — delegate to
+9. NEVER do heavy computation in the endpoint handler: delegate to
    helper functions imported via `box::use()` from `R/utils.R` or `R/services/`.
 10. Register new route files in `plumber.R` with `pr("R/routes/file.R")`.
 11. Plumber2 auto-traces all requests. For production, set `OTEL_SERVICE_NAME`
     and `OTEL_EXPORTER_OTLP_ENDPOINT` env vars for distributed tracing.
-12. Handle CORS if the API is called from browser clients — set appropriate
+12. Handle CORS if the API is called from browser clients: set appropriate
     response headers via `res$setHeader()`.

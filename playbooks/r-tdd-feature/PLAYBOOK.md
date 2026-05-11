@@ -1,4 +1,4 @@
----
+﻿---
 name: r-tdd-feature
 version: 1.0.0
 context-mode: Fork
@@ -57,7 +57,7 @@ steps:
   - id: red-phase
     requires: [understand-requirement]
     inline-prompt: |
-      🔴 RED PHASE — Write a FAILING test.
+      🔴 RED PHASE: Write a FAILING test.
 
       Feature spec: {{state.spec}}
       Target function: {{params.function}}
@@ -65,13 +65,13 @@ steps:
       1. Create or locate the test file: `tests/testthat/test-{{params.function}}.R`
       2. Write ONE minimal test that captures the core requirement.
       3. The test MUST fail at this point (if the function doesn't exist yet,
-         it will fail with "could not find function" — that's expected).
+         it will fail with "could not find function": that's expected).
          If the function already exists, the test should fail because the
          new behavior isn't implemented yet.
       4. Run: `devtools::test(filter = "{{params.function}}")` to verify failure.
       5. Report:
          ```
-         🔴 RED — Test written and FAILING (expected):
+         🔴 RED: Test written and FAILING (expected):
          Test: <describe the test>
          Expected: <what should happen>
          Actual: <current behavior / error>
@@ -83,7 +83,7 @@ steps:
       - Test the WHAT, not the HOW
       - Follow existing package conventions for test style
 
-      If the test PASSES unexpectedly, stop and re-assess — the feature may
+      If the test PASSES unexpectedly, stop and re-assess: the feature may
       already be implemented, or the test isn't testing the right thing.
     gate: Review
     output: red_result
@@ -91,7 +91,7 @@ steps:
   - id: green-phase
     requires: [red-phase]
     inline-prompt: |
-      🟢 GREEN PHASE — Write the MINIMUM code to pass the test.
+      🟢 GREEN PHASE: Write the MINIMUM code to pass the test.
 
       Test that failed (from RED phase): {{state.red_result}}
       Feature spec: {{state.spec}}
@@ -99,11 +99,11 @@ steps:
       1. Implement the MINIMUM amount of code to make the test pass.
       2. Do NOT add features beyond what the test requires.
       3. Do NOT optimize, do NOT refactor, do NOT add documentation yet.
-      4. The code can be ugly — it just needs to pass.
+      4. The code can be ugly: it just needs to pass.
       5. Run: `devtools::test(filter = "{{params.function}}")` to verify pass.
       6. When the test passes, report:
          ```
-         🟢 GREEN — Test now PASSING:
+         🟢 GREEN: Test now PASSING:
          Changes made: <summary of what you changed/added>
          Lines added: <count>
          ```
@@ -117,7 +117,7 @@ steps:
   - id: refactor-phase
     requires: [green-phase]
     inline-prompt: |
-      🔵 REFACTOR PHASE — Improve the code without changing behavior.
+      🔵 REFACTOR PHASE: Improve the code without changing behavior.
 
       Current implementation (from GREEN phase): {{state.green_result}}
       Feature spec: {{state.spec}}
@@ -135,7 +135,7 @@ steps:
       5. If any test fails during refactoring, REVERT the last change.
       6. Report:
          ```
-         🔵 REFACTOR — Code improved:
+         🔵 REFACTOR: Code improved:
          Before: <key issues>
          After: <what changed and why>
          All tests: ✅ PASSING

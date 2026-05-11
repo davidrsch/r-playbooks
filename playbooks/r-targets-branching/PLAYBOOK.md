@@ -1,4 +1,4 @@
----
+﻿---
 name: r-targets-branching
 version: 1.0.0
 context-mode: Fork
@@ -208,7 +208,7 @@ knowledge of {tarchetypes} for branching patterns.
 1. ALWAYS load `library(tarchetypes)` in `_targets.R` when using any branching.
 2. ALWAYS use `tar_map()` for static branching (known parameter grid ahead of time).
 3. ALWAYS use `pattern = map()` for 1:1 dynamic branching, `pattern = cross()` for all combinations.
-4. ALWAYS use `tar_rep()` (or `tar_rep2()`) for Monte Carlo replication — NEVER write manual for-loops.
+4. ALWAYS use `tar_rep()` (or `tar_rep2()`) for Monte Carlo replication: NEVER write manual for-loops.
 5. PREFER static branching when parameter combinations are known and enumerable.
 6. USE dynamic branching when branches depend on upstream target output size.
 7. ALWAYS set `iteration = "list"` when a dynamically-branched target returns non-data-frame objects.
@@ -216,7 +216,7 @@ knowledge of {tarchetypes} for branching patterns.
 9. ALWAYS run `tar_manifest()` and `tar_visnetwork()` after modifying `_targets.R`.
 10. RECOMMEND crew parallel backend for large branching pipelines (see r-targets-crew playbook).
 11. PREFER `format = "qs"` for branched targets to improve serialization speed and reduce storage size.
-12. NEVER create targets with `tar_target_raw()` for branching — use the DSL.
+12. NEVER create targets with `tar_target_raw()` for branching: use the DSL.
 13. When using `tar_rep()`, set batches > 1 for resilience to worker failures.
-14. Use `tar_age()` to invalidate targets based on time thresholds (e.g., re-fetch data older than 24h) —
+14. Use `tar_age()` to invalidate targets based on time thresholds (e.g., re-fetch data older than 24h) ;
     ensures freshness without manual `tar_invalidate()`.

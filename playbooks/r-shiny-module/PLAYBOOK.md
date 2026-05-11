@@ -1,4 +1,4 @@
----
+﻿---
 name: r-shiny-module
 version: 1.0.0
 context-mode: Fork
@@ -63,8 +63,8 @@ steps:
 
       Design and report:
       1. **Module file**: `R/mod_{{params.name}}.R`
-      2. **UI function**: `mod_{{params.name}}_ui(id, ...)` — what it renders
-      3. **Server function**: `mod_{{params.name}}_server(id, ...)` — reactive logic
+      2. **UI function**: `mod_{{params.name}}_ui(id, ...)`: what it renders
+      3. **Server function**: `mod_{{params.name}}_server(id, ...)`: reactive logic
       4. **Inputs**: What UI inputs does the module provide?
       5. **Outputs**: What reactive outputs does it produce?
       6. **Parameters**: Additional arguments beyond `id` (e.g., data, config)
@@ -246,18 +246,18 @@ UI components following the Mastering Shiny module design patterns.
 
 ## Rules
 
-1. ALWAYS use `box::use()` for imports — never `source()` or `library()` in module files.
+1. ALWAYS use `box::use()` for imports: never `source()` or `library()` in module files.
 2. ALWAYS use `moduleServer(id, function(input, output, session) {...})`.
 3. ALWAYS use `ns <- NS(id)` in the UI function for input/output namespacing.
 4. Module UI functions return `tagList(...)` or a single tag, not `fluidPage()`.
    Prefer `{bslib}` components (card, value_box, navset_card_tab) over base Shiny UI
    for consistent theming.
 5. Module server functions return reactive values, NOT rendered outputs.
-6. NEVER use `<<-` in modules — use `reactiveValues()` or return values.
+6. NEVER use `<<-` in modules: use `reactiveValues()` or return values.
 7. Use `req()` to guard against missing/uninitialized inputs.
 8. Module file names: `mod_<name>.R` with UI and server in the same file.
 9. Export module functions with `@export` so golem can find them.
-10. Test modules with `testServer()` — it provides isolated server context.
+10. Test modules with `testServer()`: it provides isolated server context.
 11. Document module parameters with roxygen2 `@param` tags.
 12. Use `logger::log_info()` and `logger::log_error()` for structured logging within modules.
 13. For long-running operations in the server function, use `mirai::mirai()` for non-blocking

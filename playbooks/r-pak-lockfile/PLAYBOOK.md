@@ -1,4 +1,4 @@
----
+﻿---
 name: r-pak-lockfile
 version: 1.0.0
 context-mode: Fork
@@ -277,14 +277,14 @@ for fast, reproducible R package installation.
 
 ## Rules
 
-1. ALWAYS use `pak::lockfile_create()` to create lockfiles — NEVER write them by hand.
-2. ALWAYS use `pak::lockfile_install()` to restore — NEVER `install.packages()` for locked deps.
+1. ALWAYS use `pak::lockfile_create()` to create lockfiles: NEVER write them by hand.
+2. ALWAYS use `pak::lockfile_install()` to restore: NEVER `install.packages()` for locked deps.
 3. ALWAYS include the lockfile in version control (it's JSON, human-readable).
 4. ALWAYS run `pak::lockfile_verify()` before committing changes to ensure freshness.
 5. PREFER pak over renv for CI because pak resolves and installs faster (parallel downloads).
 6. ALWAYS use `r-lib/actions/setup-pak@v2` in GitHub Actions for pak CI integration.
 7. ALWAYS run `pak::pkg_sysreqs()` to identify system-level dependencies.
-8. NEVER use `remotes::install_deps()` when a pak lockfile exists — use pak instead.
+8. NEVER use `remotes::install_deps()` when a pak lockfile exists: use pak instead.
 9. Store the lockfile at the project root as `pkg.lock` unless specified otherwise.
 10. Use `pak::pkg_deps_tree()` to visualize dependency relationships before locking.
 11. For non-CRAN packages, ensure Remotes are in DESCRIPTION so pak can resolve them.

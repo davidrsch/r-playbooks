@@ -1,4 +1,4 @@
----
+﻿---
 name: r-pkgdown-site
 version: 1.0.0
 context-mode: Fork
@@ -179,10 +179,10 @@ steps:
 
       3. Inspect the generated site:
          - `docs/` directory created at project root.
-         - `docs/index.html` — landing page.
-         - `docs/reference/index.html` — function reference.
-         - `docs/articles/` — vignettes/articles.
-         - `docs/news/` — changelog/news.
+         - `docs/index.html`: landing page.
+         - `docs/reference/index.html`: function reference.
+         - `docs/articles/`: vignettes/articles.
+         - `docs/news/`: changelog/news.
 
       4. For Bootstrap 5 theming, verify:
          - Light/dark mode toggle appears on each page.
@@ -414,10 +414,10 @@ Bootstrap-based documentation websites for R packages.
 2. ALWAYS set `url` in `_pkgdown.yml` for canonical URL generation.
 3. ALWAYS use Bootstrap 5 via `template.bootstrap: 5` in `_pkgdown.yml`.
 4. ALWAYS add `lightswitch` to the navbar for dark mode support.
-5. ALWAYS configure `reference` with explicit title/contents sections — not just `- has_concept(...)`.
+5. ALWAYS configure `reference` with explicit title/contents sections: not just `- has_concept(...)`.
 6. ALWAYS run `pkgdown::check_pkgdown()` before deploying.
 7. ALWAYS use `usethis::use_pkgdown_github_pages()` for GitHub Pages setup.
-8. ALWAYS build articles from `vignettes/` directory — they are the primary user guides.
+8. ALWAYS build articles from `vignettes/` directory: they are the primary user guides.
 9. NEVER deploy without running URL checks first.
 10. PREFER `bootswatch` themes for quick, polished theming.
 11. PREFER `bslib` for custom color/font theming beyond Bootswatch presets.

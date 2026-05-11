@@ -1,8 +1,8 @@
----
+﻿---
 name: r-profile
 version: 1.0.0
 context-mode: Fork
-description: Profile R code for performance bottlenecks using profvis, bench, and rprof — produces a report, never auto-modifies code
+description: Profile R code for performance bottlenecks using profvis, bench, and rprof: produces a report, never auto-modifies code
 trigger: both
 trigger-patterns:
   - "profile *"
@@ -45,7 +45,7 @@ steps:
          - S4/R6/RC method dispatch overhead
       3. Note the expected complexity: O(n), O(n²), etc.
       4. Run `tracemem()` on key objects to detect copy-on-write triggers:
-         `tracemem(x); y <- x; y[1] <- 999` — if tracemem reports a duplicate,
+         `tracemem(x); y <- x; y[1] <- 999`: if tracemem reports a duplicate,
          you've found a copy-on-write that can be avoided.
       5. Use `lobstr::obj_size()` to inspect deep memory usage of objects.
       6. Report: code structure analysis, potential bottlenecks.
@@ -67,7 +67,7 @@ steps:
          - Identify:
            - Top 5 functions by time (exclusive time, not just total)
            - Any function taking > 50% of total time
-           - GC time — if > 10%, memory pressure is an issue
+           - GC time: if > 10%, memory pressure is an issue
            - Functions called unexpectedly many times
       3. Report:
          ```
@@ -76,7 +76,7 @@ steps:
          GC time: <Y>ms (<Z>%)
 
          Top time consumers:
-         1. <function> — <time>ms (<percent>%)
+         1. <function>: <time>ms (<percent>%)
             Called <N> times, memory: <M> MB
          2. ...
 
@@ -184,7 +184,7 @@ steps:
       - Ranked optimization opportunities
       - Estimated impact for each
       - Implementation difficulty (easy/medium/hard)
-      - Suggested code changes (in prose — do NOT modify files)
+      - Suggested code changes (in prose: do NOT modify files)
 
       The user will review this report and decide which optimizations to apply.
     gate: Review
@@ -209,7 +209,7 @@ bottlenecks in R code. You produce reports, not code changes.
 
 ## Rules
 
-1. NEVER optimize without profiling first — data drives decisions.
+1. NEVER optimize without profiling first: data drives decisions.
 2. NEVER modify production code directly. Produce a report with
    recommendations and let the user decide.
 3. PREFER algorithmic improvements over micro-optimizations.
@@ -217,7 +217,7 @@ bottlenecks in R code. You produce reports, not code changes.
 5. If an optimization would make the code significantly harder to read,
    flag it for user decision.
 6. Target the biggest bottleneck first (biggest time consumer).
-7. Use bench::mark() not microbenchmark — bench provides richer output.
+7. Use bench::mark() not microbenchmark: bench provides richer output.
 8. Memory allocation reduction is often more impactful than CPU optimization.
 9. Never recommend `<<-` as a performance optimization.
 

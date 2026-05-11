@@ -1,4 +1,4 @@
----
+﻿---
 name: r-rhino-init
 version: 1.0.0
 context-mode: Fork
@@ -140,7 +140,7 @@ steps:
       2. Add `.github/workflows/deploy.yml` (placeholder for Connect deployment).
 
       3. Verify `.gitignore` contains critical entries:
-         - `.Renviron` (MUST be gitignored — contains secrets)
+         - `.Renviron` (MUST be gitignored: contains secrets)
          - `renv/library/` (managed by renv)
          - `node_modules/` (managed by npm)
          - `www/` (Sass output, if generated)
@@ -237,7 +237,7 @@ server <- function(id, data) {
 
 ### Anti-patterns
 
-- ❌ `source()` — use `box::use(./path/module)`
-- ❌ `library()` inside modules — use `box::use(pkg[...])`
-- ❌ Hardcoded configuration — use `config::get()`
-- ❌ `print()`/`cat()` for debugging — use `logger::log_debug()`
+- ❌ `source()`: use `box::use(./path/module)`
+- ❌ `library()` inside modules: use `box::use(pkg[...])`
+- ❌ Hardcoded configuration: use `config::get()`
+- ❌ `print()`/`cat()` for debugging: use `logger::log_debug()`

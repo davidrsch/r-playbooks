@@ -1,8 +1,8 @@
----
+﻿---
 name: r-otel-instrument
 version: 1.0.0
 context-mode: Fork
-description: Add OpenTelemetry observability to R applications — zero-code-change for Shiny 1.12+/plumber2
+description: Add OpenTelemetry observability to R applications: zero-code-change for Shiny 1.12+/plumber2
 trigger: manual
 argument-hint: "--target <shiny|plumber|targets|package> [--exporter <http://localhost:4317>] [--service_name <my-r-app>]"
 parameters:
@@ -62,7 +62,7 @@ steps:
       - **shiny**: `OTEL_SHINY_TRACE_REACTIVES=TRUE` (trace reactive graph)
       - **plumber**: `OTEL_PLUMBER_TRACE_REQUESTS=TRUE` (trace all endpoints)
       - **targets**: `OTEL_TARGETS_TRACE_TARGETS=TRUE` (trace pipeline targets)
-      - **package**: No additional vars needed — instrument manually
+      - **package**: No additional vars needed: instrument manually
 
       Create `.Renviron` file with these variables.
       Create `.Renviron.local` (gitignored) for local development overrides.
@@ -190,22 +190,22 @@ observability.
 
 ## Rules
 
-1. Set `OTEL_SERVICE_NAME` — identifies your app in distributed traces.
-2. Use meaningful span names — `"calculate_portfolio_risk"` not `"operation_1"`.
-3. Add attributes for filtering — user_id, input_size, error_type.
-4. ALWAYS end spans — use `on.exit(span$end())` or `withr::defer()`.
-5. Do NOT trace everything — use sampling for high-volume paths.
-6. Correlate logs with traces — include trace_id and span_id in log messages.
-7. Export to a collector — Jaeger (dev), Grafana Tempo, Datadog, Honeycomb (prod).
+1. Set `OTEL_SERVICE_NAME`: identifies your app in distributed traces.
+2. Use meaningful span names: `"calculate_portfolio_risk"` not `"operation_1"`.
+3. Add attributes for filtering: user_id, input_size, error_type.
+4. ALWAYS end spans: use `on.exit(span$end())` or `withr::defer()`.
+5. Do NOT trace everything: use sampling for high-volume paths.
+6. Correlate logs with traces: include trace_id and span_id in log messages.
+7. Export to a collector: Jaeger (dev), Grafana Tempo, Datadog, Honeycomb (prod).
 8. Shiny 1.12+, plumber2, mirai 2.5+, httr2, knitr, testthat, DBI are pre-instrumented.
-9. Simply set env vars and traces flow automatically — NO code changes needed for pre-instrumented packages.
+9. Simply set env vars and traces flow automatically: NO code changes needed for pre-instrumented packages.
 10. Use `on.exit()` pattern for span lifecycle in manual instrumentation.
 
 ## The Three Signals
 
-1. **Traces** — The path of a request through the system (spans = individual operations)
-2. **Metrics** — Numeric measurements over time (latency, error rate, throughput)
-3. **Logs** — Structured event records (complement traces, not replace them)
+1. **Traces**: The path of a request through the system (spans = individual operations)
+2. **Metrics**: Numeric measurements over time (latency, error rate, throughput)
+3. **Logs**: Structured event records (complement traces, not replace them)
 
 ## Span Hierarchy
 
@@ -219,7 +219,7 @@ Request Span (root)
 
 ## Collector Options
 
-- **Jaeger** (all-in-one Docker) — great for development
-- **Grafana Tempo** + Grafana — production observability stack
-- **Datadog Agent** — if using Datadog
-- **OTLP Collector** — vendor-neutral, send to any backend
+- **Jaeger** (all-in-one Docker): great for development
+- **Grafana Tempo** + Grafana: production observability stack
+- **Datadog Agent**: if using Datadog
+- **OTLP Collector**: vendor-neutral, send to any backend
