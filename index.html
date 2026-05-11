@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.43">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>R Playbooks</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-4379b0ccadffce622b03caf4c46266b3.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-f4141897fd0b7188f682f6b86d237397.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-af608e8ab06824c5a0b621b8a1a02e61.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">R Playbooks</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Playbooks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/davidrsch/r-playbooks/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text">GitHub</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">R Playbooks</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="r-playbooks" class="level1 page-header">
+<h1>🎯 R Playbooks</h1>
+<div class="subtitle">
+<p>A collection of <strong>40</strong> AI-assisted playbooks for common R development workflows</p>
+</div>
+<div class="stats-bar">
+<p><span>📚 <strong>40</strong> playbooks</span> <span>📂 <strong>11</strong> categories</span> <span>🔄 auto-updated from repo</span></p>
+</div>
+</section>
+<div class="toolbar">
+<div class="filter-bar">
+<p><input type="text" id="playbook-filter" placeholder="🔍  Filter playbooks..." autocomplete="off"> <button id="btn-select-all" class="toolbar-btn">☐ Select All</button> <button id="btn-download" class="toolbar-btn download-btn" disabled="">⬇ Download (<span id="selected-count">0</span>)</button></p>
+</div>
+</div>
+<div id="category-tags" class="category-tags">
+<button class="category-tag active" data-cat="all">
+All
+</button>
+<button class="category-tag" data-cat="Package Dev">
+Package Dev <small>(7)</small>
+</button>
+<button class="category-tag" data-cat="Testing &amp; QA">
+Testing &amp; QA <small>(6)</small>
+</button>
+<button class="category-tag" data-cat="Shiny Apps">
+Shiny Apps <small>(5)</small>
+</button>
+<button class="category-tag" data-cat="Architecture">
+Architecture <small>(4)</small>
+</button>
+<button class="category-tag" data-cat="Data Pipelines">
+Data Pipelines <small>(4)</small>
+</button>
+<button class="category-tag" data-cat="Deploy &amp; DevOps">
+Deploy &amp; DevOps <small>(4)</small>
+</button>
+<button class="category-tag" data-cat="Observability">
+Observability <small>(3)</small>
+</button>
+<button class="category-tag" data-cat="APIs">
+APIs <small>(2)</small>
+</button>
+<button class="category-tag" data-cat="Config &amp; Security">
+Config &amp; Security <small>(2)</small>
+</button>
+<button class="category-tag" data-cat="Data &amp; Validation">
+Data &amp; Validation <small>(2)</small>
+</button>
+<button class="category-tag" data-cat="Reports">
+Reports <small>(1)</small>
+</button>
+</div>
+<div id="playbook-grid" class="playbook-grid">
+<div class="playbook-card" data-name="r-api-endpoint" data-category="APIs" style="--card-accent: var(--bs-primary)"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-api-endpoint" data-name="r-api-endpoint" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-api-endpoint/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🔌</span><span class="card-name">r-api-endpoint</span></div><div class="card-description">Add a new Plumber endpoint with parameter docs, input validation, error handling, and tests</div><span class="badge badge-category">APIs</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-async-mirai" data-category="Architecture" style="--card-accent: var(--bs-primary)"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-async-mirai" data-name="r-async-mirai" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-async-mirai/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🏗️</span><span class="card-name">r-async-mirai</span></div><div class="card-description">Add async parallel processing with mirai for non-blocking execution</div><span class="badge badge-category">Architecture</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-bdd-feature" data-category="Testing &amp; QA" style="--card-accent: var(--bs-primary)"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-bdd-feature" data-name="r-bdd-feature" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-bdd-feature/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🧪</span><span class="card-name">r-bdd-feature</span></div><div class="card-description">BDD (Behavior-Driven Development): define a feature with Gherkin scenarios, then implement with testthat</div><span class="badge badge-category">Testing &amp; QA</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger manual">MANUAL</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-box-module" data-category="Architecture" style="--card-accent: var(--bs-primary)"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-box-module" data-name="r-box-module" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-box-module/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🏗️</span><span class="card-name">r-box-module</span></div><div class="card-description">Create a box module with explicit exports and clean namespace</div><span class="badge badge-category">Architecture</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-ci-gha" data-category="Deploy &amp; DevOps" style="--card-accent: var(--bs-primary)"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-ci-gha" data-name="r-ci-gha" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-ci-gha/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🚀</span><span class="card-name">r-ci-gha</span></div><div class="card-description">Set up GitHub Actions CI for an R package: R CMD check, test coverage, pkgdown, and linting</div><span class="badge badge-category">Deploy &amp; DevOps</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger manual">MANUAL</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-code-review" data-category="Testing &amp; QA" style="--card-accent: var(--bs-primary)"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-code-review" data-name="r-code-review" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-code-review/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🧪</span><span class="card-name">r-code-review</span></div><div class="card-description">Perform a structured code review for R code: check style, correctness, safety, performance, and documentation</div><span class="badge badge-category">Testing &amp; QA</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-config-env" data-category="Config &amp; Security" style="--card-accent: var(--bs-primary)"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-config-env" data-name="r-config-env" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-config-env/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🔒</span><span class="card-name">r-config-env</span></div><div class="card-description">Set up environment-specific configuration with the config package</div><span class="badge badge-category">Config &amp; Security</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-connect-deploy" data-category="Deploy &amp; DevOps" style="--card-accent: var(--bs-primary)"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-connect-deploy" data-name="r-connect-deploy" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-connect-deploy/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🚀</span><span class="card-name">r-connect-deploy</span></div><div class="card-description">Deploy an R application to Posit Connect with manifest and git-backed deployment</div><span class="badge badge-category">Deploy &amp; DevOps</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-data-validate" data-category="Data &amp; Validation" style="--card-accent: var(--bs-primary)"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-data-validate" data-name="r-data-validate" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-data-validate/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🛡️</span><span class="card-name">r-data-validate</span></div><div class="card-description">Validate data quality with pointblank/validate: schema checks, value ranges, completeness, uniqueness</div><span class="badge badge-category">Data &amp; Validation</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-docker-build" data-category="Deploy &amp; DevOps" style="--card-accent: var(--bs-primary)"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-docker-build" data-name="r-docker-build" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-docker-build/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🚀</span><span class="card-name">r-docker-build</span></div><div class="card-description">Build a Docker image for an R project: package, Shiny app, or Plumber API</div><span class="badge badge-category">Deploy &amp; DevOps</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger manual">MANUAL</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-init-package" data-category="Package Dev" style="--card-accent: var(--bs-primary)"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-init-package" data-name="r-init-package" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-init-package/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">📦</span><span class="card-name">r-init-package</span></div><div class="card-description">Scaffold a new R package with usethis, renv, testthat, roxygen2, pkgdown, and CI</div><span class="badge badge-category">Package Dev</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger manual">MANUAL</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-init-plumber" data-category="APIs" style="--card-accent: var(--bs-primary)"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-init-plumber" data-name="r-init-plumber" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-init-plumber/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🔌</span><span class="card-name">r-init-plumber</span></div><div class="card-description">Scaffold a Plumber API project with entrypoint, route files, middleware, and tests</div><span class="badge badge-category">APIs</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger manual">MANUAL</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-init-shiny" data-category="Shiny Apps" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-init-shiny" data-name="r-init-shiny" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-init-shiny/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">✨</span><span class="card-name">r-init-shiny</span></div><div class="card-description">Scaffold a new Shiny application with golem or minimal structure, plus testing and deployment config</div><span class="badge badge-category">Shiny Apps</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger manual">MANUAL</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-init-targets" data-category="Data Pipelines" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-init-targets" data-name="r-init-targets" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-init-targets/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🎯</span><span class="card-name">r-init-targets</span></div><div class="card-description">Scaffold a targets data pipeline project with _targets.R, R/functions, and CI integration</div><span class="badge badge-category">Data Pipelines</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger manual">MANUAL</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-lint" data-category="Testing &amp; QA" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-lint" data-name="r-lint" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-lint/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🧪</span><span class="card-name">r-lint</span></div><div class="card-description">Lint R code and auto-fix style issues with lintr + styler</div><span class="badge badge-category">Testing &amp; QA</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-logger-setup" data-category="Observability" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-logger-setup" data-name="r-logger-setup" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-logger-setup/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">📊</span><span class="card-name">r-logger-setup</span></div><div class="card-description">Configure structured logging with the logger package for any R application</div><span class="badge badge-category">Observability</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-otel-instrument" data-category="Observability" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-otel-instrument" data-name="r-otel-instrument" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-otel-instrument/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">📊</span><span class="card-name">r-otel-instrument</span></div><div class="card-description">Add OpenTelemetry observability to R applications: zero-code-change for Shiny 1.12+/plumber2</div><span class="badge badge-category">Observability</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger manual">MANUAL</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-pak-lockfile" data-category="Package Dev" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-pak-lockfile" data-name="r-pak-lockfile" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-pak-lockfile/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">📦</span><span class="card-name">r-pak-lockfile</span></div><div class="card-description">Create and use a pak lockfile for reproducible R package installations</div><span class="badge badge-category">Package Dev</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-pkg-add-function" data-category="Package Dev" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-pkg-add-function" data-name="r-pkg-add-function" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-pkg-add-function/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">📦</span><span class="card-name">r-pkg-add-function</span></div><div class="card-description">Add an exported function to an R package with roxygen2 docs and testthat tests: TDD-ready</div><span class="badge badge-category">Package Dev</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-pkg-check" data-category="Package Dev" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-pkg-check" data-name="r-pkg-check" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-pkg-check/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">📦</span><span class="card-name">r-pkg-check</span></div><div class="card-description">Run R CMD check and auto-remediate issues: the universal quality gate</div><span class="badge badge-category">Package Dev</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-pkg-release" data-category="Package Dev" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-pkg-release" data-name="r-pkg-release" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-pkg-release/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">📦</span><span class="card-name">r-pkg-release</span></div><div class="card-description">Full release workflow: version bump, checks, tag, NEWS, and CRAN/ GitHub release preparation</div><span class="badge badge-category">Package Dev</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger manual">MANUAL</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-pkgcheck-review" data-category="Package Dev" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-pkgcheck-review" data-name="r-pkgcheck-review" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-pkgcheck-review/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">📦</span><span class="card-name">r-pkgcheck-review</span></div><div class="card-description">Run rOpenSci automated package checks with pkgcheck: comprehensive pre-submission validation including goodpractice, R CMD check, and pkgstats</div><span class="badge badge-category">Package Dev</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-pkgdown-site" data-category="Package Dev" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-pkgdown-site" data-name="r-pkgdown-site" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-pkgdown-site/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">📦</span><span class="card-name">r-pkgdown-site</span></div><div class="card-description">Set up and deploy a pkgdown documentation site with Bootstrap 5, reference index, articles, and GitHub Pages</div><span class="badge badge-category">Package Dev</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-pointblank-agent" data-category="Data &amp; Validation" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-pointblank-agent" data-name="r-pointblank-agent" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-pointblank-agent/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🛡️</span><span class="card-name">r-pointblank-agent</span></div><div class="card-description">Set up automated data validation with pointblank agents: create validation rules, generate reports, and integrate with CI</div><span class="badge badge-category">Data &amp; Validation</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-profile" data-category="Observability" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-profile" data-name="r-profile" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-profile/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">📊</span><span class="card-name">r-profile</span></div><div class="card-description">Profile R code for performance bottlenecks using profvis, bench, and rprof: produces a report, never auto-modifies code</div><span class="badge badge-category">Observability</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-quarto-render" data-category="Reports" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-quarto-render" data-name="r-quarto-render" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-quarto-render/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">📄</span><span class="card-name">r-quarto-render</span></div><div class="card-description">Render a Quarto document or project with parameters, profiling, and output validation</div><span class="badge badge-category">Reports</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-refactor" data-category="Architecture" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-refactor" data-name="r-refactor" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-refactor/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🏗️</span><span class="card-name">r-refactor</span></div><div class="card-description">Safe refactoring with a test safety net: snapshot current behavior, refactor, verify nothing breaks</div><span class="badge badge-category">Architecture</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-rhino-init" data-category="Shiny Apps" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-rhino-init" data-name="r-rhino-init" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-rhino-init/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">✨</span><span class="card-name">r-rhino-init</span></div><div class="card-description">Initialize an enterprise Shiny application with Appsilon's rhino framework</div><span class="badge badge-category">Shiny Apps</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger manual">MANUAL</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-s7-class" data-category="Architecture" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-s7-class" data-name="r-s7-class" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-s7-class/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🏗️</span><span class="card-name">r-s7-class</span></div><div class="card-description">Define an S7 class with properties, generics, and methods</div><span class="badge badge-category">Architecture</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-security" data-category="Config &amp; Security" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-security" data-name="r-security" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-security/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🔒</span><span class="card-name">r-security</span></div><div class="card-description">Scan R code for security vulnerabilities: hardcoded secrets, unsafe eval, path traversal, injection risks</div><span class="badge badge-category">Config &amp; Security</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-shiny-e2e-test" data-category="Shiny Apps" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-shiny-e2e-test" data-name="r-shiny-e2e-test" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-shiny-e2e-test/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">✨</span><span class="card-name">r-shiny-e2e-test</span></div><div class="card-description">Add end-to-end tests for a Shiny app: shinytest2 for R-native testing or Cypress for JS-based testing</div><span class="badge badge-category">Shiny Apps</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger manual">AUTO</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-shiny-module" data-category="Shiny Apps" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-shiny-module" data-name="r-shiny-module" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-shiny-module/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">✨</span><span class="card-name">r-shiny-module</span></div><div class="card-description">Create a new Shiny module (UI + server) with reactive testing in an existing app or golem project</div><span class="badge badge-category">Shiny Apps</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-shiny-theme-bslib" data-category="Shiny Apps" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-shiny-theme-bslib" data-name="r-shiny-theme-bslib" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-shiny-theme-bslib/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">✨</span><span class="card-name">r-shiny-theme-bslib</span></div><div class="card-description">Apply a custom Bootstrap 5 theme to a Shiny app using bslib with Sass customization and Bootswatch themes</div><span class="badge badge-category">Shiny Apps</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-targets-add-target" data-category="Data Pipelines" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-targets-add-target" data-name="r-targets-add-target" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-targets-add-target/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🎯</span><span class="card-name">r-targets-add-target</span></div><div class="card-description">Add a new target to an existing targets pipeline with its companion function and test</div><span class="badge badge-category">Data Pipelines</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-targets-branching" data-category="Data Pipelines" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-targets-branching" data-name="r-targets-branching" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-targets-branching/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🎯</span><span class="card-name">r-targets-branching</span></div><div class="card-description">Add static branching (tar_map) or dynamic branching (tar_rep, pattern=map/cross) to a targets pipeline</div><span class="badge badge-category">Data Pipelines</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-targets-crew" data-category="Data Pipelines" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-targets-crew" data-name="r-targets-crew" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-targets-crew/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🎯</span><span class="card-name">r-targets-crew</span></div><div class="card-description">Configure the crew parallel backend for a targets pipeline (mirai-based, replaces future)</div><span class="badge badge-category">Data Pipelines</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-tdd-bugfix" data-category="Testing &amp; QA" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-tdd-bugfix" data-name="r-tdd-bugfix" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-tdd-bugfix/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🧪</span><span class="card-name">r-tdd-bugfix</span></div><div class="card-description">TDD bugfix workflow: reproduce the bug with a failing test, fix it, verify no regression</div><span class="badge badge-category">Testing &amp; QA</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-tdd-feature" data-category="Testing &amp; QA" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-tdd-feature" data-name="r-tdd-feature" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-tdd-feature/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🧪</span><span class="card-name">r-tdd-feature</span></div><div class="card-description">TDD (Test-Driven Development) Red-Green-Refactor cycle for implementing a feature in an R package</div><span class="badge badge-category">Testing &amp; QA</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-testthat-snapshot" data-category="Testing &amp; QA" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-testthat-snapshot" data-name="r-testthat-snapshot" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-testthat-snapshot/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🧪</span><span class="card-name">r-testthat-snapshot</span></div><div class="card-description">Add snapshot tests to an R package with testthat edition 3: output, value, error, and file snapshots</div><span class="badge badge-category">Testing &amp; QA</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+<div class="playbook-card" data-name="r-vetiver-deploy" data-category="Deploy &amp; DevOps" style="--card-accent: var(--bs-primary); display:none"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="r-vetiver-deploy" data-name="r-vetiver-deploy" title="Select this playbook"></label><a href="https://github.com/davidrsch/r-playbooks/blob/main/playbooks/r-vetiver-deploy/PLAYBOOK.md" class="card-body"><div class="card-header"><span class="card-icon">🚀</span><span class="card-name">r-vetiver-deploy</span></div><div class="card-description">Version, deploy, and monitor an ML model with vetiver: pin, create Plumber API, deploy to Connect or Docker</div><span class="badge badge-category">Deploy &amp; DevOps</span><div class="card-meta"><span class="badge badge-version">v1.0.0</span><span class="badge badge-trigger both">BOTH</span><span class="badge badge-link">📋 source</span></div></a></div>
+</div>
+<div class="show-more-wrap">
+<button id="btn-show-more" class="btn-show-more">
+Show More <span class="arrow">▼</span>
+</button>
+</div>
+
+
+
+</main> <!-- /main -->
+<script>
+(function() {
+  const filterInput  = document.getElementById('playbook-filter');
+  const grid         = document.getElementById('playbook-grid');
+  const tags         = document.querySelectorAll('.category-tag');
+  const btnSelectAll = document.getElementById('btn-select-all');
+  const btnDownload  = document.getElementById('btn-download');
+  const btnShowMore  = document.getElementById('btn-show-more');
+  const countSpan    = document.getElementById('selected-count');
+
+  let activeCategory = 'all';
+  let allSelected    = false;
+  const BATCH_SIZE   = 12;
+
+  // ---- Helpers ----
+
+  function resetCountSpan() {
+    countSpan = document.getElementById('selected-count');
+  }
+
+  function resetDownloadUI() {
+    // Uncheck every checkbox so count goes back to 0
+    grid.querySelectorAll('.card-checkbox').forEach(cb => { cb.checked = false; });
+    allSelected = false;
+    // Restore the button inner HTML so the <span id="selected-count"> reappears
+    btnDownload.innerHTML = '⬇ Download (<span id="selected-count">0</span>)';
+    btnDownload.disabled = false;
+    // Re-bind countSpan to the fresh element just re-created in btnDownload
+    resetCountSpan();
+    updateSelectionUI();
+  }
+
+  function getVisibleCards() {
+    const cards = grid.querySelectorAll('.playbook-card');
+    return [...cards].filter(c => c.style.display !== 'none');
+  }
+
+  function getCheckboxes() {
+    return grid.querySelectorAll('.card-checkbox');
+  }
+
+  function updateSelectionUI() {
+    // Re-bind if countSpan was blown away by innerHTML
+    if (!countSpan || !countSpan.isConnected) resetCountSpan();
+    const checked = grid.querySelectorAll('.card-checkbox:checked');
+    const count   = checked.length;
+    if (countSpan) countSpan.textContent = count;
+    btnDownload.disabled  = count === 0;
+    btnSelectAll.textContent = allSelected ? '☑ Deselect All' : '☐ Select All';
+
+    // Toggle .selected class on cards
+    grid.querySelectorAll('.playbook-card').forEach(card => {
+      const cb = card.querySelector('.card-checkbox');
+      card.classList.toggle('selected', cb && cb.checked);
+    });
+  }
+
+  // ---- Filtering ----
+
+  function applyFilters() {
+    const query = filterInput ? filterInput.value.toLowerCase() : '';
+    const cards = grid.querySelectorAll('.playbook-card');
+
+    cards.forEach(card => {
+      const name = card.dataset.name.toLowerCase();
+      const cat  = card.dataset.category;
+      const matchesSearch   = !query || name.includes(query);
+      const matchesCategory = activeCategory === 'all' || cat === activeCategory;
+      card.style.display = (matchesSearch && matchesCategory) ? '' : 'none';
+    });
+
+    updateShowMoreButton();
+  }
+
+  if (filterInput) {
+    filterInput.addEventListener('input', applyFilters);
+  }
+
+  tags.forEach(tag => {
+    tag.addEventListener('click', function() {
+      tags.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      activeCategory = this.dataset.cat;
+      applyFilters();
+    });
+  });
+
+  // ---- Checkbox selection ----
+
+  grid.addEventListener('change', function(e) {
+    if (e.target.classList.contains('card-checkbox')) {
+      updateSelectionUI();
+    }
+  });
+
+  btnSelectAll.addEventListener('click', function() {
+    allSelected = !allSelected;
+    const visibleCards = getVisibleCards();
+    visibleCards.forEach(card => {
+      const cb = card.querySelector('.card-checkbox');
+      if (cb) cb.checked = allSelected;
+    });
+    updateSelectionUI();
+  });
+
+  // ---- Download ----
+
+  btnDownload.addEventListener('click', async function() {
+    const checked = grid.querySelectorAll('.card-checkbox:checked');
+    if (checked.length === 0) return;
+
+    btnDownload.textContent = '⏳ Preparing...';
+    btnDownload.disabled = true;
+
+    const zip = new JSZip();
+    let success = 0;
+    let failed = 0;
+
+    for (const cb of checked) {
+      const folder = cb.dataset.file;
+      const url  = `https://raw.githubusercontent.com/davidrsch/r-playbooks/main/playbooks/${folder}/PLAYBOOK.md`;
+
+      try {
+        const resp = await fetch(url);
+        if (!resp.ok) {
+          failed++;
+          continue;
+        }
+        let text = await resp.text();
+        // Strip YAML frontmatter to keep download clean
+        text = text.replace(/^---[\s\S]*?---\n*/, '');
+        zip.file(`playbooks/${folder}/PLAYBOOK.md`, text);
+        success++;
+      } catch {
+        failed++;
+      }
+    }
+
+    if (success === 0) {
+      resetDownloadUI();
+      return;
+    }
+
+    // Generate ZIP and trigger download
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `r-playbooks-${success}-selected.zip`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+
+    resetDownloadUI();
+  });
+
+  // ---- Show More ----
+
+  let shownCount = BATCH_SIZE;
+
+  function updateShowMoreButton() {
+    const visible = getVisibleCards().length;
+    const total   = grid.querySelectorAll('.playbook-card').length;
+
+    if (shownCount >= total && activeCategory === 'all' && (!filterInput || !filterInput.value)) {
+      btnShowMore.style.display = 'none';
+    } else if (visible > shownCount) {
+      // In filtered view, show all matches — hide button
+      btnShowMore.style.display = 'none';
+    } else {
+      btnShowMore.style.display = '';
+      btnShowMore.querySelector('.arrow').classList.remove('up');
+      btnShowMore.querySelector('.arrow').textContent = '▼';
+    }
+  }
+
+  btnShowMore.addEventListener('click', function() {
+    btnShowMore.querySelector('.arrow').classList.add('up');
+    btnShowMore.querySelector('.arrow').textContent = '▲';
+
+    const allCards = [...grid.querySelectorAll('.playbook-card')];
+    let revealed = 0;
+
+    for (const card of allCards) {
+      // Only reveal cards hidden by show-more, not by filter
+      if (card.style.display === 'none') {
+        const cat  = card.dataset.category;
+        if (activeCategory !== 'all' && cat !== activeCategory) continue;
+        const name = card.dataset.name.toLowerCase();
+        const query = filterInput ? filterInput.value.toLowerCase() : '';
+        if (query && !name.includes(query)) continue;
+
+        card.style.display = '';
+        revealed++;
+        if (revealed >= BATCH_SIZE) break;
+      }
+    }
+
+    shownCount += revealed;
+    updateShowMoreButton();
+  });
+
+  // Initial state
+  updateSelectionUI();
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/davidrsch\.github\.io\/r-playbooks\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>R Playbooks: curated AI coding playbooks for R development</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built with <a href="https://quarto.org/">Quarto</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
