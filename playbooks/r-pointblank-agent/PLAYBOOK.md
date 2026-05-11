@@ -1,8 +1,8 @@
-﻿---
+---
 name: r-pointblank-agent
 version: 1.0.0
 context-mode: Fork
-description: Set up automated data validation with pointblank agents: create validation rules, generate reports, and integrate with CI
+description: "Set up automated data validation with pointblank agents: create validation rules, generate reports, and integrate with CI"
 trigger: both
 trigger-patterns:
   - "pointblank *"
@@ -417,7 +417,14 @@ allowed-tools:
   - "*"
 
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER modify raw data files — work on copies."
+    severity: "error"
+  - rule: "ALWAYS validate data before downstream use."
+    severity: "warning"
+  - rule: "Document all data transformations with comments."
+    severity: "warning"
+  - rule: "Use renv or pak to lock dependency versions."
+    severity: "warning"
 ---
 
 You are a data quality engineer using the `pointblank` package to

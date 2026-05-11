@@ -1,6 +1,6 @@
-﻿---
+---
 name: r-testthat-snapshot
-description: Add snapshot tests to an R package with testthat edition 3: output, value, error, and file snapshots
+description: "Add snapshot tests to an R package with testthat edition 3: output, value, error, and file snapshots"
 version: 1.0.0
 context-mode: Fork
 trigger: both
@@ -25,7 +25,16 @@ tags:
   - testthat
   - snapshot
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER skip the RED phase — always write a failing test first."
+    severity: "error"
+  - rule: "NEVER modify test expectations to make them pass."
+    severity: "error"
+  - rule: "NEVER implement more code than the test requires in GREEN phase."
+    severity: "error"
+  - rule: "ALWAYS run the full test suite after each TDD cycle."
+    severity: "warning"
+  - rule: "Use testthat 3rd edition — no context(), use test_that() directly."
+    severity: "warning"
 allowed-tools:
   - "*"
 steps:

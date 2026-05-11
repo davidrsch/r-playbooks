@@ -1,8 +1,8 @@
-﻿---
+---
 name: r-shiny-e2e-test
 version: 1.0.0
 context-mode: Fork
-description: Add end-to-end tests for a Shiny app: shinytest2 for R-native testing or Cypress for JS-based testing
+description: "Add end-to-end tests for a Shiny app: shinytest2 for R-native testing or Cypress for JS-based testing"
 trigger: auto
 trigger-patterns:
   - "e2e test *"
@@ -35,7 +35,16 @@ tags:
 allowed-tools:
   - "*"
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER use global variables for app state — use reactiveValues."
+    severity: "error"
+  - rule: "NEVER use source() inside reactive expressions."
+    severity: "error"
+  - rule: "ALWAYS validate user inputs server-side, not just client-side."
+    severity: "warning"
+  - rule: "Use Shiny modules for reusable UI components."
+    severity: "warning"
+  - rule: "Use logger package for structured logging, not print() or cat()."
+    severity: "warning"
 steps:
   - id: install-tools
     inline-prompt: |

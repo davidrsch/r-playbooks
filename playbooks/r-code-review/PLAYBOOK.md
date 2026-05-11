@@ -1,8 +1,8 @@
-﻿---
+---
 name: r-code-review
 version: 1.0.0
 context-mode: Fork
-description: Perform a structured code review for R code: check style, correctness, safety, performance, and documentation
+description: "Perform a structured code review for R code: check style, correctness, safety, performance, and documentation"
 trigger: both
 trigger-patterns:
   - "review * code"
@@ -324,7 +324,14 @@ allowed-tools:
   - "*"
 
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER auto-modify code without an Approve gate."
+    severity: "error"
+  - rule: "ALWAYS snapshot current behavior before refactoring."
+    severity: "warning"
+  - rule: "NEVER mask errors with empty tryCatch() blocks."
+    severity: "error"
+  - rule: "Report issues with severity and suggested fixes."
+    severity: "warning"
 ---
 
 You are a senior R code reviewer following Posit (RStudio) and Appsilon
@@ -388,8 +395,8 @@ Always flag as BLOCKER:
 
 ## Review Rubric
 
-| Level    | Meaning                                      | Action           |
-| -------- | -------------------------------------------- | ---------------- |
+| Level    | Meaning                                     | Action           |
+| -------- | ------------------------------------------- | ---------------- |
 | Blocker  | Must not merge: security, data loss, crash  | Fix now          |
 | Critical | Must fix before release: incorrect behavior | Fix before merge |
 | Major    | Should fix: maintainability, edge cases     | Fix in this PR   |

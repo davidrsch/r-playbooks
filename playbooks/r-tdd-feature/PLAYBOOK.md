@@ -1,4 +1,4 @@
-﻿---
+---
 name: r-tdd-feature
 version: 1.0.0
 context-mode: Fork
@@ -191,7 +191,16 @@ allowed-tools:
   - "*"
 
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER skip the RED phase — always write a failing test first."
+    severity: "error"
+  - rule: "NEVER modify test expectations to make them pass."
+    severity: "error"
+  - rule: "NEVER implement more code than the test requires in GREEN phase."
+    severity: "error"
+  - rule: "ALWAYS run the full test suite after each TDD cycle."
+    severity: "warning"
+  - rule: "Use testthat 3rd edition — no context(), use test_that() directly."
+    severity: "warning"
 ---
 
 You are an R developer practicing strict Test-Driven Development (TDD).

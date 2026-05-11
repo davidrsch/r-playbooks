@@ -1,8 +1,8 @@
-﻿---
+---
 name: r-ci-gha
 version: 1.0.0
 context-mode: Fork
-description: Set up GitHub Actions CI for an R package: R CMD check, test coverage, pkgdown, and linting
+description: "Set up GitHub Actions CI for an R package: R CMD check, test coverage, pkgdown, and linting"
 trigger: manual
 argument-hint: "[--r-versions release,devel,oldrel] [--coverage true|false] [--pkgdown true|false] [--lint true|false] [--multiversion true|false]"
 parameters:
@@ -272,7 +272,14 @@ allowed-tools:
   - "*"
 
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER hardcode secrets or tokens in workflow files — use GitHub Secrets."
+    severity: "error"
+  - rule: "ALWAYS include HEALTHCHECK in Dockerfiles."
+    severity: "warning"
+  - rule: "Never expose ports without proper security configuration."
+    severity: "warning"
+  - rule: "Use multi-stage Docker builds to minimize image size."
+    severity: "warning"
 ---
 
 You are a CI/CD specialist for R packages using GitHub Actions.

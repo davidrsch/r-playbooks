@@ -1,8 +1,8 @@
-﻿---
+---
 name: r-docker-build
 version: 1.0.0
 context-mode: Fork
-description: Build a Docker image for an R project: package, Shiny app, or Plumber API
+description: "Build a Docker image for an R project: package, Shiny app, or Plumber API"
 trigger: manual
 argument-hint: "--type package|shiny|plumber|quarto [--image-name <name>] [--r-version 4.4] [--port <8080>]"
 parameters:
@@ -250,7 +250,14 @@ allowed-tools:
   - "*"
 
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER hardcode secrets or tokens in workflow files — use GitHub Secrets."
+    severity: "error"
+  - rule: "ALWAYS include HEALTHCHECK in Dockerfiles."
+    severity: "warning"
+  - rule: "Never expose ports without proper security configuration."
+    severity: "warning"
+  - rule: "Use multi-stage Docker builds to minimize image size."
+    severity: "warning"
 ---
 
 You are an R DevOps specialist focused on containerization with Docker.

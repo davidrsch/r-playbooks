@@ -1,8 +1,8 @@
-﻿---
+---
 name: r-pkgcheck-review
 version: 1.0.0
 context-mode: Fork
-description: Run rOpenSci automated package checks with pkgcheck: comprehensive pre-submission validation including goodpractice, R CMD check, and pkgstats
+description: "Run rOpenSci automated package checks with pkgcheck: comprehensive pre-submission validation including goodpractice, R CMD check, and pkgstats"
 trigger: both
 trigger-patterns:
   - "pkgcheck *"
@@ -230,7 +230,18 @@ allowed-tools:
   - "*"
 
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER modify NAMESPACE manually — roxygen2 manages it."
+    severity: "error"
+  - rule: "NEVER commit to main without passing R CMD check."
+    severity: "error"
+  - rule: "ALWAYS run devtools::document() after changing roxygen comments."
+    severity: "warning"
+  - rule: "NEVER use install.packages() in scripts — use renv or DESCRIPTION."
+    severity: "error"
+  - rule: "ALWAYS run devtools::test() before committing."
+    severity: "warning"
+  - rule: "Use rlang::abort() or cli::cli_abort() over stop() for errors."
+    severity: "warning"
 ---
 
 You are an R package reviewer using the rOpenSci `pkgcheck` tool to

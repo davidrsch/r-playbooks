@@ -1,8 +1,8 @@
-﻿---
+---
 name: r-security
 version: 1.0.0
 context-mode: Fork
-description: Scan R code for security vulnerabilities: hardcoded secrets, unsafe eval, path traversal, injection risks
+description: "Scan R code for security vulnerabilities: hardcoded secrets, unsafe eval, path traversal, injection risks"
 trigger: both
 trigger-patterns:
   - "security scan *"
@@ -340,7 +340,14 @@ allowed-tools:
   - "*"
 
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER auto-modify code without an Approve gate."
+    severity: "error"
+  - rule: "ALWAYS snapshot current behavior before refactoring."
+    severity: "warning"
+  - rule: "NEVER mask errors with empty tryCatch() blocks."
+    severity: "error"
+  - rule: "Report issues with severity and suggested fixes."
+    severity: "warning"
 ---
 
 You are an R security auditor. You scan R code for security vulnerabilities

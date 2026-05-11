@@ -1,8 +1,8 @@
-﻿---
+---
 name: r-data-validate
 version: 1.0.0
 context-mode: Fork
-description: Validate data quality with pointblank/validate: schema checks, value ranges, completeness, uniqueness
+description: "Validate data quality with pointblank/validate: schema checks, value ranges, completeness, uniqueness"
 trigger: both
 trigger-patterns:
   - "validate data *"
@@ -261,7 +261,14 @@ allowed-tools:
   - "*"
 
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER modify raw data files — work on copies."
+    severity: "error"
+  - rule: "ALWAYS validate data before downstream use."
+    severity: "warning"
+  - rule: "Document all data transformations with comments."
+    severity: "warning"
+  - rule: "Use renv or pak to lock dependency versions."
+    severity: "warning"
 ---
 
 You are an R data quality specialist. You validate data using pointblank

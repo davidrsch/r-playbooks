@@ -1,4 +1,4 @@
-﻿---
+---
 name: r-lint
 version: 1.0.0
 context-mode: Fork
@@ -145,7 +145,14 @@ allowed-tools:
   - "*"
 
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER auto-modify code without an Approve gate."
+    severity: "error"
+  - rule: "ALWAYS snapshot current behavior before refactoring."
+    severity: "warning"
+  - rule: "NEVER mask errors with empty tryCatch() blocks."
+    severity: "error"
+  - rule: "Report issues with severity and suggested fixes."
+    severity: "warning"
 ---
 
 You are an R code quality specialist focused on style and linting.

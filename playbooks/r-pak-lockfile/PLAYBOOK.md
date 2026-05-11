@@ -1,4 +1,4 @@
-﻿---
+---
 name: r-pak-lockfile
 version: 1.0.0
 context-mode: Fork
@@ -269,7 +269,14 @@ allowed-tools:
   - "*"
 
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER modify raw data files — work on copies."
+    severity: "error"
+  - rule: "ALWAYS validate data before downstream use."
+    severity: "warning"
+  - rule: "Document all data transformations with comments."
+    severity: "warning"
+  - rule: "Use renv or pak to lock dependency versions."
+    severity: "warning"
 ---
 
 You are an R package management specialist, expert in the {pak} package manager

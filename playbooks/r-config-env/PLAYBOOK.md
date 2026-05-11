@@ -1,4 +1,4 @@
-﻿---
+---
 name: r-config-env
 version: 1.0.0
 context-mode: Fork
@@ -187,7 +187,14 @@ allowed-tools:
   - "*"
 
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER log secrets, passwords, tokens, or credentials."
+    severity: "error"
+  - rule: "ALWAYS include service name and trace ID in log entries."
+    severity: "warning"
+  - rule: "Use structured logging (JSON format) for production."
+    severity: "warning"
+  - rule: "Never store config in source code — use environment variables."
+    severity: "error"
 ---
 
 You are an expert in R deployment configuration and environment management.

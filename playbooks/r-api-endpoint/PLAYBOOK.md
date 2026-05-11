@@ -1,4 +1,4 @@
-﻿---
+---
 name: r-api-endpoint
 version: 1.0.0
 context-mode: Fork
@@ -190,7 +190,16 @@ allowed-tools:
   - "*"
 
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER expose internal error details in API responses."
+    severity: "error"
+  - rule: "ALWAYS validate and sanitize request parameters."
+    severity: "error"
+  - rule: "NEVER use eval/parse on user-supplied input."
+    severity: "error"
+  - rule: "Use structured error responses with status codes."
+    severity: "warning"
+  - rule: "Always include health check endpoints."
+    severity: "warning"
 ---
 
 You are a Plumber API developer specializing in RESTful endpoint design.

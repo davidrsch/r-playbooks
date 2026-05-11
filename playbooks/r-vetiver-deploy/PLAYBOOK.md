@@ -1,6 +1,6 @@
-﻿---
+---
 name: r-vetiver-deploy
-description: Version, deploy, and monitor an ML model with vetiver: pin, create Plumber API, deploy to Connect or Docker
+description: "Version, deploy, and monitor an ML model with vetiver: pin, create Plumber API, deploy to Connect or Docker"
 version: 1.0.0
 context-mode: Fork
 trigger: both
@@ -45,7 +45,14 @@ tags:
   - model
   - vetiver
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER deploy without version pinning."
+    severity: "error"
+  - rule: "ALWAYS test the API health endpoint after deployment."
+    severity: "warning"
+  - rule: "Use vetiver for model versioning and deployment."
+    severity: "warning"
+  - rule: "Always include model metadata (version, date, metrics)."
+    severity: "warning"
 allowed-tools:
   - "*"
 steps:

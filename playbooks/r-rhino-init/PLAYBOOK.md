@@ -1,4 +1,4 @@
-﻿---
+---
 name: r-rhino-init
 version: 1.0.0
 context-mode: Fork
@@ -177,7 +177,16 @@ tags:
   - enterprise
   - init
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER use global variables for app state — use reactiveValues."
+    severity: "error"
+  - rule: "NEVER use source() inside reactive expressions."
+    severity: "error"
+  - rule: "ALWAYS validate user inputs server-side, not just client-side."
+    severity: "warning"
+  - rule: "Use Shiny modules for reusable UI components."
+    severity: "warning"
+  - rule: "Use logger package for structured logging, not print() or cat()."
+    severity: "warning"
 allowed-tools:
   - "*"
 ---

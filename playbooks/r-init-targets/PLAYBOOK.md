@@ -1,4 +1,4 @@
-﻿---
+---
 name: r-init-targets
 version: 1.0.0
 context-mode: Fork
@@ -185,7 +185,14 @@ allowed-tools:
   - "*"
 
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER edit the _targets/ store manually."
+    severity: "error"
+  - rule: "NEVER use setwd() in pipeline functions — use here::here()."
+    severity: "error"
+  - rule: "ALWAYS test pipeline functions independently before running the pipeline."
+    severity: "warning"
+  - rule: "Use memory = 'transient' for large pipelines."
+    severity: "warning"
 ---
 
 You are a targets pipeline architect specializing in reproducible

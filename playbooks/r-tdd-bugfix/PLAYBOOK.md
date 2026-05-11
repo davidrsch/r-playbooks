@@ -1,8 +1,8 @@
-﻿---
+---
 name: r-tdd-bugfix
 version: 1.0.0
 context-mode: Fork
-description: TDD bugfix workflow: reproduce the bug with a failing test, fix it, verify no regression
+description: "TDD bugfix workflow: reproduce the bug with a failing test, fix it, verify no regression"
 trigger: both
 trigger-patterns:
   - "fix bug *"
@@ -146,7 +146,16 @@ allowed-tools:
   - "*"
 
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER skip the RED phase — always write a failing test first."
+    severity: "error"
+  - rule: "NEVER modify test expectations to make them pass."
+    severity: "error"
+  - rule: "NEVER implement more code than the test requires in GREEN phase."
+    severity: "error"
+  - rule: "ALWAYS run the full test suite after each TDD cycle."
+    severity: "warning"
+  - rule: "Use testthat 3rd edition — no context(), use test_that() directly."
+    severity: "warning"
 ---
 
 You are an R developer specializing in bug diagnosis and safe fixes

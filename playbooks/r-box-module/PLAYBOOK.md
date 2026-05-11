@@ -1,4 +1,4 @@
-﻿---
+---
 name: r-box-module
 version: 1.0.0
 context-mode: Fork
@@ -105,7 +105,14 @@ allowed-tools:
   - "*"
 
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER export internal implementation details."
+    severity: "error"
+  - rule: "ALWAYS use explicit imports with box::use()."
+    severity: "warning"
+  - rule: "Use S7 for formal class systems in new code."
+    severity: "warning"
+  - rule: "NEVER block the main thread with synchronous I/O."
+    severity: "error"
 ---
 
 You are an expert in modern R module architecture using the `box` package by

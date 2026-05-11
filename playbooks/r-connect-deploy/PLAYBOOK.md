@@ -1,4 +1,4 @@
-﻿---
+---
 name: r-connect-deploy
 version: 1.0.0
 context-mode: Fork
@@ -172,7 +172,14 @@ tags:
   - production
   - devops
 constraints:
-  file: ../_shared/constraints-r.md
+  - rule: "NEVER hardcode secrets or tokens in workflow files — use GitHub Secrets."
+    severity: "error"
+  - rule: "ALWAYS include HEALTHCHECK in Dockerfiles."
+    severity: "warning"
+  - rule: "Never expose ports without proper security configuration."
+    severity: "warning"
+  - rule: "Use multi-stage Docker builds to minimize image size."
+    severity: "warning"
 allowed-tools:
   - "*"
 ---
