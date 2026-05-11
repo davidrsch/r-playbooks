@@ -1,0 +1,38 @@
+<script>
+// Client-side filtering for playbook cards
+(function() {
+  const filterInput = document.getElementById('playbook-filter');
+  const grid = document.getElementById('playbook-grid');
+  const tags = document.querySelectorAll('.category-tag');
+  
+  let activeCategory = 'all';
+  
+  function filterCards() {
+    const query = filterInput ? filterInput.value.toLowerCase() : '';
+    const cards = grid.querySelectorAll('.playbook-card');
+    
+    cards.forEach(card => {
+      const name = card.dataset.name.toLowerCase();
+      const cat = card.dataset.category;
+      
+      const matchesSearch = !query || name.includes(query);
+      const matchesCategory = activeCategory === 'all' || cat === activeCategory;
+      
+      card.style.display = (matchesSearch && matchesCategory) ? '' : 'none';
+    });
+  }
+  
+  if (filterInput) {
+    filterInput.addEventListener('input', filterCards);
+  }
+  
+  tags.forEach(tag => {
+    tag.addEventListener('click', function() {
+      tags.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      activeCategory = this.dataset.cat;
+      filterCards();
+    });
+  });
+})();
+</script>

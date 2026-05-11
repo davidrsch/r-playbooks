@@ -1,0 +1,150 @@
+---
+title: "R Playbooks"
+format:
+  html:
+    include-after-body: card-script.html
+---
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(yaml)
+
+# ---- Helpers ----
+
+# Assign emoji + category based on playbook name
+get_playbook_meta <- function(name) {
+  mapping <- list(
+    "r-init-"        = c("🚀", "Scaffolding"),
+    "r-lint"         = c("🧹", "Code Quality"),
+    "r-tdd-"         = c("🧪", "Testing"),
+    "r-bdd-"         = c("🥒", "Testing"),
+    "r-testthat-"    = c("📸", "Testing"),
+    "r-shiny-module"  = c("🧩", "Shiny"),
+    "r-shiny-theme-" = c("🎨", "Shiny"),
+    "r-shiny-e2e-"   = c("🔍", "Shiny"),
+    "r-docker-"      = c("🐳", "DevOps"),
+    "r-ci-"          = c("🔄", "DevOps"),
+    "r-pkg-check"    = c("✅", "Packages"),
+    "r-pkg-add-"     = c("➕", "Packages"),
+    "r-pkg-release"  = c("🏷️", "Packages"),
+    "r-pkgcheck-"    = c("🔎", "Packages"),
+    "r-pkgdown-"     = c("📖", "Packages"),
+    "r-pak-"         = c("🔐", "Packages"),
+    "r-security"     = c("🔒", "Security"),
+    "r-connect-"     = c("☁️", "Deployment"),
+    "r-vetiver-"      = c("🏺", "Deployment"),
+    "r-config-"      = c("⚙️", "Configuration"),
+    "r-logger-"      = c("📋", "Observability"),
+    "r-otel-"        = c("📊", "Observability"),
+    "r-profile"      = c("⚡", "Performance"),
+    "r-refactor"     = c("🔧", "Maintenance"),
+    "r-quarto-"      = c("📄", "Reporting"),
+    "r-data-"        = c("📊", "Data"),
+    "r-targets-"     = c("🎯", "Pipelines"),
+    "r-box-"         = c("📁", "Modules"),
+    "r-rhino-"       = c("🦏", "Apps"),
+    "r-s7-"          = c("🏗️", "OOP"),
+    "r-async-"       = c("⏳", "Async"),
+    "r-api-"         = c("🔌", "API"),
+    "r-code-review"  = c("👀", "Review"),
+    "r-pointblank-"  = c("🛡️", "Validation"),
+    "r-r-version"    = c("📌", "Configuration")
+  )
+  
+  for (prefix in names(mapping)) {
+    if (startsWith(name, prefix)) {
+      return(mapping[[prefix]])
+    }
+  }
+  c("📋", "Other")
+}
+
+# ---- Read all playbooks ----
+
+playbook_dirs <- list.dirs("playbooks", recursive = FALSE)
+playbooks <- list()
+
+for (dir in playbook_dirs) {
+  md_file <- file.path(dir, "PLAYBOOK.md")
+  if (!file.exists(md_file)) next
+  
+  content <- readLines(md_file, warn = FALSE)
+  dashes <- which(content == "---")
+  if (length(dashes) < 2) next
+  
+  yaml_text <- paste(content[(dashes[1] + 1):(dashes[2] - 1)], collapse = "\n")
+  meta <- tryCatch(yaml.load(yaml_text), error = function(e) NULL)
+  if (is.null(meta)) next
+  
+  m <- get_playbook_meta(meta$name)
+  
+  playbooks[[length(playbooks) + 1]] <- list(
+    name        = meta$name,
+    desc        = meta$description %||% "",
+    version     = meta$version %||% "1.0.0",
+    trigger     = meta$trigger %||% "manual",
+    dir         = basename(dir),
+    icon        = m[1],
+    category    = m[2],
+    gh_url      = sprintf("https://github.com/davidxuang/r-playbooks/blob/main/playbooks/%s/PLAYBOOK.md", basename(dir))
+  )
+}
+```
+
+```{r}
+#| echo: false
+# Stats
+n_total   <- length(playbooks)
+cats      <- sort(table(sapply(playbooks, `[[`, "category")), decreasing = TRUE)
+```
+
+::: {.page-header}
+# 🎯 R Playbooks
+
+:::{.subtitle}
+A collection of **`r n_total`** AI-assisted playbooks for common R development workflows —  
+from scaffolding packages to deploying APIs, with step-by-step guidance.
+:::
+
+:::{.stats-bar}
+<span>📚 **`r n_total`** playbooks</span>
+<span>📂 **`r length(cats)`** categories</span>
+<span>🔄 auto-updated from repo</span>
+:::
+:::
+
+::: {.filter-bar}
+<input type="text" id="playbook-filter" placeholder="🔍  Filter playbooks..." autocomplete="off">
+:::
+
+::: {.category-tags id="category-tags"}
+<button class="category-tag active" data-cat="all">All</button>
+`r paste(sprintf('<button class="category-tag" data-cat="%s">%s  <small>(%d)</small></button>', names(cats), names(cats), cats), collapse = "\n")`
+:::
+
+::: {.playbook-grid id="playbook-grid"}
+```{r}
+#| echo: false
+#| results: asis
+
+cards <- character(length(playbooks))
+for (i in seq_along(playbooks)) {
+  pb <- playbooks[[i]]
+  trigger_class <- if (pb$trigger == "both") "both" else "manual"
+  trigger_label <- toupper(pb$trigger)
+  
+  cards[i] <- sprintf(
+    '<a href="%s" class="playbook-card" data-name="%s" data-category="%s" style="--card-accent: var(--bs-primary);"><div class="card-header"><span class="card-icon">%s</span><span class="card-name">%s</span></div><div class="card-description">%s</div><div class="card-meta"><span class="badge badge-version">v%s</span><span class="badge badge-trigger %s">%s</span></div></a>',
+    pb$gh_url, pb$name, pb$category,
+    pb$icon, pb$name,
+    pb$desc,
+    pb$version, trigger_class, trigger_label
+  )
+}
+
+knitr::asis_output(paste(cards, collapse = "\n"))
+```
+:::

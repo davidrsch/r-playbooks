@@ -1,0 +1,33 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - index.qmd
+
+website:
+  title: "R Playbooks"
+  site-url: https://davidxuang.github.io/r-playbooks/
+  repo-url: https://github.com/davidxuang/r-playbooks/
+  navbar:
+    background: primary
+    search: true
+    left:
+      - text: "Playbooks"
+        href: index.qmd
+      - text: "GitHub"
+        href: https://github.com/davidxuang/r-playbooks/
+        icon: github
+
+  page-footer:
+    left: "R Playbooks — curated AI coding playbooks for R development"
+    right: "Built with [Quarto](https://quarto.org/)"
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: false
+    page-layout: full
+
+execute:
+  freeze: auto
