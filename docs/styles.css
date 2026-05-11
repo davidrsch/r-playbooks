@@ -248,6 +248,93 @@
   box-shadow: 0 0 0 0.2rem var(--bs-primary-bg-subtle);
 }
 
+/* ---- Dark mode overrides ---- */
+
+.quarto-dark .playbook-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.quarto-dark .badge-version {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.quarto-dark .badge-trigger.manual {
+  background: rgba(255, 193, 7, 0.15);
+  color: #ffc107;
+}
+
+.quarto-dark .badge-trigger.both {
+  background: rgba(0, 188, 140, 0.15);
+  color: #00bc8c;
+}
+
+.quarto-dark .badge-category {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.quarto-dark .badge-link {
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.quarto-dark .badge-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.quarto-dark .card-name {
+  color: var(--bs-body-color);
+}
+
+.quarto-dark .card-description {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.quarto-dark .card-check {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.quarto-dark .card-check:has(input:checked) {
+  background: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+.quarto-dark .filter-bar input {
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.quarto-dark .toolbar-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.quarto-dark .stats-bar {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.quarto-dark .category-tag {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.quarto-dark .category-tag.active {
+  background: var(--bs-primary);
+  color: #fff;
+  border-color: var(--bs-primary);
+}
+
+.quarto-dark .btn-show-more {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .toolbar-btn {
   padding: 0.45rem 1rem;
   border: 1px solid var(--bs-border-color);
