@@ -94,34 +94,42 @@
     btnDownload.textContent = '⏳ Preparing...';
     btnDownload.disabled = true;
 
-    let md = '# Selected R Playbooks\n\n';
-    md += `*Generated: ${new Date().toISOString().split('T')[0]}*\n\n`;
-    md += `---\n\n`;
+    const zip = new JSZip();
+    let success = 0;
+    let failed = 0;
 
     for (const cb of checked) {
-      const file = cb.dataset.file;
-      const url  = `https://raw.githubusercontent.com/davidrsch/r-playbooks/main/playbooks/${file}/PLAYBOOK.md`;
+      const folder = cb.dataset.file;
+      const url  = `https://raw.githubusercontent.com/davidrsch/r-playbooks/main/playbooks/${folder}/PLAYBOOK.md`;
 
       try {
         const resp = await fetch(url);
         if (!resp.ok) {
-          md += `> ⚠️ Could not fetch: **${cb.dataset.name}**\n\n---\n\n`;
+          failed++;
           continue;
         }
         let text = await resp.text();
         // Strip YAML frontmatter to keep download clean
         text = text.replace(/^---[\s\S]*?---\n*/, '');
-        md += text.trim() + '\n\n---\n\n';
+        zip.file(`playbooks/${folder}/PLAYBOOK.md`, text);
+        success++;
       } catch {
-        md += `> ⚠️ Could not fetch: **${cb.dataset.name}**\n\n---\n\n`;
+        failed++;
       }
     }
 
-    // Trigger download
-    const blob = new Blob([md], { type: 'text/markdown' });
+    if (success === 0) {
+      btnDownload.innerHTML = '⬇ Download (<span id="selected-count">0</span>)';
+      btnDownload.disabled = false;
+      setTimeout(() => { updateSelectionUI(); }, 100);
+      return;
+    }
+
+    // Generate ZIP and trigger download
+    const blob = await zip.generateAsync({ type: 'blob' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `r-playbooks-${checked.length}-selected.md`;
+    a.download = `r-playbooks-${success}-selected.zip`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -129,7 +137,6 @@
 
     btnDownload.innerHTML = '⬇ Download (<span id="selected-count">0</span>)';
     btnDownload.disabled = false;
-    // Reset count span reference after innerHTML change
     setTimeout(() => { updateSelectionUI(); }, 100);
   });
 

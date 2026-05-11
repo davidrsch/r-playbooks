@@ -148,11 +148,11 @@ for (i in seq_along(playbooks)) {
   pb <- playbooks[[i]]
   trigger_class <- if (pb$trigger == "both") "both" else "manual"
   trigger_label <- toupper(pb$trigger)
-  hidden <- if (i > init_show) ' style="display:none"' else ""
+  hidden_style <- if (i > init_show) '; display:none' else ''
 
   cards[i] <- sprintf(
-    '<div class="playbook-card%s" data-name="%s" data-category="%s" style="--card-accent: var(--bs-primary);"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="%s" data-name="%s" title="Select this playbook"></label><a href="%s" class="card-body"><div class="card-header"><span class="card-icon">%s</span><span class="card-name">%s</span></div><div class="card-description">%s</div><div class="card-meta"><span class="badge badge-version">v%s</span><span class="badge badge-trigger %s">%s</span><span class="badge badge-link">📋 source</span></div></a></div>',
-    hidden, pb$name, pb$category,
+    '<div class="playbook-card" data-name="%s" data-category="%s" style="--card-accent: var(--bs-primary)%s"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="%s" data-name="%s" title="Select this playbook"></label><a href="%s" class="card-body"><div class="card-header"><span class="card-icon">%s</span><span class="card-name">%s</span></div><div class="card-description">%s</div><div class="card-meta"><span class="badge badge-version">v%s</span><span class="badge badge-trigger %s">%s</span><span class="badge badge-link">📋 source</span></div></a></div>',
+    pb$name, pb$category, hidden_style,
     pb$dir, pb$name,
     pb$gh_url,
     pb$icon, pb$name,

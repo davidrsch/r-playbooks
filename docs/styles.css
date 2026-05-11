@@ -19,6 +19,7 @@
   position: relative;
   overflow: hidden;
   display: flex;
+  color: var(--bs-body-color);
 }
 
 .playbook-card::before {
@@ -110,7 +111,7 @@
 .card-name {
   font-weight: 700;
   font-size: 1.05rem;
-  color: var(--bs-heading-color);
+  color: var(--bs-emphasis-color);
   font-family: var(--bs-font-monospace);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -120,9 +121,10 @@
 /* ---- Card Description ---- */
 .card-description {
   font-size: 0.9rem;
-  color: var(--bs-secondary-color);
+  color: var(--bs-body-color);
   line-height: 1.45;
   flex-grow: 1;
+  opacity: 0.85;
 }
 
 /* ---- Card Meta ---- */

@@ -28,6 +28,9 @@ format:
     css: styles.css
     toc: false
     page-layout: full
+    include-after-body: card-script.html
+    include-in-header:
+      - text: '<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>'
 
 execute:
   freeze: auto
