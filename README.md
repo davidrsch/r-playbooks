@@ -10,19 +10,19 @@ Playbooks are structured, step-by-step guides designed for AI coding agents. Eac
 
 ## Categories
 
-| Category | Playbooks |
-|---|---|
-| 📦 **Package Dev** | `r-init-package`, `r-pkg-add-function`, `r-pkg-check`, `r-pkg-release`, `r-pkgcheck-review`, `r-pkgdown-site`, `r-pak-lockfile` |
-| 🧪 **Testing & QA** | `r-lint`, `r-tdd-feature`, `r-tdd-bugfix`, `r-bdd-feature`, `r-testthat-snapshot`, `r-code-review` |
-| ✨ **Shiny Apps** | `r-init-shiny`, `r-shiny-module`, `r-shiny-theme-bslib`, `r-shiny-e2e-test`, `r-rhino-init` |
-| 🎯 **Data Pipelines** | `r-init-targets`, `r-targets-add-target`, `r-targets-branching`, `r-targets-crew` |
-| 🚀 **Deploy & DevOps** | `r-docker-build`, `r-connect-deploy`, `r-vetiver-deploy`, `r-ci-gha` |
-| 🔌 **APIs** | `r-init-plumber`, `r-api-endpoint` |
-| 📊 **Observability** | `r-logger-setup`, `r-otel-instrument`, `r-profile` |
-| 🛡️ **Data & Validation** | `r-data-validate`, `r-pointblank-agent` |
-| 🏗️ **Architecture** | `r-box-module`, `r-s7-class`, `r-refactor`, `r-async-mirai` |
-| 🔒 **Config & Security** | `r-config-env`, `r-security` |
-| 📄 **Reports** | `r-quarto-render` |
+| Category                 | Playbooks                                                                                                                       |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| 📦 **Package Dev**       | `r-init-package`, `r-pkg-add-function`, `r-pkg-check`, `r-pkg-release`, `r-pkgcheck-review`, `r-pkgdown-site`, `r-pak-lockfile` |
+| 🧪 **Testing & QA**      | `r-lint`, `r-tdd-feature`, `r-tdd-bugfix`, `r-bdd-feature`, `r-testthat-snapshot`, `r-code-review`                              |
+| ✨ **Shiny Apps**        | `r-init-shiny`, `r-shiny-module`, `r-shiny-theme-bslib`, `r-shiny-e2e-test`, `r-rhino-init`                                     |
+| 🎯 **Data Pipelines**    | `r-init-targets`, `r-targets-add-target`, `r-targets-branching`, `r-targets-crew`                                               |
+| 🚀 **Deploy & DevOps**   | `r-docker-build`, `r-connect-deploy`, `r-vetiver-deploy`, `r-ci-gha`                                                            |
+| 🔌 **APIs**              | `r-init-plumber`, `r-api-endpoint`                                                                                              |
+| 📊 **Observability**     | `r-logger-setup`, `r-otel-instrument`, `r-profile`                                                                              |
+| 🛡️ **Data & Validation** | `r-data-validate`, `r-pointblank-agent`                                                                                         |
+| 🏗️ **Architecture**      | `r-box-module`, `r-s7-class`, `r-refactor`, `r-async-mirai`                                                                     |
+| 🔒 **Config & Security** | `r-config-env`, `r-security`                                                                                                    |
+| 📄 **Reports**           | `r-quarto-render`                                                                                                               |
 
 ## Playbook structure
 
@@ -40,7 +40,6 @@ parameters:
     type: string
     required: true
 ---
-
 # Playbook steps...
 ```
 
