@@ -153,12 +153,13 @@
 
 .badge-category {
   background: var(--bs-tertiary-bg);
-  color: var(--bs-tertiary-color);
+  color: var(--bs-emphasis-color);
   font-size: 0.72rem;
   font-weight: 500;
   padding: 0.2em 0.65em;
   border-radius: 6px;
   align-self: flex-start;
+  opacity: 0.75;
 }
 
 .badge-trigger {
