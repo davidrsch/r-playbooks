@@ -9,7 +9,7 @@ permissions:
     contents: write
 
 jobs:
-    deploy:
+    build-deploy:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -21,18 +21,15 @@ jobs:
             - uses: r-lib/actions/setup-r@v2
               with:
                   r-version: "4.4"
-                  use-public-rspm: true
 
             - name: Install R dependencies
               run: |
-                  Rscript -e 'install.packages(c("yaml", "knitr", "rmarkdown"), repos = "https://cloud.r-project.org")'
+                  install.packages(c("yaml", "knitr", "rmarkdown"))
+              shell: Rscript {0}
 
-            - name: Render site
-              run: quarto render
-
-            - uses: peaceiris/actions-gh-pages@v4
+            - name: Render and Publish
+              uses: quarto-dev/quarto-actions/publish@v2
               with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: ./docs
-                  publish_branch: gh-pages
-                  force_orphan: true
+                  target: gh-pages
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
