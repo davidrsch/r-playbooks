@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/davidrsch/r-playbooks/playbook-schema.json",
+  "title": "R Playbook",
+  "description": "Schema for validating R playbook PLAYBOOK.md YAML frontmatter",
+  "type": "object",
+  "required": ["name", "version", "description", "trigger", "steps"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^r-[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Playbook name in kebab-case, must start with 'r-'"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version (e.g., 1.0.0)"
+    },
+    "context-mode": {
+      "type": "string",
+      "enum": ["Fork", "Same", "Sandbox"],
+      "description": "Execution context mode for Copilot"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 200,
+      "description": "Concise description of what the playbook does"
+    },
+    "trigger": {
+      "type": "string",
+      "enum": ["manual", "automatic", "both"],
+      "description": "How the playbook is triggered"
+    },
+    "trigger-patterns": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "description": "Natural language patterns that trigger this playbook"
+    },
+    "argument-hint": {
+      "type": "string",
+      "description": "CLI-style argument hint for the playbook"
+    },
+    "parameters": {
+      "type": "object",
+      "description": "Input parameters for the playbook",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["type", "required", "hint"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["String", "Boolean", "Integer", "Float", "Array"]
+          },
+          "required": { "type": "boolean" },
+          "default": {},
+          "hint": { "type": "string", "minLength": 1 },
+          "enum": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "inline-prompt"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:-[a-z][a-z0-9]*)*$",
+            "description": "Step identifier in kebab-case"
+          },
+          "requires": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "IDs of steps that must complete before this one"
+          },
+          "inline-prompt": {
+            "type": "string",
+            "minLength": 10,
+            "description": "The Copilot prompt for this step"
+          },
+          "output": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "description": "Variable name to store this step's output"
+          },
+          "gate": {
+            "type": "string",
+            "enum": ["Confirm"],
+            "description": "Whether this step requires user confirmation"
+          }
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "maxItems": 10,
+      "description": "Tags for categorization"
+    },
+    "allowed-tools": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Tools allowed during playbook execution"
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "file": { "type": "string" }
+      }
+    }
+  }
+}
