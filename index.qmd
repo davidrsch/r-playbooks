@@ -23,7 +23,9 @@ CATEGORIES <- list(
             "r-pkg-release",
             "r-pkgcheck-",
             "r-pkgdown-",
-            "r-pak-"
+            "r-pak-",
+            "r-renv-",
+            "r-cran-"
         )
     ),
     "Testing & QA" = list(
@@ -56,15 +58,15 @@ CATEGORIES <- list(
     ),
     "APIs" = list(
         icon = "🔌",
-        prefixes = c("r-api-", "r-init-plumber")
+        prefixes = c("r-api-", "r-init-plumber", "r-httr2-")
     ),
     "Observability" = list(
         icon = "📊",
-        prefixes = c("r-logger-", "r-otel-", "r-profile")
+        prefixes = c("r-logger-", "r-otel-", "r-profile", "r-debug")
     ),
     "Data & Validation" = list(
         icon = "🛡️",
-        prefixes = c("r-data-", "r-pointblank-")
+        prefixes = c("r-data-", "r-pointblank-", "r-dbi-", "r-duckdb-")
     ),
     "Architecture" = list(
         icon = "🏗️",
@@ -76,7 +78,11 @@ CATEGORIES <- list(
     ),
     "Reports" = list(
         icon = "📄",
-        prefixes = c("r-quarto-")
+        prefixes = c("r-quarto-render", "r-quarto-website", "r-quarto-dashboard")
+    ),
+    "ML & Tidymodels" = list(
+        icon = "🤖",
+        prefixes = c("r-tidymodels-")
     )
 )
 
