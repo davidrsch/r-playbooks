@@ -118,7 +118,7 @@ for (dir in sort(dirs)) {
   }
 
   # 3g. Validate trigger
-  valid_triggers <- c("manual", "automatic", "both")
+  valid_triggers <- c("manual", "auto", "both")
   if (!is.null(yaml$trigger) && !yaml$trigger %in% valid_triggers) {
     errors[[playbook_name]] <- c(
       errors[[playbook_name]],
@@ -154,7 +154,7 @@ for (dir in sort(dirs)) {
   }
 
   # 3i. Validate context-mode
-  valid_modes <- c("Fork", "Same", "Sandbox")
+  valid_modes <- c("Full", "Selective", "Fork")
   if (
     !is.null(yaml[["context-mode"]]) &&
       !yaml[["context-mode"]] %in% valid_modes
@@ -267,7 +267,7 @@ for (dir in sort(dirs)) {
         errors[[playbook_name]] <- c(
           errors[[playbook_name]],
           sprintf(
-            "%s '%s': gate must be 'Confirm', got '%s'",
+            "%s '%s': gate '%s' must be one of: Confirm, Review, Approve",
             step_label,
             step$id,
             step$gate
