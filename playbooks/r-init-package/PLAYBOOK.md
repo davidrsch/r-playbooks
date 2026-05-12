@@ -247,11 +247,11 @@ steps:
 
       1. Change to {{state.pkg_path}}
       2. Run `devtools::check(args = c("--no-manual", "--no-vignettes", "--as-cran"))`
-        : R CMD check MUST pass with 0 errors before commit
+         R CMD check MUST pass with 0 errors before commit
       3. Fix any errors or warnings before proceeding
       4. Run: `pak::lockfile_create("pkg.lock")` to generate SBOM/manifest
       5. Make the initial git commit:
-      4. Run: `git commit -m "feat: initial package scaffold for {{params.name}}"`
+         Run: `git commit -m "feat: initial package scaffold for {{params.name}}"`
 
       Report: commit hash and summary.
     gate: Review
