@@ -199,7 +199,7 @@ for (i in seq_along(playbooks)) {
     pb <- playbooks[[i]]
     trigger_class <- if (pb$trigger == "both") "both" else "manual"
     trigger_label <- toupper(pb$trigger)
-    hidden_style <- if (i > init_show) ';display:none' else ''
+    hidden_style <- if (i > init_show) ";display:none" else ""
 
     cat(paste0(
         '<div class="playbook-card" data-name="',
@@ -221,13 +221,13 @@ for (i in seq_along(playbooks)) {
         pb$icon,
         '</span><span class="card-name">',
         pb$name,
-        '</span></div>',
+        "</span></div>",
         '<div class="card-description">',
         pb$desc,
-        '</div>',
+        "</div>",
         '<span class="badge badge-category">',
         pb$category,
-        '</span>',
+        "</span>",
         '<div class="card-meta"><span class="badge badge-version">v',
         pb$version,
         '</span><span class="badge badge-trigger ',
@@ -235,9 +235,9 @@ for (i in seq_along(playbooks)) {
         '">',
         trigger_label,
         '</span><span class="badge badge-link">📋 source</span></div>',
-        '</a>',
-        '</div>',
-        '\n'
+        "</a>",
+        "</div>",
+        "\n"
     ))
 }
 ```
