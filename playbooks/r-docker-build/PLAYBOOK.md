@@ -37,6 +37,11 @@ parameters:
     required: false
     default: true
     hint: "Use renv.lock for dependency installation"
+  multistage:
+    type: Boolean
+    required: false
+    default: false
+    hint: "Use multi-stage build to minimise final image size (separates build deps from runtime)"
 steps:
   - id: analyze-project
     inline-prompt: |
@@ -206,6 +211,71 @@ steps:
       Report: .dockerignore created.
     output: dockerignore
 
+  - id: multistage-dockerfile
+    requires: [analyze-project]
+    inline-prompt: |
+      If the user specified 'multistage' as true (value: {{params.multistage}}):
+      Rewrite the Dockerfile as a multi-stage build to minimise the final image size.
+
+      The pattern separates build-time dependencies (compiler tools, dev headers, renv restore)
+      from the runtime image (only the installed R library and app files).
+
+      **Multi-stage template for type "{{params.type}}":**
+
+      ```dockerfile
+      # ── Stage 1: builder ────────────────────────────────────────
+      FROM rocker/r-ver:{{params.r-version}} AS builder
+
+      RUN apt-get update && apt-get install -y --no-install-recommends \
+        libcurl4-openssl-dev \
+        libssl-dev \
+        libxml2-dev \
+        make \
+        && rm -rf /var/lib/apt/lists/*
+
+      # Restore R packages into a dedicated library path
+      ENV RENV_PATHS_LIBRARY=/renv/library
+      COPY renv.lock .
+      COPY .Rprofile .
+      COPY renv/activate.R renv/
+      RUN R -e "renv::restore(library = Sys.getenv('RENV_PATHS_LIBRARY'), prompt = FALSE)"
+
+      # ── Stage 2: runtime ────────────────────────────────────────
+      FROM rocker/r-ver:{{params.r-version}}
+
+      # Only runtime system libs (no -dev headers needed after compile)
+      RUN apt-get update && apt-get install -y --no-install-recommends \
+        libcurl4 \
+        libssl3 \
+        libxml2 \
+        && rm -rf /var/lib/apt/lists/*
+
+      # Copy the pre-built library from builder
+      ENV RENV_PATHS_LIBRARY=/renv/library
+      COPY --from=builder /renv/library /renv/library
+
+      # Copy application source (no renv/ dir needed at runtime)
+      COPY --chown=nobody:nogroup . /app
+      WORKDIR /app
+
+      EXPOSE {{params.port}}
+      USER nobody
+      CMD ["R", "-e", "# set entrypoint per type"]
+      ```
+
+      Adjust the CMD for the project type:
+      - shiny:   `CMD ["/usr/bin/shiny-server"]`
+      - plumber: `CMD ["R", "-e", "plumber::pr_run(plumber::pr('plumber.R'), host='0.0.0.0', port={{params.port}})"]`
+      - package: `CMD ["R"]`
+      - quarto:  `CMD ["quarto", "render"]`
+
+      Report: multi-stage Dockerfile created. Estimate size reduction vs. single-stage.
+
+      If the user specified 'multistage' as false: skip this step.
+      Report: skipped — single-stage Dockerfile used.
+    gate: Review
+    output: multistage_dockerfile
+
   - id: build-instructions
     requires: [create-dockerfile]
     inline-prompt: |
@@ -261,7 +331,7 @@ constraints:
     severity: "warning"
   - rule: "Never expose ports without proper security configuration."
     severity: "warning"
-  - rule: "Use multi-stage Docker builds to minimize image size."
+  - rule: "Use multi-stage Docker builds (multistage: true) for production images to minimize size."
     severity: "warning"
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: r-refactor
-version: 1.0.0
+version: 1.1.0
 context-mode: Fork
 description: "Safe refactoring of R code: capture current behavior with tests as a safety net, then restructure the code (extract functions, rename, reorganize) and verify nothing broke"
 trigger: both
@@ -9,7 +9,7 @@ trigger-patterns:
   - "clean up *"
   - "restructure *"
   - "reorganize *"
-argument-hint: "--target <function|file> [--reason <text>] [--snapshot true|false]"
+argument-hint: "--target <function|file> [--reason <text>] [--snapshot true|false] [--benchmark true|false]"
 parameters:
   target:
     type: String
@@ -24,6 +24,11 @@ parameters:
     required: false
     default: true
     hint: "Use snapshot tests to lock in current behavior before refactoring"
+  benchmark:
+    type: Boolean
+    required: false
+    default: false
+    hint: "Capture bench::mark() timings before refactoring and compare after (useful when reason includes performance)"
 steps:
   - id: capture-state
     inline-prompt: |
@@ -38,15 +43,37 @@ steps:
       2. If target is a file path:
          - Read the file.
          - List all files that `source()` or depend on it.
-      3. Create a git checkpoint:
-         - `git stash` or note the current HEAD.
+      3. Create a named git stash as a hard checkpoint:
+         ```bash
+         git stash push -m "pre-refactor-{{params.target}}"
+         git stash list | head -1   # confirm the stash was created; note the reference
+         ```
+         If there are no uncommitted changes, instead record the current HEAD:
+         ```bash
+         git rev-parse HEAD
+         ```
+         Include the stash ref or commit hash in the report — this is the single
+         recovery point if anything goes wrong.
       4. Snapshot the renv state: `renv::snapshot(type = "explicit")` to lock package versions
          before refactoring.
-      5. Report:
+      5. If {{params.benchmark}} is true, capture a baseline timing for the target function:
+         ```r
+         # Use representative, stable inputs
+         bm_before <- bench::mark(
+           {{params.target}}(<representative_input>),
+           iterations = 100,
+           check = FALSE
+         )
+         saveRDS(bm_before, file = "/tmp/bm_before_{{params.target}}.rds")
+         print(bm_before[c("expression", "median", "mem_alloc", "n_itr")])
+         ```
+         Include the baseline median time and memory in the report.
+      6. Report:
          - Current state summary
          - All callers/dependents
          - Test status (all passing?)
-         - Git checkpoint: commit hash or stash reference
+         - Git checkpoint: stash ref (e.g., `stash@{0}: pre-refactor-{{params.target}}`) or commit hash
+         - Benchmark baseline (if benchmark: true): median time, memory
     output: pre_state
 
   - id: add-snapshot-tests
@@ -147,7 +174,7 @@ steps:
       - Run: `lintr::lint_package()` to check style didn't regress
 
       If at any point you're unsure, STOP and ask for guidance.
-    gate: Review
+    gate: Approve
     output: refactor_results
 
   - id: verify-refactor
@@ -155,7 +182,7 @@ steps:
     inline-prompt: |
       Verify the refactoring is complete and correct.
 
-      1. Review the diff: `git diff` (if available)
+      1. Review the diff: `git diff` (or `git diff stash@{0}` if changes were stashed before)
       2. Confirm:
          ✅ All tests pass (including snapshot tests)
          ✅ No behavior changes (snapshot tests confirm this)
@@ -163,17 +190,42 @@ steps:
          ✅ No new lints introduced
          ✅ R CMD check passes
       3. If snapshot tests were used:
-         - The snapshots confirm zero behavior change
+         - The snapshots confirm zero behavior change.
          - If the refactor intentionally changed behavior (e.g., bug fix),
            update the snapshots: `testthat::snapshot_accept()`
-         - Document why behavior changed
-      4. Report:
+         - Document why behavior changed.
+      4. If {{params.benchmark}} is true, run a post-refactor benchmark and compare:
+         ```r
+         bm_after <- bench::mark(
+           {{params.target}}(<representative_input>),
+           iterations = 100,
+           check = FALSE
+         )
+         bm_before <- readRDS("/tmp/bm_before_{{params.target}}.rds")
+         cat("Before:", format(bm_before$median), " After:", format(bm_after$median), "\n")
+         cat("Memory before:", format(bm_before$mem_alloc), " after:", format(bm_after$mem_alloc), "\n")
+         speedup <- as.numeric(bm_before$median) / as.numeric(bm_after$median)
+         cat("Speedup:", round(speedup, 2), "x\n")
+         ```
+         If the refactor was NOT intended to improve performance and the after-median
+         is more than 20% slower than the before-median, flag it as a regression.
+      5. Commit the refactor:
+         ```bash
+         git add R/{{params.target}}.R tests/testthat/
+         git commit -m "refactor: {{params.target}} — {{params.reason}}
+
+         No behavior change. Snapshot tests confirm output identical.
+         $(if benchmark: true) Performance: <speedup>x (before: <med_before>, after: <med_after>)."
+         ```
+      6. Report:
          ```
          🔵 REFACTOR COMPLETE:
-         Target: {{params.target}}
-         Changes: <summary>
-         Result: <N> tests passing, 0 regressions
-         Status: ✅ Safe to commit
+         Target:      {{params.target}}
+         Changes:     <summary>
+         Tests:       <N>/<M> passing, 0 regressions
+         Performance: <speedup>x (or N/A if benchmark: false)
+         Committed:   <hash>
+         Status:      ✅ Safe to merge
          ```
 
       If the refactor required no changes (code was already clean), report that.
@@ -210,7 +262,7 @@ without changing external behavior, protected by a test safety net.
 2. **SMALL STEPS**: Make one change at a time, test, then proceed.
 3. **TEST AFTER EVERY CHANGE**: Run tests after each micro-change.
 4. **REVERT ON FAILURE**: If tests break and you can't fix in 1 minute, revert.
-5. **GIT SAFETY NET**: Ensure there's a way to undo (git stash/commit before).
+5. **GIT SAFETY NET**: Always create a named stash (`git stash push -m "pre-refactor-<target>"`) before the first change so recovery is one command away.
 6. **SNAPSHOTS ARE SACRED**: Snapshot tests define "correct behavior."
    If they change, you either made a mistake or are fixing a bug (not refactoring).
 7. **LEAVE IT BETTER**: The code should be objectively better after refactoring:

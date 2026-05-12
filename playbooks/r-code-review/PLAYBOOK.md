@@ -1,6 +1,6 @@
 ---
 name: r-code-review
-version: 1.0.0
+version: 1.1.0
 context-mode: Fork
 description: "Perform a structured code review for R code: check code style, logical correctness, security, performance bottlenecks, and documentation completeness"
 trigger: both
@@ -255,8 +255,58 @@ steps:
     gate: Review
     output: performance_report
 
+  - id: check-docs
+    inline-prompt: |
+      Review documentation completeness and test coverage.
+
+      File: {{params.file}}
+      Scope: {{params.scope}}
+
+      **Documentation review:**
+      1. For every exported function, verify roxygen2 blocks are present and complete:
+         - `@title` — one-line description (or bare `#'` first line)
+         - `@description` — fuller description (optional but encouraged)
+         - `@param` — every argument documented, with type and valid values
+         - `@returns` — what the function returns (not just "a data.frame" — be specific)
+         - `@examples` — at least one runnable example; wrap slow/network examples in `\dontrun{}`
+         - `@export` — present on all public functions; absent on internal helpers
+         - `@noRd` — present on internal helpers that should not appear in help pages
+         - `@family` — present to group related functions in pkgdown reference index
+      2. Run `devtools::check_man()` or inspect `devtools::document()` output for
+         roxygen2 warnings (missing `@param`, undocumented arguments, etc.).
+      3. Check README.md:
+         - Installation instructions present?
+         - Quick-start example present and correct?
+         - Badges: R CMD check, coverage, CRAN status?
+      4. Check for vignettes (`vignettes/`) for complex multi-function workflows.
+         Missing vignettes for non-trivial functionality is a documentation gap.
+      5. Verify `NEWS.md` exists and contains an entry for the current development version.
+
+      **Test coverage review:**
+      6. Run coverage measurement:
+         ```r
+         cov <- covr::package_coverage(quiet = FALSE)
+         print(cov)
+         covr::report(cov)  # opens HTML report in viewer
+         ```
+      7. Identify functions with < 80% coverage — list them with their current coverage %.
+      8. Identify untested exported functions (0% coverage) — flag as [Critical].
+      9. Check that error paths are covered:
+         ```r
+         # Example: is the rlang::abort() branch tested?
+         covr::tally_coverage(cov) |> dplyr::filter(value == 0)
+         ```
+
+      Report:
+      - Documentation: list of functions missing docs or incomplete docs
+      - Coverage: overall %, functions below 80%, untested functions
+      - README: present / missing sections
+      - Vignettes: present / recommended
+    gate: Review
+    output: docs_report
+
   - id: summarize-review
-    requires: [check-style, check-correctness, check-safety, check-performance]
+    requires: [check-style, check-correctness, check-safety, check-performance, check-docs]
     inline-prompt: |
       Produce a comprehensive code review summary.
 

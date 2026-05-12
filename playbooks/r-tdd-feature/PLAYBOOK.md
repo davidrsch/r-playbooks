@@ -1,6 +1,6 @@
 ---
 name: r-tdd-feature
-version: 1.0.0
+version: 1.1.0
 context-mode: Fork
 description: "TDD (Test-Driven Development): Red-Green-Refactor cycle — write a failing test first, implement minimal code to pass, then refactor. Works for R packages, Shiny modules, Plumber endpoints, or any R code"
 trigger: both
@@ -61,30 +61,34 @@ steps:
 
       Feature spec: {{state.spec}}
       Target function: {{params.function}}
+      Max TDD cycles allowed: {{params.max-cycles}}
 
       1. Create or locate the test file: `tests/testthat/test-{{params.function}}.R`
       2. Write ONE minimal test that captures the core requirement.
+         - One behaviour per `test_that()` block.
+         - Descriptive test name: "returns <expected> when <condition>"
+         - Test the WHAT (observable output), not the HOW (implementation).
+         - Follow existing package conventions for test style.
       3. The test MUST fail at this point (if the function doesn't exist yet,
          it will fail with "could not find function": that's expected).
          If the function already exists, the test should fail because the
-         new behavior isn't implemented yet.
+         new behaviour isn't implemented yet.
       4. Run: `devtools::test(filter = "{{params.function}}")` to verify failure.
       5. Report:
          ```
-         🔴 RED: Test written and FAILING (expected):
+         🔴 RED (cycle N of {{params.max-cycles}}): Test written and FAILING (expected):
          Test: <describe the test>
          Expected: <what should happen>
-         Actual: <current behavior / error>
+         Actual: <current behaviour / error>
          ```
-
-      Rules for the test:
-      - One behavior per test_that() block
-      - Use descriptive test names: "handles <case> correctly"
-      - Test the WHAT, not the HOW
-      - Follow existing package conventions for test style
 
       If the test PASSES unexpectedly, stop and re-assess: the feature may
       already be implemented, or the test isn't testing the right thing.
+
+      Note on cycles: this playbook allows up to {{params.max-cycles}} Red-Green-Refactor
+      cycles. Each cycle adds one new behaviour. After completing this cycle's
+      Green and Refactor phases, run `complete_step` again to start the next
+      Red phase for the next behaviour (up to the limit).
     gate: Review
     output: red_result
 
@@ -156,25 +160,49 @@ steps:
   - id: document-and-integrate
     requires: [refactor-phase]
     inline-prompt: |
-      Finalize the feature with documentation and integration verification.
+      Finalize the feature with documentation, coverage, and integration verification.
 
       1. Add roxygen2 documentation to {{params.function}}:
-         - `@title`, `@description`, `@param`, `@returns`, `@examples`, `@export`, `@family`, `@inheritParams`
+         - `@title`, `@description`, `@param`, `@returns`, `@examples`, `@export`
+         - Add `@family <group>` to link related functions in pkgdown
+         - Add `@inheritParams` if parameters are shared with existing functions
       2. Run: `devtools::document()` to update NAMESPACE and man/.
-      3. Run FULL test suite: `devtools::test()`
-      4. Run: `devtools::check(args = c("--as-cran", "--no-manual", "--no-vignettes"))`
-      5. If lintr is configured: `lintr::lint_package()`
-      6. Run styler on the modified files: `styler::style_file("R/{{params.function}}.R")`
-      7. Report final status:
+      3. Run styler on the modified files:
+         ```r
+         styler::style_file("R/{{params.function}}.R")
+         styler::style_file("tests/testthat/test-{{params.function}}.R")
          ```
-         ✅ TDD Cycle Complete:
-         🔴 RED:   1 test failed (expected)
-         🟢 GREEN: 1 test now passes
-         🔵 REFACTOR: Code improved
-         📋 Documentation: Added
-         🧪 Full suite: <N>/<M> tests passing
-         📦 R CMD check: <status>
+      4. Measure test coverage for the new function:
+         ```r
+         covr::file_coverage(
+           source_files = "R/{{params.function}}.R",
+           test_files   = "tests/testthat/test-{{params.function}}.R"
+         )
          ```
+         Target: ≥ 90% line coverage. If below, identify uncovered branches
+         (typically error paths or edge cases) and add tests for them.
+      5. Run FULL test suite: `devtools::test()`
+      6. Run: `devtools::check(args = c("--as-cran", "--no-manual", "--no-vignettes"))`
+         Must pass with 0 errors, 0 warnings.
+      7. If lintr is configured: `lintr::lint_package()`
+      8. Commit the completed feature:
+         ```bash
+         git add R/{{params.function}}.R tests/testthat/test-{{params.function}}.R man/
+         git commit -m "feat: implement {{params.function}} via TDD ({{params.feature}})"
+         ```
+
+      Report final status:
+      ```
+      ✅ TDD COMPLETE:
+      🔴 RED:      <N> test(s) written and initially failing
+      🟢 GREEN:    All tests now passing
+      🔵 REFACTOR: Code improved
+      📋 Docs:     roxygen2 documentation added
+      📊 Coverage: <N>% of R/{{params.function}}.R
+      🧪 Suite:    <N>/<M> tests passing
+      📦 R CMD check: 0 errors / 0 warnings
+      💾 Committed: <commit hash>
+      ```
 
       If R CMD check has issues, fix them before completing.
     gate: Review
