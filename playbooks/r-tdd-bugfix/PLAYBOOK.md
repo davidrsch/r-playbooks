@@ -1,6 +1,6 @@
 ---
 name: r-tdd-bugfix
-version: 1.0.0
+version: 1.1.0
 context-mode: Fork
 description: "TDD bugfix workflow: reproduce the bug by writing a failing test first, fix the code, then verify no regressions. Works for R packages, Shiny apps, Plumber APIs, or any R code"
 trigger: both
@@ -37,10 +37,22 @@ steps:
       1. If a function was named, read its source file: `R/{{params.function}}.R`
       2. If no function named, search for relevant code using the bug description.
       3. Read existing tests: `tests/testthat/test-{{params.function}}.R`
-      4. Try to manually reproduce the bug:
+      4. Check git log for recent changes to the affected area:
+         ```bash
+         git log --oneline -20 -- R/{{params.function}}.R
+         git log --oneline -10  # recent commits that may have introduced the bug
+         ```
+         Look for commits in the last 20 that touched the relevant file.
+         If a recent commit is suspicious, inspect it: `git show <hash>`.
+      5. Check if any callers of `{{params.function}}` pass unexpected values:
+         ```bash
+         grep -rn "{{params.function}}(" R/ tests/
+         ```
+      6. Try to manually reproduce the bug:
          - Write a small script that triggers the bug
          - Note the actual vs expected behavior
-      5. Report:
+         - Use `rlang::last_trace()` for the full call stack if an error occurs
+      7. Report:
          ```
          🐛 BUG ANALYSIS:
          Affected function: <name>
@@ -49,6 +61,8 @@ steps:
          Actual behavior: <what happens>
          Expected behavior: <what should happen>
          Root cause (best guess): <likely cause>
+         Introduced by: <commit hash if identifiable, or "unknown">
+         Callers at risk: <list of other call sites>
          ```
     gate: Confirm
     output: bug_analysis
@@ -114,25 +128,53 @@ steps:
   - id: verify-no-regression
     requires: [fix-bug]
     inline-prompt: |
-      Verify the fix is complete and causes no regressions:
+      Verify the fix is complete and causes no regressions.
 
-      1. Run full test suite: `devtools::test()` (use `skip_on_ci()` for tests requiring local resources)
+      1. Run full test suite: `devtools::test()`
       2. Run: `devtools::check(args = c("--as-cran", "--no-manual", "--no-vignettes"))`
-      3. If other functions call the fixed function, verify they work:
-         Search for `{{params.function}}(` in `R/` files.
-      4. Add the bug to a known-bugs comment or file (if the project has one).
-      5. Add additional edge-case tests inspired by the bug:
-         - What other inputs might trigger similar bugs?
-         - Write 1-2 extra tests for those cases.
-      6. Run lintr on the modified file: `lintr::lint("R/{{params.function}}.R")`
-      7. Report final status:
+         Must pass with 0 errors, 0 warnings.
+      3. Verify callers identified in the bug analysis still work:
+         ```bash
+         grep -rn "{{params.function}}(" R/
+         ```
+         For each call site in `R/`, confirm the fix doesn't break the caller's assumption.
+      4. Measure coverage impact of the new regression test:
+         ```r
+         covr::file_coverage(
+           source_files = "R/{{params.function}}.R",
+           test_files   = "tests/testthat/test-{{params.function}}.R"
+         )
+         ```
+         The regression test should cover the previously-uncovered branch that caused the bug.
+      5. Add 1–2 additional edge-case tests inspired by the root cause:
+         - What other inputs could trigger similar behaviour?
+         - Test adjacent boundary values, empty inputs, or related type coercions.
+      6. Run lintr on modified files:
+         ```r
+         lintr::lint("R/{{params.function}}.R")
+         ```
+         Fix any new lint issues introduced by the fix.
+      7. Commit the fix:
+         ```bash
+         git add R/{{params.function}}.R tests/testthat/test-{{params.function}}.R
+         git commit -m "fix: {{params.bug}}
+
+         Regression test added in test-{{params.function}}.R.
+         Root cause: <one-line summary from bug analysis>"
+         ```
+      8. Report final status:
          ```
          ✅ BUGFIX COMPLETE:
-         Bug: {{params.bug}}
-         Test: ✅ New regression test added
-         Check: ✅ R CMD check passed
-         Coverage: ✅ Edge cases tested
+         Bug:      {{params.bug}}
+         Root cause: <summary>
+         Fix:      <what changed>
+         Test:     ✅ Regression test added (now PASSING)
+         Coverage: <N>% (was <prev>%)
+         Suite:    <N>/<M> tests passing
+         Check:    ✅ 0 errors / 0 warnings
+         Committed: <hash>
          ```
+    gate: Review
     output: verification
 
 tags:
