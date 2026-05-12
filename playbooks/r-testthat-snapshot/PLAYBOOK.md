@@ -1,10 +1,12 @@
 ---
 name: r-testthat-snapshot
-description: "Add snapshot tests to an R package with testthat edition 3: output, value, error, and file snapshots"
+description: "Add snapshot tests with testthat edition 3: output snapshots, value snapshots, error snapshots, and file snapshots. Works for R packages, Shiny reactive modules, and Plumber endpoint testing"
 version: 1.0.0
 context-mode: Fork
 trigger: both
 trigger-patterns:
+  - "snapshot *"
+  - "testthat *"
   - "add snapshot tests *"
   - "snapshot test *"
   - "expect_snapshot *"

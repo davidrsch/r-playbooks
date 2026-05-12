@@ -2,9 +2,12 @@
 name: r-data-validate
 version: 1.0.0
 context-mode: Fork
-description: "Validate data quality with pointblank/validate: schema checks, value ranges, completeness, uniqueness"
+description: "Validate data quality with pointblank or validate: schema checks, value ranges, completeness, uniqueness, and row counts. Works with data frames, database tables, or targets pipeline outputs"
 trigger: both
 trigger-patterns:
+  - "validate *"
+  - "validation *"
+  - "pointblank *"
   - "validate data *"
   - "check data *"
   - "data quality *"

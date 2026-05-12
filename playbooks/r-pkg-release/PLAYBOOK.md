@@ -2,8 +2,14 @@
 name: r-pkg-release
 version: 1.0.0
 context-mode: Fork
-description: "Full release workflow: version bump, checks, tag, NEWS, and CRAN/GitHub release preparation"
-trigger: manual
+description: "Execute a full R package release: bump version with usethis, run all checks, update NEWS.md, create a git tag, and prepare for CRAN submission or GitHub release"
+trigger: auto
+trigger-patterns:
+  - "release *"
+  - "version bump *"
+  - "CRAN release *"
+  - "package release *"
+  - "publish package *"
 argument-hint: "--bump patch|minor|major [--message <release msg>] [--dry-run true|false] [--push true|false]"
 parameters:
   bump:

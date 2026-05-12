@@ -5,6 +5,8 @@ context-mode: Fork
 description: Set up and deploy a pkgdown documentation site with Bootstrap 5, reference index, articles, and GitHub Pages
 trigger: both
 trigger-patterns:
+  - "pkgdown *"
+  - "documentation *"
   - "pkgdown site *"
   - "set up pkgdown *"
   - "build pkgdown *"

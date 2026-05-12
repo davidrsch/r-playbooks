@@ -3,7 +3,13 @@ name: r-otel-instrument
 version: 1.0.0
 context-mode: Fork
 description: "Add OpenTelemetry observability to R applications: zero-code-change for Shiny 1.12+/plumber2"
-trigger: manual
+trigger: auto
+trigger-patterns:
+  - "otel *"
+  - "opentelemetry *"
+  - "observability *"
+  - "tracing *"
+  - "instrument *"
 argument-hint: "--target <shiny|plumber|targets|package> [--exporter <http://localhost:4317>] [--service_name <my-r-app>]"
 parameters:
   target:

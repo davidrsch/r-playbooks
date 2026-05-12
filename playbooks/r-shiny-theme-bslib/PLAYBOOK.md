@@ -5,6 +5,9 @@ context-mode: Fork
 description: Apply a custom Bootstrap 5 theme to a Shiny app using bslib with Sass customization and Bootswatch themes
 trigger: both
 trigger-patterns:
+  - "shiny *"
+  - "theme *"
+  - "bslib *"
   - "shiny theme *"
   - "bslib theme *"
   - "bootstrap theme *"

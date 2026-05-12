@@ -2,12 +2,14 @@
 name: r-pkg-add-function
 version: 1.0.0
 context-mode: Fork
-description: "Add an exported function to an R package with roxygen2 docs and testthat tests: TDD-ready"
+description: "Add a new exported function to an R package with roxygen2 documentation, testthat tests, and NAMESPACE export — follows TDD workflow"
 trigger: both
 trigger-patterns:
+  - "function *"
   - "add function *"
   - "add a function *"
   - "create function *"
+  - "new function *"
   - "new function *"
 argument-hint: "--name <function_name> [--file <R/filename.R>] [--export true|false] [--tdd true|false]"
 parameters:

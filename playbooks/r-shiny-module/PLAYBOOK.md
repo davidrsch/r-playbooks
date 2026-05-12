@@ -2,9 +2,10 @@
 name: r-shiny-module
 version: 1.0.0
 context-mode: Fork
-description: Create a new Shiny module (UI + server) with reactive testing in an existing app or golem project
+description: "Create a new Shiny module with UI + server functions, reactive testing, and proper namespace isolation. Works with golem, rhino, or standalone Shiny apps"
 trigger: both
 trigger-patterns:
+  - "shiny *"
   - "shiny module *"
   - "add module *"
   - "new shiny module *"

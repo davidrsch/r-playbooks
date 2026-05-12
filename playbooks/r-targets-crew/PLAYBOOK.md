@@ -5,6 +5,9 @@ context-mode: Fork
 description: Configure the crew parallel backend for a targets pipeline (mirai-based, replaces future)
 trigger: both
 trigger-patterns:
+  - "crew *"
+  - "parallel *"
+  - "mirai *"
   - "configure crew *"
   - "crew backend *"
   - "set up crew *"

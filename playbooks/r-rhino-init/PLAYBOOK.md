@@ -2,8 +2,16 @@
 name: r-rhino-init
 version: 1.0.0
 context-mode: Fork
-description: Initialize an enterprise Shiny application with Appsilon's rhino framework
-trigger: manual
+description: "Initialize an enterprise Shiny application with Appsilon's rhino framework: box modules, Sass styles, JavaScript bundling, Cypress E2E tests, testthat unit tests, Docker, and CI/CD"
+trigger: auto
+trigger-patterns:
+  - "rhino *"
+  - "shiny *"
+  - "rhino init *"
+  - "init rhino *"
+  - "create rhino app *"
+  - "scaffold rhino *"
+  - "initialize rhino *"
 argument-hint: "--name <app_name> [--directory <path>]"
 parameters:
   name:

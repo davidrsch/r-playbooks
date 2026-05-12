@@ -2,7 +2,7 @@
 name: r-lint
 version: 1.0.0
 context-mode: Fork
-description: Lint R code and auto-fix style issues with lintr + styler
+description: "Lint R code (scripts, packages, Shiny apps) for style, syntax, and code quality issues using lintr; auto-fix formatting with styler where possible"
 trigger: both
 trigger-patterns:
   - "lint *"

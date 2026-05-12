@@ -2,9 +2,11 @@
 name: r-box-module
 version: 1.0.0
 context-mode: Fork
-description: Create a box module with explicit exports and clean namespace
+description: "Create a module using the box package with explicit @export declarations, clean namespace isolation, and proper file structure. Core pattern in rhino, golem, and Shiny apps — distinct from Shiny modules (UI+server)"
 trigger: both
 trigger-patterns:
+  - "box *"
+  - "module *"
   - "box module *"
   - "create module *"
   - "add module *"

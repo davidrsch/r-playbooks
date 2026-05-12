@@ -2,9 +2,12 @@
 name: r-logger-setup
 version: 1.0.0
 context-mode: Fork
-description: Configure structured logging with the logger package for any R application
+description: "Configure structured JSON logging with the logger package for any R application: Shiny, Plumber, targets pipelines, or R packages — with log levels, file output, and CI-friendly formats"
 trigger: both
 trigger-patterns:
+  - "logger *"
+  - "logging *"
+  - "log *"
   - "add logging *"
   - "setup logger *"
   - "configure logs *"

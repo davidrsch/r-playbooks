@@ -2,7 +2,7 @@
 name: r-pak-lockfile
 version: 1.0.0
 context-mode: Fork
-description: Create and use a pak lockfile for reproducible R package installations
+description: "Create and use a pak lockfile for strict reproducible R package installations across dev, CI, and production environments — prevents 'works on my machine' dependency drift"
 trigger: both
 trigger-patterns:
   - "pak lockfile *"

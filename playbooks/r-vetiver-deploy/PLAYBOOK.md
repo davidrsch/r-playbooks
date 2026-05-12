@@ -1,6 +1,6 @@
 ---
 name: r-vetiver-deploy
-description: "Version, deploy, and monitor an ML model with vetiver: pin, create Plumber API, deploy to Connect or Docker"
+description: "Version, deploy, and monitor an R ML model using vetiver: pin the model for versioning, auto-generate a Plumber API endpoint, and deploy to Posit Connect or Docker with monitoring"
 version: 1.0.0
 context-mode: Fork
 trigger: both

@@ -2,9 +2,12 @@
 name: r-connect-deploy
 version: 1.0.0
 context-mode: Fork
-description: Deploy an R application to Posit Connect with manifest and git-backed deployment
+description: "Deploy an R application (Shiny app, Plumber API, Quarto doc, or static R Markdown) to Posit Connect with rsconnect manifest and git-backed deployment"
 trigger: both
 trigger-patterns:
+  - "connect *"
+  - "rsconnect *"
+  - "deploy *"
   - "deploy to connect *"
   - "connect deploy *"
   - "publish to connect *"

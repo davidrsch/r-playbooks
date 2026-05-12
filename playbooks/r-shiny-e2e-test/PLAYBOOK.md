@@ -2,9 +2,10 @@
 name: r-shiny-e2e-test
 version: 1.0.0
 context-mode: Fork
-description: "Add end-to-end tests for a Shiny app: shinytest2 for R-native testing or Cypress for JS-based testing"
-trigger: automatic
+description: "Add end-to-end tests for a Shiny app using shinytest2 (R-native, headless) or Cypress (JavaScript, real browser). For unit tests or TDD, use r-tdd-feature or r-rhino-test instead"
+trigger: auto
 trigger-patterns:
+  - "shiiny *"
   - "e2e test *"
   - "shinytest2 *"
   - "cypress *"

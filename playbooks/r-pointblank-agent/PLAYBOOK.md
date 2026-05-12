@@ -2,7 +2,7 @@
 name: r-pointblank-agent
 version: 1.0.0
 context-mode: Fork
-description: "Set up automated data validation with pointblank agents: create validation rules, generate reports, and integrate with CI"
+description: "Set up automated data validation using pointblank agents: define validation rules (column types, value ranges, uniqueness, row counts), generate HTML/JSON reports, schedule checks in CI/CD, or embed in Plumber APIs and targets pipelines"
 trigger: both
 trigger-patterns:
   - "pointblank *"

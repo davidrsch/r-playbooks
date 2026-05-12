@@ -3,7 +3,12 @@ name: r-docker-build
 version: 1.0.0
 context-mode: Fork
 description: "Build a Docker image for an R project: package, Shiny app, or Plumber API"
-trigger: manual
+trigger: auto
+trigger-patterns:
+  - "docker *"
+  - "containerize *"
+  - "Dockerfile *"
+  - "build image *"
 argument-hint: "--type package|shiny|plumber|quarto [--image-name <name>] [--r-version 4.4] [--port <8080>]"
 parameters:
   type:

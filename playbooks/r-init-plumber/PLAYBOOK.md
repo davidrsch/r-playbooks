@@ -2,8 +2,16 @@
 name: r-init-plumber
 version: 1.0.0
 context-mode: Fork
-description: Scaffold a Plumber API project with entrypoint, route files, middleware, and tests
-trigger: manual
+description: "Scaffold a Plumber API project with entrypoint, route files, middleware, health checks, testthat tests, and optional Dockerfile — ready for CI/CD and Connect deployment"
+trigger: auto
+trigger-patterns:
+  - "plumber *"
+  - "api *"
+  - "init plumber *"
+  - "scaffold api *"
+  - "create plumber *"
+  - "new api *"
+  - "initialize api *"
 argument-hint: "--name <api_name> [--port <8080>] [--renv true|false] [--docker true|false]"
 parameters:
   name:

@@ -5,11 +5,13 @@ context-mode: Fork
 description: Add static branching (tar_map) or dynamic branching (tar_rep, pattern=map/cross) to a targets pipeline
 trigger: both
 trigger-patterns:
+  - "branching *"
+  - "targets *"
+  - "tar_map *"
+  - "tar_rep *"
   - "add branching *"
   - "static branching *"
   - "dynamic branching *"
-  - "tar_map *"
-  - "tar_rep *"
   - "branching targets *"
 argument-hint: "--strategy static|dynamic [--mapping <field1,field2>] [--replications <n>] [--batches <n>]"
 parameters:

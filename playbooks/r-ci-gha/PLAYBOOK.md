@@ -3,7 +3,13 @@ name: r-ci-gha
 version: 1.0.0
 context-mode: Fork
 description: "Set up GitHub Actions CI for an R package: R CMD check, test coverage, pkgdown, and linting"
-trigger: manual
+trigger: auto
+trigger-patterns:
+  - "ci *"
+  - "github actions *"
+  - "CI setup *"
+  - "continuous integration *"
+  - "CI/CD *"
 argument-hint: "[--r-versions release,devel,oldrel] [--coverage true|false] [--pkgdown true|false] [--lint true|false] [--multiversion true|false]"
 parameters:
   r-versions:

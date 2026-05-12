@@ -2,8 +2,16 @@
 name: r-init-targets
 version: 1.0.0
 context-mode: Fork
-description: Scaffold a targets data pipeline project with _targets.R, R/functions, and CI integration
-trigger: manual
+description: "Scaffold a targets data pipeline project with _targets.R, R/functions/, testthat tests, renv, and GitHub Actions CI integration — optionally with parallel crew backend"
+trigger: auto
+trigger-patterns:
+  - "targets *"
+  - "pipeline *"
+  - "init targets *"
+  - "scaffold pipeline *"
+  - "create targets *"
+  - "new pipeline *"
+  - "initialize pipeline *"
 argument-hint: "--name <project_name> [--renv true|false] [--parallel true|false]"
 parameters:
   name:

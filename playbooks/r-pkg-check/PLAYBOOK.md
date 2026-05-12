@@ -2,9 +2,11 @@
 name: r-pkg-check
 version: 1.0.0
 context-mode: Fork
-description: "Run R CMD check and auto-remediate issues: the universal quality gate"
+description: "Run R CMD check on an R package and automatically fix common issues (missing imports, undocumented parameters, stale Rd files) before manual review"
 trigger: both
 trigger-patterns:
+  - "check *"
+  - "R CMD *"
   - "check package *"
   - "check the package *"
   - "run checks *"

@@ -2,7 +2,7 @@
 name: r-refactor
 version: 1.0.0
 context-mode: Fork
-description: "Safe refactoring with a test safety net: snapshot current behavior, refactor, verify nothing broke"
+description: "Safe refactoring of R code: capture current behavior with tests as a safety net, then restructure the code (extract functions, rename, reorganize) and verify nothing broke"
 trigger: both
 trigger-patterns:
   - "refactor *"

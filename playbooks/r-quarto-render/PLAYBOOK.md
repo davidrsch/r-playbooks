@@ -2,9 +2,11 @@
 name: r-quarto-render
 version: 1.0.0
 context-mode: Fork
-description: Render a Quarto document or project with parameters, profiling, and output validation
+description: "Render a Quarto document or project (.qmd) to HTML, PDF, or other formats with parameterized execution, execution profiling, and output validation — for R-based Quarto projects"
 trigger: both
 trigger-patterns:
+  - "quarto *"
+  - "render *"
   - "render quarto *"
   - "render * qmd"
   - "quarto render *"

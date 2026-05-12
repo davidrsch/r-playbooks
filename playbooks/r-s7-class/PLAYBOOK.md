@@ -2,9 +2,11 @@
 name: r-s7-class
 version: 1.0.0
 context-mode: Fork
-description: Define an S7 class with properties, generics, and methods
+description: "Define an S7 class (R's new OOP system) with typed properties, generic functions, and methods — the modern alternative to S3/S4/R6. Usable in packages, Shiny modules, or Plumber serialization"
 trigger: both
 trigger-patterns:
+  - "S7 *"
+  - "class *"
   - "S7 class *"
   - "create S7 *"
   - "define class *"

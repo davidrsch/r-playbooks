@@ -5,6 +5,9 @@ context-mode: Fork
 description: "Scan R code for security vulnerabilities: hardcoded secrets, unsafe eval, path traversal, injection risks"
 trigger: both
 trigger-patterns:
+  - "security *"
+  - "scan *"
+  - "secret *"
   - "security scan *"
   - "security check *"
   - "scan for secrets *"

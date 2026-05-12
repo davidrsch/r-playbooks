@@ -2,7 +2,7 @@
 name: r-tdd-feature
 version: 1.0.0
 context-mode: Fork
-description: TDD (Test-Driven Development) Red-Green-Refactor cycle for implementing a feature in an R package
+description: "TDD (Test-Driven Development): Red-Green-Refactor cycle — write a failing test first, implement minimal code to pass, then refactor. Works for R packages, Shiny modules, Plumber endpoints, or any R code"
 trigger: both
 trigger-patterns:
   - "tdd *"

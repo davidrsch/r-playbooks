@@ -2,8 +2,15 @@
 name: r-init-shiny
 version: 1.0.0
 context-mode: Fork
-description: Scaffold a new Shiny application with golem or minimal structure, plus testing and deployment config
-trigger: manual
+description: "Scaffold a new Shiny application with golem or minimal structure, plus testthat unit tests, Cypress E2E test setup, renv dependency management, and Posit Connect deployment config"
+trigger: auto
+trigger-patterns:
+  - "shiny *"
+  - "init shiny *"
+  - "scaffold shiny *"
+  - "create shiny app *"
+  - "new shiny app *"
+  - "initialize shiny *"
 argument-hint: "--name <app_name> [--framework golem|minimal] [--renv true|false] [--modules true|false]"
 parameters:
   name:

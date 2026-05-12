@@ -2,9 +2,11 @@
 name: r-config-env
 version: 1.0.0
 context-mode: Fork
-description: Set up environment-specific configuration with the config package
+description: "Set up environment-specific configuration for R applications (development, staging, production) using the config package with YAML config files — works with Shiny, Plumber, and targets projects"
 trigger: both
 trigger-patterns:
+  - "config *"
+  - "environment *"
   - "add config *"
   - "setup config *"
   - "configure environment *"

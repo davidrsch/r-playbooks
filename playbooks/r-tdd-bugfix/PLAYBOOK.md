@@ -2,7 +2,7 @@
 name: r-tdd-bugfix
 version: 1.0.0
 context-mode: Fork
-description: "TDD bugfix workflow: reproduce the bug with a failing test, fix it, verify no regression"
+description: "TDD bugfix workflow: reproduce the bug by writing a failing test first, fix the code, then verify no regressions. Works for R packages, Shiny apps, Plumber APIs, or any R code"
 trigger: both
 trigger-patterns:
   - "fix bug *"

@@ -5,9 +5,11 @@ context-mode: Fork
 description: Add a new Plumber endpoint with parameter docs, input validation, error handling, and tests
 trigger: both
 trigger-patterns:
+  - "endpoint *"
+  - "plumber *"
+  - "api endpoint *"
   - "add endpoint *"
   - "new endpoint *"
-  - "api endpoint *"
   - "add api *"
   - "create endpoint *"
 argument-hint: "--path <endpoint_path> --method GET|POST|PUT|DELETE [--resource <resource_name>] [--description <text>]"

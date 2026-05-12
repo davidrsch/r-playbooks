@@ -3,7 +3,14 @@ name: r-init-package
 version: 1.0.0
 context-mode: Fork
 description: Scaffold a new R package with usethis, renv, testthat, roxygen2, pkgdown, and CI
-trigger: manual
+trigger: auto
+trigger-patterns:
+  - "package *"
+  - "init package *"
+  - "scaffold package *"
+  - "create package *"
+  - "new R package *"
+  - "initialize package *"
 argument-hint: "--name <pkg> [--license MIT|GPL-3|Apache-2.0] [--ci true|false] [--use-renv true|false]"
 parameters:
   name:

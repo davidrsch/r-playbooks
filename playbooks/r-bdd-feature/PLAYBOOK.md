@@ -2,8 +2,13 @@
 name: r-bdd-feature
 version: 1.0.0
 context-mode: Fork
-description: "BDD (Behavior-Driven Development): define a feature with Gherkin scenarios, then implement with testthat"
-trigger: manual
+description: "BDD (Behavior-Driven Development): define a feature with user stories, acceptance criteria, and Gherkin scenarios; then implement with testthat or Cypress tests. Works for R packages, Shiny apps, Plumber APIs, or any R project"
+trigger: auto
+trigger-patterns:
+  - "bdd *"
+  - "behavior driven *"
+  - "gherkin *"
+  - "feature spec *"
 argument-hint: "--feature <description> [--gherkin true|false]"
 parameters:
   feature:

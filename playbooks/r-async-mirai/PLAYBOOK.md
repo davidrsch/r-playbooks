@@ -2,7 +2,7 @@
 name: r-async-mirai
 version: 1.0.0
 context-mode: Fork
-description: Add async parallel processing with mirai for non-blocking execution
+description: "Add asynchronous parallel processing to R code using the mirai package: launch non-blocking background tasks, collect results, and handle errors. Ideal for API calls, file I/O, or heavy computation in Shiny, Plumber, targets pipelines, or R packages"
 trigger: both
 trigger-patterns:
   - "add async *"

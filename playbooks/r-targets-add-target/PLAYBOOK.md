@@ -5,6 +5,8 @@ context-mode: Fork
 description: Add a new target to an existing targets pipeline with its companion function and test
 trigger: both
 trigger-patterns:
+  - "target *"
+  - "pipeline *"
   - "add target *"
   - "new target *"
   - "add pipeline *"

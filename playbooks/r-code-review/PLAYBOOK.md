@@ -2,11 +2,12 @@
 name: r-code-review
 version: 1.0.0
 context-mode: Fork
-description: "Perform a structured code review for R code: check style, correctness, safety, performance, and documentation"
+description: "Perform a structured code review for R code: check code style, logical correctness, security, performance bottlenecks, and documentation completeness"
 trigger: both
 trigger-patterns:
-  - "review * code"
+  - "review *"
   - "code review *"
+  - "review * code"
   - "review r code *"
   - "review my code"
   - "review this *"

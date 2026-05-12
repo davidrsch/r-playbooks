@@ -3,6 +3,9 @@ title: "R Playbooks"
 format:
   html:
     include-after-body: card-script.html
+    include-in-header:
+      - text: '<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>'
+    page-layout: full
 ---
 
 ```{r}
@@ -163,9 +166,6 @@ cats <- sort(table(sapply(playbooks, `[[`, "category")), decreasing = TRUE)
 init_show <- 12
 ```
 
-::: {.page-header}
-# 🎯 R Playbooks
-
 ::: {.subtitle}
 A collection of **`r n_total`** AI-assisted playbooks for common R development workflows
 :::
@@ -174,7 +174,7 @@ A collection of **`r n_total`** AI-assisted playbooks for common R development w
 <span>📚 **`r n_total`** playbooks</span>
 <span>📂 **`r length(cats)`** categories</span>
 <span>🔄 auto-updated from repo</span>
-:::
+
 :::
 
 ::: {.toolbar}
@@ -199,27 +199,47 @@ for (i in seq_along(playbooks)) {
     pb <- playbooks[[i]]
     trigger_class <- if (pb$trigger == "both") "both" else "manual"
     trigger_label <- toupper(pb$trigger)
-    hidden_style <- if (i > init_show) '; display:none' else ''
+    hidden_style <- if (i > init_show) ';display:none' else ''
 
-    cards[i] <- sprintf(
-        '<div class="playbook-card" data-name="%s" data-category="%s" style="--card-accent: var(--bs-primary)%s"><label class="card-check"><input type="checkbox" class="card-checkbox" data-file="%s" data-name="%s" title="Select this playbook"></label><a href="%s" class="card-body"><div class="card-header"><span class="card-icon">%s</span><span class="card-name">%s</span></div><div class="card-description">%s</div><span class="badge badge-category">%s</span><div class="card-meta"><span class="badge badge-version">v%s</span><span class="badge badge-trigger %s">%s</span><span class="badge badge-link">📋 source</span></div></a></div>',
+    cat(paste0(
+        '<div class="playbook-card" data-name="',
         pb$name,
+        '" data-category="',
         pb$category,
+        '" style="--card-accent: var(--bs-primary)',
         hidden_style,
+        '">',
+        '<label class="card-check"><input type="checkbox" class="card-checkbox" data-file="',
         pb$dir,
+        '" data-name="',
         pb$name,
+        '" title="Select this playbook"></label>',
+        '<a href="',
         pb$gh_url,
+        '" class="card-body">',
+        '<div class="card-header"><span class="card-icon">',
         pb$icon,
+        '</span><span class="card-name">',
         pb$name,
+        '</span></div>',
+        '<div class="card-description">',
         pb$desc,
+        '</div>',
+        '<span class="badge badge-category">',
         pb$category,
+        '</span>',
+        '<div class="card-meta"><span class="badge badge-version">v',
         pb$version,
+        '</span><span class="badge badge-trigger ',
         trigger_class,
-        trigger_label
-    )
+        '">',
+        trigger_label,
+        '</span><span class="badge badge-link">📋 source</span></div>',
+        '</a>',
+        '</div>',
+        '\n'
+    ))
 }
-
-knitr::asis_output(paste(cards, collapse = "\n"))
 ```
 :::
 
