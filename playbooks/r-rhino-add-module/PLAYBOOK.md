@@ -194,8 +194,6 @@ steps:
       ✅ Clean up observers in session$onSessionEnded
 
       After creation, format: `styler::style_file("app/view/{{params.name}}.R")`
-    requires:
-      - design-module
     output: view-file
 
   - id: create-logic-module
@@ -258,8 +256,6 @@ steps:
       ✅ Consistent with existing logic module patterns
 
       After creation, format: `styler::style_file("app/logic/{{params.name}}.R")`
-    requires:
-      - design-module
     output: logic-file
 
   - id: create-test
@@ -318,9 +314,6 @@ steps:
 
       Run the test: `rhino::test_r()`
       Verify all tests pass before reporting.
-    requires:
-      - create-view-module
-      - create-logic-module
     output: test-file
 
   - id: integrate-module
