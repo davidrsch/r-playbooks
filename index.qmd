@@ -25,7 +25,8 @@ CATEGORIES <- list(
             "r-pkgdown-",
             "r-pak-",
             "r-renv-",
-            "r-cran-"
+            "r-cran-",
+            "r-dependency-"
         )
     ),
     "Testing & QA" = list(
@@ -35,7 +36,11 @@ CATEGORIES <- list(
             "r-tdd-",
             "r-bdd-",
             "r-testthat-",
-            "r-code-review"
+            "r-code-review",
+            "r-package-audit",
+            "r-property-",
+            "r-mutation-",
+            "r-test-database"
         )
     ),
     "Shiny Apps" = list(
@@ -45,32 +50,38 @@ CATEGORIES <- list(
             "r-shiny-module",
             "r-shiny-theme-",
             "r-shiny-e2e-",
-            "r-rhino-"
+            "r-rhino-",
+            "r-shiny-auth",
+            "r-shiny-perf"
         )
     ),
     "Data Pipelines" = list(
         icon = "🎯",
-        prefixes = c("r-init-targets", "r-targets-")
+        prefixes = c("r-init-targets", "r-targets-", "r-schedule-")
     ),
     "Deploy & DevOps" = list(
         icon = "🚀",
-        prefixes = c("r-docker-", "r-connect-", "r-vetiver-", "r-ci-")
+        prefixes = c("r-docker-", "r-connect-", "r-vetiver-", "r-ci-", "r-deploy-", "r-cloud-")
     ),
     "APIs" = list(
         icon = "🔌",
         prefixes = c("r-api-", "r-init-plumber", "r-httr2-")
     ),
+    "Notifications" = list(
+        icon = "🔔",
+        prefixes = c("r-notification")
+    ),
     "Observability" = list(
         icon = "📊",
-        prefixes = c("r-logger-", "r-otel-", "r-profile", "r-debug")
+        prefixes = c("r-logger-", "r-otel-", "r-profile", "r-debug", "r-performance-")
     ),
     "Data & Validation" = list(
         icon = "🛡️",
-        prefixes = c("r-data-", "r-pointblank-", "r-dbi-", "r-duckdb-")
+        prefixes = c("r-data-", "r-pointblank-", "r-dbi-", "r-duckdb-", "r-database-")
     ),
     "Architecture" = list(
         icon = "🏗️",
-        prefixes = c("r-box-", "r-s7-", "r-refactor", "r-async-")
+        prefixes = c("r-box-", "r-s7-", "r-refactor", "r-async-", "r-workflow-", "r-plan-", "r-playbook-")
     ),
     "Config & Security" = list(
         icon = "🔒",
@@ -78,11 +89,11 @@ CATEGORIES <- list(
     ),
     "Reports" = list(
         icon = "📄",
-        prefixes = c("r-quarto-render", "r-quarto-website", "r-quarto-dashboard")
+        prefixes = c("r-quarto-render", "r-quarto-website", "r-quarto-dashboard", "r-observable")
     ),
     "ML & Tidymodels" = list(
         icon = "🤖",
-        prefixes = c("r-tidymodels-")
+        prefixes = c("r-tidymodels-", "r-model-", "r-ml-")
     )
 )
 
