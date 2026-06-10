@@ -3,6 +3,7 @@
 /_site/
 _freeze/
 docs/
+/.claude/
 
 # R
 .Rproj.user/
