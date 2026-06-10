@@ -526,9 +526,15 @@ Cloud Run, or ECS — following cloud-native best practices.
 - Multiple replicas behind a Service (Plumber handles concurrent requests)
 - Set `plumber::pr_run(..., host='0.0.0.0', port=8000)`
 - Consider async Plumber with `promises` + `mirai` for I/O-bound endpoints
+- ⚠️ `mori` (shared memory) does NOT work across K8s pods — it requires same-machine
+  POSIX/Win32 shared memory. Data shared via `mori::share()` works within a single
+  pod (multi-process), but not across pods or nodes. Use standard serialization
+  or a shared filesystem (EFS, Filestore) for cross-pod data sharing.
 
 ### targets Pipeline on Kubernetes
 - Run as a Kubernetes Job (not Deployment — exits when complete)
 - Use `crew` with `crew.cluster` controller for distributed target execution
   across the cluster
 - Schedule with Kubernetes CronJob instead of cronR
+- `mori` is effective for single-node crew workers (one pod, many processes) but
+  not for multi-node clusters

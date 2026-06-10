@@ -7,6 +7,8 @@ trigger: both
 trigger-patterns:
   - "schedule pipeline *"
   - "schedule targets *"
+  - "mori *"
+  - "shared memory *"
   - "production pipeline *"
   - "cron pipeline *"
   - "deploy pipeline *"
@@ -521,3 +523,7 @@ data engineering practices.
 - **error = "continue"**: Don't stop the whole pipeline on one target failure.
 - **tar_meta() for monitoring**: Check `tar_meta()` output for target ages,
   errors, and warnings programmatically.
+- **mori for large reference data**: Use `mori::share()` for large (>100 MB)
+  reference datasets that multiple targets read. Crew uses mirai under the hood,
+  so `mori`'s ALTREP serialization works transparently — workers map the same
+  physical memory instead of deserializing individual copies. Same-machine only.

@@ -425,6 +425,11 @@ caching strategies (bindCache, memoise).
 5. **ASYNC IS NOT FREE**: `future` + `promises` improve concurrency but add
    complexity. Use them for I/O-bound work (DB queries, API calls), not for
    CPU-bound work (which just moves the problem to a different process).
+6. **SHARE LARGE DATA WITH MORI**: For Shiny apps running on a single server with
+   large reference datasets (>100 MB), use `mori::share()` to place the data in
+   OS-level shared memory. All R sessions (mirai workers, Shiny processes) map
+   the same physical region via ALTREP references — 200 MB becomes 824 bytes per
+   process. Requires same-machine deployment (not Kubernetes multi-pod).
 
 ## Shiny Performance Tooling
 
