@@ -343,13 +343,17 @@ allowed-tools:
   - "*"
 
 constraints:
-  - rule: "NEVER auto-modify code without an Approve gate."
+  - rule: "NEVER ignore a CRITICAL finding — report it prominently and block the audit from passing."
     severity: "error"
-  - rule: "ALWAYS snapshot current behavior before refactoring."
+  - rule: "ALWAYS scan for R-specific injection vectors: eval(parse(...)), system() with user input, SQL injection via paste/sprintf, glue injection."
+    severity: "error"
+  - rule: "NEVER leave hardcoded secrets unflagged — any API key, password, or token in code is a BLOCKER."
+    severity: "error"
+  - rule: "ALWAYS recommend specific fixes, not just flag problems — each finding must have a concrete remediation."
     severity: "warning"
-  - rule: "NEVER mask errors with empty tryCatch() blocks."
-    severity: "error"
-  - rule: "Report issues with severity and suggested fixes."
+  - rule: "ALWAYS check git history for accidentally committed secrets — they persist even after removal."
+    severity: "warning"
+  - rule: "Use grep/regex patterns to scan efficiently — don't read every file manually."
     severity: "warning"
 ---
 

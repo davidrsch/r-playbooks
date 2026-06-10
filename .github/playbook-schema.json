@@ -30,7 +30,7 @@
     },
     "trigger": {
       "type": "string",
-      "enum": ["manual", "automatic", "both"],
+      "enum": ["manual", "auto", "both"],
       "description": "How the playbook is triggered"
     },
     "trigger-patterns": {
@@ -58,6 +58,8 @@
           "required": { "type": "boolean" },
           "default": {},
           "hint": { "type": "string", "minLength": 1 },
+          "min": { "type": "number" },
+          "max": { "type": "number" },
           "enum": {
             "type": "array",
             "items": { "type": "string" }
@@ -114,10 +116,17 @@
       "description": "Tools allowed during playbook execution"
     },
     "constraints": {
-      "type": "object",
-      "properties": {
-        "file": { "type": "string" }
-      }
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rule"],
+        "additionalProperties": false,
+        "properties": {
+          "rule": { "type": "string", "minLength": 1 },
+          "severity": { "type": "string", "enum": ["error", "warning"] }
+        }
+      },
+      "description": "Non-negotiable rules and strong guidelines for the playbook"
     }
   }
 }
