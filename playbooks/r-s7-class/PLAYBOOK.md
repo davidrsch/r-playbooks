@@ -213,14 +213,16 @@ tags:
   - S7
   - architecture
 constraints:
-  - rule: "NEVER export internal implementation details."
+  - rule: "ALWAYS validate property types in the constructor — use S7 property validators to enforce type invariants."
     severity: "error"
-  - rule: "ALWAYS use explicit imports with box::use()."
-    severity: "warning"
-  - rule: "Use S7 for formal class systems in new code."
-    severity: "warning"
-  - rule: "NEVER block the main thread with synchronous I/O."
+  - rule: "Register generics with new_generic() and attach methods via method() dispatch — NEVER use S3 dispatch for S7 classes."
     severity: "error"
+  - rule: "Use parent = <class> in new_class() for inheritance and call super's methods via super() where applicable."
+    severity: "warning"
+  - rule: "ALWAYS use class_character, class_double, new_union() etc. for property type constraints — never leave properties untyped."
+    severity: "error"
+  - rule: "Place one S7 class per file in R/ClassName.R with roxygen2 @export tags for the class, generics, and methods."
+    severity: "warning"
 allowed-tools:
   - "*"
 ---

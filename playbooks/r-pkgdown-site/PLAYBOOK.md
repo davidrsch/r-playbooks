@@ -404,17 +404,17 @@ allowed-tools:
   - "*"
 
 constraints:
-  - rule: "NEVER modify NAMESPACE manually — roxygen2 manages it."
+  - rule: "ALWAYS set `url` in _pkgdown.yml for canonical URLs and SEO — never deploy without it."
     severity: "error"
-  - rule: "NEVER commit to main without passing R CMD check."
+  - rule: "ALWAYS run pkgdown::check_pkgdown() before deploying to catch broken links and missing topics."
     severity: "error"
-  - rule: "ALWAYS run devtools::document() after changing roxygen comments."
+  - rule: "ALWAYS use Bootstrap 5 via `template.bootstrap: 5` in _pkgdown.yml."
+    severity: "error"
+  - rule: "ALWAYS run urlchecker::url_check() on the built site before deploying to GitHub Pages."
+    severity: "error"
+  - rule: "NEVER deploy without verifying light/dark mode toggle works and no pages return 404."
     severity: "warning"
-  - rule: "NEVER use install.packages() in scripts — use renv or DESCRIPTION."
-    severity: "error"
-  - rule: "ALWAYS run devtools::test() before committing."
-    severity: "warning"
-  - rule: "Use rlang::abort() or cli::cli_abort() over stop() for errors."
+  - rule: "ALWAYS verify reference index lists all exported functions and orphaned .Rd files are resolved."
     severity: "warning"
 ---
 

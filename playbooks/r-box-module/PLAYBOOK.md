@@ -107,14 +107,16 @@ allowed-tools:
   - "*"
 
 constraints:
-  - rule: "NEVER export internal implementation details."
+  - rule: "ALWAYS use box::use() for imports — NEVER use library(), require(), or source() inside a box module."
     severity: "error"
-  - rule: "ALWAYS use explicit imports with box::use()."
-    severity: "warning"
-  - rule: "Use S7 for formal class systems in new code."
-    severity: "warning"
-  - rule: "NEVER block the main thread with synchronous I/O."
+  - rule: "NEVER export internal implementation details — only functions with roxygen2 @export are part of the public API."
     severity: "error"
+  - rule: "Use selective imports: box::use(dplyr[filter, mutate]) rather than importing entire packages."
+    severity: "warning"
+  - rule: "NEVER use <<- or assign() to leak state out of a module — each module has its own isolated scope."
+    severity: "error"
+  - rule: "ALWAYS create one module per .r file and name the file in snake_case matching the module namespace."
+    severity: "warning"
 ---
 
 You are an expert in modern R module architecture using the `box` package by

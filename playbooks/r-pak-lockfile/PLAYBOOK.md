@@ -269,13 +269,17 @@ allowed-tools:
   - "*"
 
 constraints:
-  - rule: "NEVER modify raw data files — work on copies."
+  - rule: "ALWAYS use pak::lockfile_create() to create lockfiles — NEVER write them by hand."
     severity: "error"
-  - rule: "ALWAYS validate data before downstream use."
+  - rule: "ALWAYS run pak::lockfile_verify() before committing lockfile changes to ensure freshness."
+    severity: "error"
+  - rule: "ALWAYS include the lockfile in version control (pkg.lock is JSON and human-readable)."
+    severity: "error"
+  - rule: "NEVER use install.packages() or remotes::install_deps() when a pak lockfile exists — use pak::lockfile_install() instead."
+    severity: "error"
+  - rule: "ALWAYS re-create the lockfile after adding, removing, or updating any dependency."
     severity: "warning"
-  - rule: "Document all data transformations with comments."
-    severity: "warning"
-  - rule: "Use renv or pak to lock dependency versions."
+  - rule: "ALWAYS run pak::pkg_sysreqs() to identify system-level dependencies for CI portability."
     severity: "warning"
 ---
 

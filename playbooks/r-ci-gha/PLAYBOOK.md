@@ -278,13 +278,15 @@ allowed-tools:
   - "*"
 
 constraints:
-  - rule: "NEVER hardcode secrets or tokens in workflow files — use GitHub Secrets."
+  - rule: "NEVER hardcode secrets or tokens in workflow files — ALWAYS use GitHub Secrets (${{ secrets.SECRET_NAME }})."
     severity: "error"
-  - rule: "ALWAYS include HEALTHCHECK in Dockerfiles."
+  - rule: "Pin action versions to SHA or major tag (e.g., actions/checkout@v4) — NEVER use @main or @master."
+    severity: "error"
+  - rule: "Set fail-fast: false in build matrices so one platform failure does not cancel other runs."
     severity: "warning"
-  - rule: "Never expose ports without proper security configuration."
+  - rule: "ALWAYS use r-lib/actions/setup-r-dependencies@v2 for dependency caching — it handles caching internally."
     severity: "warning"
-  - rule: "Use multi-stage Docker builds to minimize image size."
+  - rule: "Cache renv packages across workflow runs using actions/cache with a hash of renv.lock as the cache key."
     severity: "warning"
 ---
 

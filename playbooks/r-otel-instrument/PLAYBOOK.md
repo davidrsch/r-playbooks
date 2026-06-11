@@ -187,14 +187,16 @@ allowed-tools:
   - "*"
 
 constraints:
-  - rule: "NEVER log secrets, passwords, tokens, or credentials."
+  - rule: "ALWAYS set OTEL_SERVICE_NAME to identify your app in distributed traces — a missing service name breaks span correlation."
     severity: "error"
-  - rule: "ALWAYS include service name and trace ID in log entries."
-    severity: "warning"
-  - rule: "Use structured logging (JSON format) for production."
-    severity: "warning"
-  - rule: "Never store config in source code — use environment variables."
+  - rule: "ALWAYS end spans with on.exit(span$end()) or withr::defer() — unclosed spans leak memory and corrupt traces."
     severity: "error"
+  - rule: "Set OTEL_TRACES_SAMPLER and OTEL_TRACES_SAMPLER_ARG to control sampling rates — NEVER trace every request in production."
+    severity: "warning"
+  - rule: "Configure OTEL_EXPORTER_OTLP_ENDPOINT to point to a collector (Jaeger, Grafana Tempo, Datadog) — never export directly to a backend."
+    severity: "warning"
+  - rule: "Correlate logs with traces by including trace_id and span_id in log messages for cross-signal debugging."
+    severity: "warning"
 ---
 
 You are an expert in R application observability and distributed tracing.
