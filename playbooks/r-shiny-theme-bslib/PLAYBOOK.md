@@ -60,7 +60,7 @@ parameters:
     default: ""
     hint: "Google Font for code blocks (e.g., 'Fira Code', 'JetBrains Mono'). Leave empty for default monospace."
   font_scale:
-    type: Number
+    type: Float
     required: false
     default: 1.0
     hint: "Global font size scale factor (0.8 for compact, 1.2 for larger text)"
@@ -409,15 +409,17 @@ allowed-tools:
   - "*"
 
 constraints:
-  - rule: "NEVER use global variables for app state — use reactiveValues."
+  - rule: "ALWAYS use bs_theme(version = 5) — Bootstrap 5 is the current standard for bslib theming."
     severity: "error"
-  - rule: "NEVER use source() inside reactive expressions."
+  - rule: "NEVER use shinythemes alongside bslib — bslib replaces it entirely."
     severity: "error"
-  - rule: "ALWAYS validate user inputs server-side, not just client-side."
+  - rule: "ALWAYS use card() and value_box() instead of shinydashboard::box() and valueBox()."
+    severity: "error"
+  - rule: "ALWAYS verify WCAG contrast ratios for primary text on background colors (minimum 4.5:1 for normal text)."
+    severity: "error"
+  - rule: "ALWAYS test dark mode custom CSS with [data-bs-theme=\"dark\"] selectors — never assume default styles carry over."
     severity: "warning"
-  - rule: "Use Shiny modules for reusable UI components."
-    severity: "warning"
-  - rule: "Use logger package for structured logging, not print() or cat()."
+  - rule: "ALWAYS verify Google Fonts load correctly at render time (requires internet) — provide fallback system fonts for offline or CI use."
     severity: "warning"
 ---
 

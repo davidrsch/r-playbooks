@@ -19,7 +19,7 @@ parameters:
     enum: ["shiny", "targets", "script", "package"]
     hint: "Where the async code runs (shiny app, targets pipeline, standalone script)"
   workers:
-    type: Number
+    type: Integer
     required: false
     default: 4
     hint: "Number of parallel workers (daemons)"

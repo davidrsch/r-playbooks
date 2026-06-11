@@ -24,14 +24,14 @@ parameters:
     default: []
     hint: "List of properties/invariants to test (e.g., 'idempotent', 'commutative', 'roundtrip')"
   iterations:
-    type: Number
+    type: Integer
     required: false
     default: 100
     min: 10
     max: 10000
     hint: "Number of random test cases to generate per property"
   seed:
-    type: Number
+    type: Integer
     required: false
     default: 123
     hint: "Random seed for reproducible test generation"

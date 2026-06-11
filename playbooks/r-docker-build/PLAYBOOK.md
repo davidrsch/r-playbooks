@@ -26,7 +26,7 @@ parameters:
     default: "4.4"
     hint: "R version for the base image (e.g., 4.4, 4.3, devel)"
   port:
-    type: Number
+    type: Integer
     required: false
     default: 3838
     min: 1024
@@ -325,13 +325,15 @@ allowed-tools:
   - "*"
 
 constraints:
-  - rule: "NEVER hardcode secrets or tokens in workflow files — use GitHub Secrets."
+  - rule: "NEVER use the :latest tag — ALWAYS pin the base image version (e.g., rocker/r-ver:4.4)."
     severity: "error"
-  - rule: "ALWAYS include HEALTHCHECK in Dockerfiles."
+  - rule: "ALWAYS include HEALTHCHECK in Dockerfiles for production images."
     severity: "warning"
-  - rule: "Never expose ports without proper security configuration."
+  - rule: "Use multi-stage Docker builds (multistage: true) to separate build dependencies from the runtime layer."
     severity: "warning"
-  - rule: "Use multi-stage Docker builds (multistage: true) for production images to minimize size."
+  - rule: "ALWAYS run as a non-root user (rstudio or nobody) — NEVER run R processes as root in containers."
+    severity: "error"
+  - rule: "Create a .dockerignore excluding .git/, renv/library/, tests/, and _targets/ to keep image size minimal."
     severity: "warning"
 ---
 

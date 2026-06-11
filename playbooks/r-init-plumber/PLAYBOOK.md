@@ -19,7 +19,7 @@ parameters:
     required: true
     hint: "API project name (lowercase, letters/numbers/underscores only)"
   port:
-    type: Number
+    type: Integer
     required: false
     default: 8080
     min: 1024

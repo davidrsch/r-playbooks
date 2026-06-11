@@ -36,17 +36,17 @@ parameters:
     default: "map"
     hint: "Dynamic branching pattern: map (one branch per element) or cross (all combinations)"
   replications:
-    type: Number
+    type: Integer
     required: false
     default: 1
     hint: "Number of Monte Carlo replications for tar_rep()"
   batches:
-    type: Number
+    type: Integer
     required: false
     default: 1
     hint: "Number of batches for tar_rep() (splits replications across batches)"
   workers:
-    type: Number
+    type: Integer
     required: false
     default: 4
     hint: "Number of parallel workers for crew backend"

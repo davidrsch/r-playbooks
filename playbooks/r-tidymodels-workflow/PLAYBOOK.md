@@ -34,14 +34,14 @@ parameters:
     required: false
     hint: "Path to the dataset CSV/RDS, or name of a built-in dataset (e.g. 'mtcars', 'penguins')"
   test-split:
-    type: Number
+    type: Float
     required: false
     default: 0.2
     min: 0.1
     max: 0.4
     hint: "Proportion of data held out for testing (default: 0.2)"
   cv-folds:
-    type: Number
+    type: Integer
     required: false
     default: 5
     min: 3

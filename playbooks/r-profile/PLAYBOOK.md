@@ -24,7 +24,7 @@ parameters:
     enum: ["profvis", "bench", "rprof", "both"]
     hint: "Profiling tool: profvis (flame graph), bench (timing), rprof (sampling), both (profvis + bench)"
   iterations:
-    type: Number
+    type: Integer
     required: false
     default: 5
     min: 1
@@ -200,13 +200,17 @@ allowed-tools:
   - "*"
 
 constraints:
-  - rule: "NEVER auto-modify code without an Approve gate."
+  - rule: "NEVER optimize without profiling first — data drives decisions, not intuition."
     severity: "error"
-  - rule: "ALWAYS snapshot current behavior before refactoring."
+  - rule: "NEVER auto-modify production code — produce a report with recommendations and let the user decide."
+    severity: "error"
+  - rule: "ALWAYS use bench::mark() with multiple iterations for stable timing baselines."
     severity: "warning"
-  - rule: "NEVER mask errors with empty tryCatch() blocks."
-    severity: "error"
-  - rule: "Report issues with severity and suggested fixes."
+  - rule: "ALWAYS report GC time and memory allocation alongside execution time."
+    severity: "warning"
+  - rule: "ALWAYS clean up profiling artifacts (Rprof.out, profvis files) after reporting."
+    severity: "warning"
+  - rule: "ALWAYS run at least two profiling tools (profvis + bench) for cross-validated results."
     severity: "warning"
 ---
 

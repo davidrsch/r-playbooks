@@ -20,7 +20,7 @@ trigger-patterns:
 argument-hint: "[--workers <n>] [--migrate-from future|sequential] [--launcher local|slurm|sge|pbs]"
 parameters:
   workers:
-    type: Number
+    type: Integer
     required: false
     default: 4
     hint: "Number of parallel workers (default: 4, use detectCores() - 1 for max)"

@@ -25,7 +25,7 @@ parameters:
     default: true
     hint: "Whether this is in an R package context (vs. a script)"
   max-cycles:
-    type: Number
+    type: Integer
     required: false
     default: 3
     min: 1
