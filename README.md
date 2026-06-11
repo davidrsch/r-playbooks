@@ -85,7 +85,7 @@ trigger-patterns:
   - "init package *"
 parameters:
   param1:
-    type: String        # String | Number | Boolean | Array
+    type: String        # String | Boolean | Integer | Float | Array
     required: true
     hint: "Description shown to the agent"
   param2:
