@@ -92,7 +92,7 @@ steps:
          - Breaking changes (commits with BREAKING CHANGE in body)
       4. Prepend a new section to NEWS.md:
          ```
-         # {{params.name}} <new-version>
+         # <package-name> <new-version>
 
          ## New Features
          - ...

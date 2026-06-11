@@ -126,7 +126,9 @@ steps:
       ```r
       db_connect <- function() {
         DBI::dbConnect(
-          drv = {{driver_class}},
+          # Choose driver based on database type (params.driver):
+          # RPostgres::Postgres() / RMySQL::MySQL() / RSQLite::SQLite() / odbc::odbc()
+          drv = <appropriate_driver>,
           host     = Sys.getenv("DB_HOST"),
           dbname   = Sys.getenv("DB_NAME"),
           user     = Sys.getenv("DB_USER"),
@@ -138,7 +140,7 @@ steps:
       db_disconnect <- function(con) DBI::dbDisconnect(con)
       ```
 
-      Use `{{driver_class}}`:
+      Driver mapping based on database type ({{params.driver}}):
       - postgres → `RPostgres::Postgres()`
       - mysql    → `RMySQL::MySQL()`
       - sqlite   → `RSQLite::SQLite()`
@@ -148,7 +150,7 @@ steps:
       ```r
       db_pool <- function() {
         pool::dbPool(
-          drv      = {{driver_class}},
+          drv      = <appropriate_driver>,
           host     = Sys.getenv("DB_HOST"),
           dbname   = Sys.getenv("DB_NAME"),
           user     = Sys.getenv("DB_USER"),

@@ -101,7 +101,7 @@ steps:
 
          # Residual plot
          predictions |>
-           mutate(residual = .pred - {{target}}) |>
+           mutate(residual = .pred - <target_column>) |>
            ggplot(aes(x = .pred, y = residual)) +
            geom_point(alpha = 0.5) +
            geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
@@ -117,7 +117,7 @@ steps:
          # Scale-location plot (heteroscedasticity check)
          predictions |>
            mutate(
-             residual = .pred - {{target}},
+             residual = .pred - <target_column>,
              sqrt_abs_resid = sqrt(abs(residual))
            ) |>
            ggplot(aes(x = .pred, y = sqrt_abs_resid)) +
@@ -130,18 +130,18 @@ steps:
          ```r
          # Probability calibration
          predictions |>
-           cal_plot_breaks(truth = {{target}}, estimate = .pred_class)
+           cal_plot_breaks(truth = <target_column>, estimate = .pred_class)
          # Or: probably::cal_plot_breaks()
          ```
 
       3. **Confusion matrix and per-class metrics** (classification):
          ```r
          predictions |>
-           conf_mat(truth = {{target}}, estimate = .pred_class) |>
+           conf_mat(truth = <target_column>, estimate = .pred_class) |>
            autoplot(type = "heatmap")
 
          predictions |>
-           metrics(truth = {{target}}, estimate = .pred_class) |>
+           metrics(truth = <target_column>, estimate = .pred_class) |>
            filter(.metric %in% c("accuracy", "precision", "recall", "f_meas"))
          ```
 
@@ -180,8 +180,8 @@ steps:
       # Create explainer
       explainer <- explain_tidymodels(
         fit,
-        data = training_data |> select(-{{target}}),
-        y = training_data${{target}},
+        data = training_data |> select(-<target_column>),
+        y = training_data$<target_column>,
         label = "{{params.model}}"
       )
 

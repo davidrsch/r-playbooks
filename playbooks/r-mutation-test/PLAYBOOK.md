@@ -100,12 +100,9 @@ steps:
       # Create plan targeting the source file(s) with the selected mutators
       plan <- muttest_plan(
         source_files = "<target_file>",  # e.g., "R/my_function.R"
-        mutators = {{#if params.mutators == "all"}}
-          # Use all available mutator presets
-          comparison_operators()
-        {{#else}}
-          comparison_operators()
-        {{/if}}
+        mutators = comparison_operators()
+        # For more operators, check available mutator presets:
+        # ?muttest::comparison_operators
       )
 
       # Execute mutation testing against testthat tests
