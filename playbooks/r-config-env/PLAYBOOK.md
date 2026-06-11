@@ -189,14 +189,16 @@ allowed-tools:
   - "*"
 
 constraints:
-  - rule: "NEVER log secrets, passwords, tokens, or credentials."
+  - rule: "ALWAYS set R_CONFIG_ACTIVE environment variable to control which environment config is loaded — NEVER hardcode the active environment."
     severity: "error"
-  - rule: "ALWAYS include service name and trace ID in log entries."
-    severity: "warning"
-  - rule: "Use structured logging (JSON format) for production."
-    severity: "warning"
-  - rule: "Never store config in source code — use environment variables."
+  - rule: "Use config::get() to load configuration — NEVER use source() or .Rprofile for config values."
     severity: "error"
+  - rule: "ALWAYS use !expr Sys.getenv() for secrets in config.yml — NEVER hardcode credentials in configuration files."
+    severity: "error"
+  - rule: "Define a default section as the base config — environment sections override only what differs from default."
+    severity: "warning"
+  - rule: "Add .Renviron.production, .Renviron.staging, and .Renviron.local to .gitignore to prevent committing secrets."
+    severity: "warning"
 ---
 
 You are an expert in R deployment configuration and environment management.

@@ -1,6 +1,6 @@
 ---
 name: r-code-review
-version: 1.1.0
+version: 1.2.0
 context-mode: Fork
 description: "Perform a structured code review for R code: check code style, logical correctness, security, performance bottlenecks, and documentation completeness"
 trigger: both
@@ -31,336 +31,179 @@ parameters:
     enum: ["lenient", "standard", "strict"]
     hint: "Review strictness: lenient (only major issues), standard, strict (pedantic)"
 steps:
-  - id: check-style
+  - id: preflight
     inline-prompt: |
-      Review R code style against the Tidyverse style guide.
+      Verify the R environment and identify target files.
 
       File: {{params.file}}
+      Scope: {{params.scope}}
+
+      1. Verify R is available and key tools are installed:
+         ```r
+         stopifnot(
+           requireNamespace("devtools", quietly = TRUE),
+           requireNamespace("lintr", quietly = TRUE)
+         )
+         # Optional but recommended:
+         # goodpractice::gp(), cyclocomp::cyclocomp()
+         ```
+
+      2. Identify target file(s):
+         - If {{params.file}} provided: use that file
+         - Otherwise: `git diff --name-only HEAD` for staged changes
+         - If no git changes: list `R/*.R` files
+         - Read each target file completely
+
+      3. Run automated checks as a first pass:
+         ```r
+         lintr::lint_package()
+         goodpractice::gp()  # if available
+         ```
+
+      Report: files to review, automated check results, environment status.
+    output: preflight_info
+
+  - id: review-code-quality
+    requires: [preflight]
+    inline-prompt: |
+      Review style, correctness, and logic for each target file.
+
+      Files: {{state.preflight_info}}
       Scope: {{params.scope}}
       Strictness: {{params.strictness}}
 
-      Read the target file(s) completely. Check every line for style violations:
+      Skip this step if scope is 'safety', 'performance', or 'docs' only.
 
-      Also run automated checks:
-      - `goodpractice::gp()` for a broad quality assessment
-      - `cyclocomp::cyclocomp()` to flag functions with high cyclomatic
-        complexity (> 15 indicates refactoring is needed)
+      Review against the **Style Guide Checklist** and **Correctness Patterns**
+      documented in the system prompt below. Focus on what matters at your
+      strictness level ({{params.strictness}}):
+      - lenient: only [Major] correctness issues and logic errors
+      - standard: [Major] + [Minor] style and correctness issues
+      - strict: everything including [Nitpick] formatting
 
-      **Naming conventions:**
-      1. All function and variable names use `snake_case` (not camelCase, not dot.case).
-      2. File names use snake_case and end in `.R`.
-      3. Package names in DESCRIPTION use Title Case for Title, sentence case for Description.
+      For each issue found, report:
+      - File and line number
+      - Category (style / correctness / logic / edge-case / NA-handling)
+      - What was found and why it's a problem
+      - Suggested fix with code example
+      - Severity: [Blocker], [Critical], [Major], [Minor], [Nitpick]
 
-      **Assignment:**
-      4. ALWAYS use `<-` for assignment, NEVER `=` (except in function argument defaults).
-      5. No right-assignment `->` or `->>`.
+      Automated tools to run:
+      ```r
+      lintr::lint("<file>")
+      cyclocomp::cyclocomp("<file>")     # flag > 15 complexity
+      goodpractice::gp()                  # broad quality scan
+      ```
+    output: code_quality_report
 
-      **Spacing and formatting:**
-      6. Commas: space after, not before (e.g., `c(1, 2, 3)` not `c(1,2,3)`).
-      7. Infix operators: spaces around `+`, `-`, `*`, `/`, `==`, `!=`, `&&`, `||`, `<-`, `|>`.
-      8. No spaces around `:` in sequences: `1:10` not `1 : 10`.
-      9. No spaces around `^` exponentiation: `x^2` not `x ^ 2`.
-      10. Opening parenthesis: space before `(` in `if`, `for`, `while`, `function`.
-          No space before `(` in function calls.
-      11. Curly braces: `{` on same line as statement, `}` on own line.
-          Always use braces for multi-line blocks, even where optional.
-
-      **Pipe formatting:**
-      12. Pipe operator `|>` at end of line, next line indented 2 spaces.
-      13. Single-argument pipes can stay on one line if short (< 80 chars).
-
-      **Line length and indentation:**
-      14. Lines should not exceed 80 characters.
-      15. Indent with 2 spaces, never tabs.
-
-      **Other:**
-      16. Use double quotes `"..."` for character strings (consistent within project).
-      17. Use `TRUE`/`FALSE`, never `T`/`F`.
-      18. Use `seq_along(x)` or `seq_len(n)`, never `1:length(x)` or `1:nrow(df)`.
-      19. No commented-out code blocks: remove them.
-
-      Report each violation with:
-      - Line number
-      - What was found
-      - What the correct style should be
-      - Severity: [Nitpick], [Minor], or [Major]
-
-      At strictness=lenient, only report [Major] violations.
-      At strictness=standard, report [Major] and [Minor].
-      At strictness=strict, report all including [Nitpick].
-    output: style_report
-
-  - id: check-correctness
+  - id: review-safety-performance
+    requires: [preflight]
     inline-prompt: |
-      Review R code for logical correctness and robustness.
+      Review security vulnerabilities and performance anti-patterns.
 
-      File: {{params.file}}
-      Scope: {{params.scope}}
-      Strictness: {{params.strictness}}
-
-      Review every function and logical block for:
-
-      **Input validation:**
-      1. Are function inputs validated at the top of each exported function?
-      2. Are required arguments checked with `missing()` or `rlang::is_missing()`?
-      3. Are types checked: `is.character(x)`, `is.numeric(x)`, `is.data.frame(x)`?
-      4. Are value ranges checked: `x > 0`, `nrow(df) > 0`?
-
-      **Edge cases:**
-      5. What happens with empty inputs: `NULL`, `NA`, `character(0)`, `data.frame()`?
-      6. What happens with zero-length inputs: `integer(0)`, `list()`?
-      7. What happens with single-row or single-column data frames?
-      8. What happens when all values are `NA`?
-      9. What happens at boundaries: `0`, `Inf`, `-Inf`, `NaN`?
-
-      **Error handling:**
-      10. Are errors thrown explicitly with `rlang::abort()` or `stop()`?
-      11. Are error messages informative (what went wrong, why, what to do)?
-      12. Are warnings used for non-fatal issues via `rlang::warn()`?
-      13. Is `tryCatch()` used correctly (not swallowing all errors silently)?
-
-      **Type safety:**
-      14. Does `sapply()` return unpredictable types? Use `vapply()` or `purrr::map_*()`.
-      15. Are factors converted to character before string operations?
-      16. Are list-columns handled correctly in data frames?
-      17. Does subsetting preserve expected types (e.g., `df[, 1]` not `df[[1]]` if a column is needed)?
-
-      **NA handling:**
-      18. Are `NA` values handled explicitly? Check `na.rm = TRUE` in summary functions.
-      19. Does `==` with NA produce unexpected results? Use `is.na()` checks.
-      20. Does `if(NA)` produce an error? NA used in conditional.
-
-      **Logic errors:**
-      21. Are conditions mutually exclusive when they should be?
-      22. Are `&` and `&&` / `|` and `||` used correctly (scalar vs vectorized)?
-      23. Are `ifelse()` vs `dplyr::if_else()` vs `data.table::fifelse()` used appropriately?
-      24. Are recycling rules respected or explicitly handled?
-
-      Report each issue with:
-      - Line number and code snippet
-      - What the issue is and why it's a problem
-      - Suggested fix
-      - Severity: [Blocker], [Critical], [Major], [Minor]
-    gate: Review
-    output: correctness_report
-
-  - id: check-safety
-    inline-prompt: |
-      Scan R code for security vulnerabilities and dangerous patterns.
-
-      File: {{params.file}}
+      Files: {{state.preflight_info}}
       Scope: {{params.scope}}
 
-      **Code execution risks (CRITICAL):**
-      1. `eval(parse(text = ...))`: arbitrary code execution. Flag as BLOCKER.
-      2. `eval()` with any user-controllable input: BLOCKER.
-      3. `source()` with user-provided paths: BLOCKER.
-      4. `system()` or `system2()` with user-controllable arguments: BLOCKER.
-         If used with hardcoded commands, flag as CRITICAL and verify the command.
-      5. `shell()` on Windows with user input: BLOCKER.
+      Skip this step if scope is 'style', 'correctness', or 'docs' only.
 
-      **Secret management (CRITICAL):**
-      6. Hardcoded API keys, tokens, passwords, or credentials in source code.
-         Search for patterns like: `key = "sk-..."`, `password = "..."`,
-         `token = "ghp_..."`, `secret = "..."`.
-      7. Environment variables used without fallback handling:
-         `Sys.getenv("API_KEY")` without checking for `""`.
+      Review against the **Security Red Flags** and **Performance Patterns**
+      documented in the system prompt below.
 
-      **State and side effects (MAJOR):**
-      8. `<<-` (superassignment): modifies parent environment. Flag as MAJOR.
-         If present, check if it's justified and documented.
-      9. `assign()` with `envir = .GlobalEnv`: modifies global state. MAJOR.
-      10. `setwd()`: changes working directory globally. MAJOR.
-          Should use `withr::with_dir()` or `here::here()` instead.
-      11. `rm(list = ls())`: destroys user workspace. BLOCKER in any shared code.
-      12. `options()` modified without restoring previous values.
-          Should use `withr::with_options()`.
-      13. `par()` modified without restoring: use `withr::with_par()`.
-      14. `on.exit()` used correctly to restore state? Check for missing cleanup.
+      **Safety — scan for these BLOCKERS first:**
+      - `eval(parse(text = ...))` with variable input
+      - `system()` / `shell()` with user input
+      - Hardcoded API keys, passwords, tokens (search: `key = "`, `secret = "`, `token = "`)
+      - `rm(list = ls())` in shared code
+      - SQL built with `paste()` or `sprintf()` from user input
 
-      **Package installation (MAJOR):**
-      15. `install.packages()` in scripts or .Rprofile: should use renv or DESCRIPTION.
-      16. `devtools::install_github()` without version pinning: reproducibility risk.
-
-      **File system safety (MINOR/MAJOR):**
-      17. Hardcoded absolute file paths: should use `here::here()` or relative paths.
-      18. File reads/writes without path validation (directory traversal).
-      19. Temporary files: used `tempfile()` instead of hardcoded /tmp paths?
+      **Performance — flag these patterns:**
+      - Growing objects in loops (`result <- c(result, x)`)
+      - `rbind()` / `cbind()` in a loop
+      - `sapply()` with unpredictable return types
+      - Unnecessary copies of large objects
 
       For each finding, report:
-      - Line number and the exact code
+      - File, line, code snippet
       - Risk level: BLOCKER / CRITICAL / MAJOR / MINOR
-      - Why it's dangerous
-      - How to fix it safely
-    gate: Review
-    output: safety_report
+      - Why it's dangerous/slow
+      - Concrete fix with code example
+    output: safety_perf_report
 
-  - id: check-performance
-    inline-prompt: |
-      Review R code for performance anti-patterns.
-
-      File: {{params.file}}
-      Scope: {{params.scope}}
-      Strictness: {{params.strictness}}
-
-      **Vectorization (MAJOR):**
-      1. Growing objects in loops:
-         ```r
-         # BAD: grows result on each iteration
-         result <- c()
-         for (i in 1:n) { result <- c(result, f(i)) }
-         ```
-         Use pre-allocation: `result <- vector("list", n)` or `purrr::map()`.
-
-      2. `for` loop where a vectorized operation exists:
-         `for (i in 1:n) { x[i] <- x[i] + 1 }` → `x <- x + 1`.
-
-      3. Row-wise operations on data frames where column-wise is possible.
-         Use `dplyr::mutate()` with vectorized functions instead of `rowwise()`.
-
-      **Data structures (MINOR/MAJOR):**
-      4. `rbind()` in a loop: exponential slowdown. Collect in list, `do.call(rbind, ...)` once.
-      5. `cbind()` in a loop: same issue.
-      6. Using `data.frame()` where `data.table` or `tibble` would be faster for large data.
-      7. StringsAsFactors not set consistently.
-
-      **Unnecessary computation (MINOR):**
-      8. Repeated computation in loops: hoist invariant calculations outside.
-      9. `unique()` called multiple times on same data: cache the result.
-      10. Redundant type conversions: `as.data.frame(as.matrix(df))`.
-
-      **Memory (MAJOR):**
-      11. Unnecessary copies of large objects.
-          ```r
-          # BAD: copies entire df
-          df$new_col <- df$a + df$b
-          df2 <- df  # copy
-          ```
-          Use `data.table` for in-place modification if data is large.
-      12. Keeping intermediate results that aren't needed: clean up large objects.
-      13. Loading entire dataset when only a subset is needed.
-
-      **Package choices:**
-      14. `data.table` vs `dplyr` for large data (> 1M rows): prefer data.table.
-      15. `readr` vs `data.table::fread()` for large CSV: prefer fread.
-      16. `stringr` vs `stringi` for heavy string processing: both are good.
-
-      Report each finding with:
-      - Line number and pattern description
-      - Expected performance impact: [Critical], [Major], [Minor]
-      - Suggested optimization with code example
-      - At strictness=lenient: only report [Critical] and [Major]
-      - At strictness=standard: report [Critical] and [Major] and [Minor]
-      - At strictness=strict: report all and suggest micro-optimizations
-    gate: Review
-    output: performance_report
-
-  - id: check-docs
+  - id: review-documentation
+    requires: [preflight]
     inline-prompt: |
       Review documentation completeness and test coverage.
 
-      File: {{params.file}}
+      Files: {{state.preflight_info}}
       Scope: {{params.scope}}
 
-      **Documentation review:**
-      1. For every exported function, verify roxygen2 blocks are present and complete:
-         - `@title` — one-line description (or bare `#'` first line)
-         - `@description` — fuller description (optional but encouraged)
-         - `@param` — every argument documented, with type and valid values
-         - `@returns` — what the function returns (not just "a data.frame" — be specific)
-         - `@examples` — at least one runnable example; wrap slow/network examples in `\dontrun{}`
-         - `@export` — present on all public functions; absent on internal helpers
-         - `@noRd` — present on internal helpers that should not appear in help pages
-         - `@family` — present to group related functions in pkgdown reference index
-      2. Run `devtools::check_man()` or inspect `devtools::document()` output for
-         roxygen2 warnings (missing `@param`, undocumented arguments, etc.).
-      3. Check README.md:
-         - Installation instructions present?
-         - Quick-start example present and correct?
-         - Badges: R CMD check, coverage, CRAN status?
-      4. Check for vignettes (`vignettes/`) for complex multi-function workflows.
-         Missing vignettes for non-trivial functionality is a documentation gap.
-      5. Verify `NEWS.md` exists and contains an entry for the current development version.
+      Skip this step if scope is 'style', 'correctness', 'safety', or 'performance' only.
 
-      **Test coverage review:**
-      6. Run coverage measurement:
-         ```r
-         cov <- covr::package_coverage(quiet = FALSE)
-         print(cov)
-         covr::report(cov)  # opens HTML report in viewer
-         ```
-      7. Identify functions with < 80% coverage — list them with their current coverage %.
-      8. Identify untested exported functions (0% coverage) — flag as [Critical].
-      9. Check that error paths are covered:
-         ```r
-         # Example: is the rlang::abort() branch tested?
-         covr::tally_coverage(cov) |> dplyr::filter(value == 0)
-         ```
+      **Documentation — check each exported function for:**
+      - [ ] roxygen2 block present with `@title`, `@param` (all args), `@returns`, `@examples`
+      - [ ] `@export` on public functions, `@noRd` on internal helpers
+      - [ ] `@family` tag to group related functions in pkgdown
+      - [ ] README.md: installation, quick-start, badges
+      - [ ] NEWS.md: entries for current dev version
+      - [ ] Vignettes for complex multi-function workflows
 
-      Report:
-      - Documentation: list of functions missing docs or incomplete docs
-      - Coverage: overall %, functions below 80%, untested functions
-      - README: present / missing sections
-      - Vignettes: present / recommended
-    gate: Review
+      Run: `devtools::document()` and check for warnings.
+
+      **Test coverage — measure and report:**
+      ```r
+      cov <- covr::package_coverage(quiet = FALSE)
+      print(cov)
+      # Flag functions with < 80% coverage
+      # Flag exported functions with 0% coverage — [Critical]
+      # Identify uncovered lines with covr::zero_coverage()
+      ```
+
+      **Coverage measurement may fail if the package doesn't build.**
+      If it does, report that as a pre-existing issue and skip coverage.
+      Do NOT block the review on coverage tool failure.
+
+      Report: documentation gaps and coverage summary.
     output: docs_report
 
   - id: summarize-review
-    requires: [check-style, check-correctness, check-safety, check-performance, check-docs]
+    requires: [review-code-quality, review-safety-performance, review-documentation]
     inline-prompt: |
-      Produce a comprehensive code review summary.
+      Produce the final code review summary.
 
-      Style report: {{state.style_report}}
-      Correctness report: {{state.correctness_report}}
-      Safety report: {{state.safety_report}}
-      Performance report: {{state.performance_report}}
+      Code quality: {{state.code_quality_report}}
+      Safety & performance: {{state.safety_perf_report}}
+      Documentation: {{state.docs_report}}
 
       **Summary structure:**
 
-      1. **Overall assessment**: 1-2 sentences: Is this code ready? What's the biggest concern?
+      1. **Overall assessment**: 1-2 sentences. Is this code ready?
 
       2. **Issue count by severity:**
-         | Severity   | Count | Category breakdown               |
-         |------------|-------|-----------------------------------|
-         | Blocker    | N     | Safety: eval/parse, secrets       |
-         | Critical   | N     | Correctness: logic errors, no err |
-         | Major      | N     | Style: naming, Safety: setwd/<<-  |
-         | Minor      | N     | Style: spacing, Perf: loops       |
-         | Nitpick    | N     | Style: line length, quotes        |
+         | Severity | Count |
+         |----------|-------|
+         | Blocker  | N     |
+         | Critical | N     |
+         | Major    | N     |
+         | Minor    | N     |
+         | Nitpick  | N     |
 
-      3. **Blocker issues (must fix before merge):**
-         List each with file, line, code, risk, and fix.
+      3. **Blocker issues** (must fix before merge): list each with file, line, code, risk, fix.
 
-      4. **Critical issues (must fix before release):**
-         List each with file, line, description, and suggested fix.
+      4. **Critical issues** (must fix before release): list each with file, line, fix.
 
-      5. **Major issues (should fix):**
-         List each with file, line, description, and suggested fix.
+      5. **Major issues** (should fix): list each with file, line, fix.
 
-      6. **Documentation review:**
-         - Are all exported functions documented with roxygen2?
-         - Do `@examples` run without error? Check for `\dontrun{}` abuse.
-         - Are `@param` tags complete for every argument?
-         - Are `@returns` tags informative (not just "a data.frame")?
-         - Are `@family` tags used to group related functions?
-         - Are internal (non-exported) functions marked with `@noRd`?
-         - Is there a README with installation instructions?
-         - Are there vignettes for complex workflows?
+      6. **Documentation review**: roxygen2 completeness, README, NEWS.md, vignettes.
 
-      7. **Testing review:**
-         - What is the test coverage? Run `covr::package_coverage()` to measure.
-         - Are edge cases tested (NA, NULL, empty, boundary)?
-         - Are error conditions tested with `expect_error()`?
-         - Are snapshot tests used appropriately?
-         - Are there tests for all exported functions?
+      7. **Test coverage**: overall %, functions below 80%, untested functions.
 
       8. **Recommendation:**
          - APPROVE: code is ready to merge
-         - APPROVE WITH COMMENTS: minor issues only, can fix later
+         - APPROVE WITH COMMENTS: minor issues only
          - REQUEST CHANGES: major issues need fixing
          - BLOCK: blocker issues must be addressed first
 
-      9. **Action items**: concrete list of what to do, ordered by priority.
+      9. **Action items**: concrete list ordered by priority.
     gate: Approve
     output: review_summary
 
@@ -375,13 +218,13 @@ allowed-tools:
   - "*"
 
 constraints:
-  - rule: "NEVER auto-modify code without an Approve gate."
+  - rule: "NEVER auto-modify code without user approval — reviews are read-only unless the user explicitly asks for fixes."
     severity: "error"
-  - rule: "ALWAYS snapshot current behavior before refactoring."
+  - rule: "NEVER mask errors with empty tryCatch() blocks — report tool failures, don't silently skip them."
+    severity: "error"
+  - rule: "Report issues with severity AND suggested fixes — never just flag a problem without a solution."
     severity: "warning"
-  - rule: "NEVER mask errors with empty tryCatch() blocks."
-    severity: "error"
-  - rule: "Report issues with severity and suggested fixes."
+  - rule: "ALWAYS explain WHY something is a problem — not just that it breaks a rule."
     severity: "warning"
 ---
 
@@ -391,19 +234,19 @@ performance with pragmatic, actionable feedback.
 
 ## Review Philosophy
 
-A code review is not a style enforcement exercise: it's a collaborative
-quality improvement process. Focus on what matters:
-
 1. **Does the code work correctly?**: Correctness first.
 2. **Is it safe?**: Security and reproducibility.
 3. **Is it maintainable?**: Readability, naming, structure.
 4. **Is it fast enough?**: Performance only where it matters.
 
-## Tidyverse Style Guide Checklist
+A code review is not a style enforcement exercise: it's a collaborative
+quality improvement process. Focus on what matters.
+
+## Style Guide Checklist
 
 Reference: https://style.tidyverse.org
 
-- [ ] snake_case for functions and variables
+- [ ] `snake_case` for functions and variables
 - [ ] `<-` for assignment (not `=`, not `->`)
 - [ ] Spaces around infix operators
 - [ ] `TRUE`/`FALSE` (never `T`/`F`)
@@ -411,7 +254,33 @@ Reference: https://style.tidyverse.org
 - [ ] `{` on same line, `}` on own line
 - [ ] `seq_along()` / `seq_len()` instead of `1:length(x)`
 - [ ] Double quotes for strings (or single: be consistent)
-- [ ] No commented-out code
+- [ ] No commented-out code blocks
+- [ ] Pipe `|>` at end of line, next line indented 2 spaces
+- [ ] Space before `(` in `if`, `for`, `while`, `function`; no space before `(` in calls
+- [ ] Always use braces for multi-line blocks
+
+## Correctness Patterns
+
+**Input validation:** Are function inputs validated at the top? Are required
+arguments checked? Are types and value ranges validated?
+
+**Edge cases:** Test with empty inputs (NULL, NA, `character(0)`, `data.frame()`),
+zero-length inputs, single-row/column data frames, all-NA data, boundaries
+(0, Inf, -Inf, NaN).
+
+**Error handling:** Use `rlang::abort()` or `cli::cli_abort()` for errors with
+informative messages. Use `rlang::warn()` for warnings. Never swallow all errors
+with bare `tryCatch()`.
+
+**Type safety:** `sapply()` returns unpredictable types → use `vapply()` or
+`purrr::map_*()`. Factors should be converted to character before string ops.
+Check subsetting preserves expected types.
+
+**NA handling:** Check `na.rm = TRUE` in summary functions. `==` with NA produces
+unexpected results → use `is.na()`. `if(NA)` errors → check before conditional.
+
+**Logic errors:** Are `&`/`&&` and `|`/`||` used correctly? Are `ifelse()` vs
+`dplyr::if_else()` used appropriately? Are recycling rules respected?
 
 ## Common R Anti-Patterns
 
@@ -426,23 +295,29 @@ Reference: https://style.tidyverse.org
 | `options(warn=-1)`          | Silences all warnings     | `suppressWarnings()` or fix root cause |
 | `library()` in package code | Pollutes namespace        | `requireNamespace()` or `@importFrom`  |
 | Growing objects in loops    | O(n²) performance         | Pre-allocate or `purrr::map()`         |
+| `rbind()` in a loop         | Exponential slowdown      | Collect in list, `do.call(rbind, ...)` |
 
-## Security Red Flags
-
-Always flag as BLOCKER:
+## Security Red Flags (Always BLOCKER)
 
 - `eval(parse(text = ...))` with any variable input
-- `system()` / `shell()` with user input
-- Hardcoded secrets (API keys, passwords, tokens)
+- `system()` / `shell()` with user-controllable arguments
+- Hardcoded API keys, passwords, tokens in source code
 - `rm(list = ls())` in scripts or packages
+- `source()` with user-provided paths
+- SQL built with `paste()` or `sprintf()` from user input → use parameterized queries
+- `glue::glue()` with unsanitized user input
+- `setwd()` with user-provided paths (path traversal)
+- `download.file()` without URL validation
 
 ## Performance Guidelines
 
-- Pre-allocation over growing objects
-- Vectorization over explicit loops
-- `data.table` or `collapse` for large data (> 1M rows)
-- Avoid unnecessary copies of large objects
-- Profile before optimizing: don't guess
+- **Pre-allocation over growing objects**: `vector("list", n)` not `c(result, x)`
+- **Vectorization over explicit loops**: `vapply(x, fn, ...)` not `for (i in x)`
+- **data.table or collapse for large data (> 1M rows)**
+- **Avoid unnecessary copies of large objects**
+- **Profile before optimizing**: use `profvis::profvis()`, don't guess
+- **Hoist invariant calculations** out of loops
+- **Use `data.table::fread()`** for large CSVs
 
 ## Review Rubric
 

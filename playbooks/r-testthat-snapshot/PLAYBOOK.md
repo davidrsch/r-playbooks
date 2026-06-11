@@ -27,15 +27,17 @@ tags:
   - testthat
   - snapshot
 constraints:
-  - rule: "NEVER skip the RED phase — always write a failing test first."
+  - rule: "NEVER blindly accept all snapshots — review each one individually in snapshot_review() before accepting."
     severity: "error"
-  - rule: "NEVER modify test expectations to make them pass."
+  - rule: "ALWAYS use local_reproducible_output() in snapshot tests to control console width, encoding, and locale."
     severity: "error"
-  - rule: "NEVER implement more code than the test requires in GREEN phase."
+  - rule: "ALWAYS normalize environment-specific content (file paths, timestamps, memory addresses) with the transform argument."
     severity: "error"
-  - rule: "ALWAYS run the full test suite after each TDD cycle."
+  - rule: "NEVER set testthat.snapshot_accept = TRUE on CI — it silently overwrites snapshots."
+    severity: "error"
+  - rule: "ALWAYS commit _snaps/ directories to git — snapshots are versioned golden files."
     severity: "warning"
-  - rule: "Use testthat 3rd edition — no context(), use test_that() directly."
+  - rule: "ALWAYS set numeric tolerance (tolerance = 1e-6) in expect_snapshot_value() to prevent platform-specific floating-point differences."
     severity: "warning"
 allowed-tools:
   - "*"

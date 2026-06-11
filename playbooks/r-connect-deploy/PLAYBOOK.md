@@ -175,13 +175,15 @@ tags:
   - production
   - devops
 constraints:
-  - rule: "NEVER hardcode secrets or tokens in workflow files — use GitHub Secrets."
+  - rule: "ALWAYS generate manifest.json via rsconnect::writeManifest() before deploying — it captures R version and package sources."
     severity: "error"
-  - rule: "ALWAYS include HEALTHCHECK in Dockerfiles."
+  - rule: "NEVER hardcode API keys or tokens in code — use Connect environment variables or CONNECT_API_KEY from secure env vars."
+    severity: "error"
+  - rule: "Commit manifest.json to git for git-backed deployment — Connect reads it to restore the R environment."
     severity: "warning"
-  - rule: "Never expose ports without proper security configuration."
+  - rule: "Set R_CONFIG_ACTIVE via Connect environment variables for environment-specific configuration."
     severity: "warning"
-  - rule: "Use multi-stage Docker builds to minimize image size."
+  - rule: "Restrict app access via Connect's user/group permissions — NEVER deploy with world-readable settings unless intended."
     severity: "warning"
 allowed-tools:
   - "*"

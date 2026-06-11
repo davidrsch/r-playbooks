@@ -24,14 +24,14 @@ parameters:
     enum: ["grid", "bayes", "racing"]
     hint: "Tuning strategy: Latin hypercube grid, Bayesian optimisation, or ANOVA racing"
   budget:
-    type: Number
+    type: Integer
     required: false
     default: 30
     min: 10
     max: 200
     hint: "Number of candidate models to evaluate (grid size or Bayesian iterations)"
   cv-folds:
-    type: Number
+    type: Integer
     required: false
     default: 5
     min: 3

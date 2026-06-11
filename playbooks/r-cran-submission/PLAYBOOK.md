@@ -261,7 +261,7 @@ steps:
          - Social media (Mastodon/LinkedIn #rstats)
 
       5. After CRAN acceptance, create a GitHub Release:
-         - Tag: v{{bump_version}}
+         - Tag: v{{params.bump}}
          - Body: copy from NEWS.md
          - Attach built .tar.gz
 

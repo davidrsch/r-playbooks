@@ -230,17 +230,17 @@ allowed-tools:
   - "*"
 
 constraints:
-  - rule: "NEVER modify NAMESPACE manually — roxygen2 manages it."
+  - rule: "ALWAYS install pkgcheck from ropensci-review-tools/pkgcheck, never from CRAN."
     severity: "error"
-  - rule: "NEVER commit to main without passing R CMD check."
+  - rule: "NEVER skip CRITICAL issues (missing DESCRIPTION fields, undeclared deps, R CMD check errors) before marking ready to submit."
     severity: "error"
-  - rule: "ALWAYS run devtools::document() after changing roxygen comments."
+  - rule: "ALWAYS run devtools::check() with --as-cran as part of the recheck step."
+    severity: "error"
+  - rule: "NEVER modify package logic during auto-fix — only fix infrastructure (dependencies, documentation, style, license)."
+    severity: "error"
+  - rule: "ALWAYS re-run pkgcheck::pkgcheck() after fixing issues — never use cached results."
     severity: "warning"
-  - rule: "NEVER use install.packages() in scripts — use renv or DESCRIPTION."
-    severity: "error"
-  - rule: "ALWAYS run devtools::test() before committing."
-    severity: "warning"
-  - rule: "Use rlang::abort() or cli::cli_abort() over stop() for errors."
+  - rule: "ALWAYS save pkgcheck results to pkgcheck-results.rds for reproducibility and CI artifact upload."
     severity: "warning"
 ---
 

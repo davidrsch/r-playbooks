@@ -36,15 +36,17 @@ tags:
 allowed-tools:
   - "*"
 constraints:
-  - rule: "NEVER use global variables for app state — use reactiveValues."
+  - rule: "NEVER let E2E tests hit live external APIs — use cy.intercept() or mock servers to avoid flakiness."
     severity: "error"
-  - rule: "NEVER use source() inside reactive expressions."
+  - rule: "NEVER use hardcoded wait times (cy.wait(N) or Sys.sleep()) — wait for DOM state or network responses instead."
     severity: "error"
-  - rule: "ALWAYS validate user inputs server-side, not just client-side."
+  - rule: "ALWAYS use data-cy or data-testid selectors — never CSS classes, IDs, or XPath."
+    severity: "error"
+  - rule: "ALWAYS use app$wait_for_idle() after app$set_inputs() in shinytest2 to wait for reactive recalculation."
+    severity: "error"
+  - rule: "ALWAYS run tests in headless mode in CI — never depend on headed browser availability."
     severity: "warning"
-  - rule: "Use Shiny modules for reusable UI components."
-    severity: "warning"
-  - rule: "Use logger package for structured logging, not print() or cat()."
+  - rule: "ALWAYS clean up test fixtures and app state between tests to ensure isolation."
     severity: "warning"
 steps:
   - id: install-tools

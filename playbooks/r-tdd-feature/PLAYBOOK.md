@@ -25,7 +25,7 @@ parameters:
     default: true
     hint: "Whether this is in an R package context (vs. a script)"
   max-cycles:
-    type: Number
+    type: Integer
     required: false
     default: 3
     min: 1
@@ -39,6 +39,16 @@ steps:
       Feature: {{params.feature}}
       Target function (if provided): {{params.function}}
       Package context: {{params.package}}
+
+      0. Verify the R environment is functional:
+         ```r
+         stopifnot(
+           requireNamespace("devtools", quietly = TRUE),
+           requireNamespace("testthat", quietly = TRUE)
+         )
+         # For package context: verify DESCRIPTION exists
+         if ({{params.package}}) stopifnot(file.exists("DESCRIPTION"))
+         ```
 
       1. If in a package, read DESCRIPTION and list existing functions in R/.
       2. If a function name was provided, check if it already exists.
@@ -157,10 +167,10 @@ steps:
     gate: Review
     output: refactor_result
 
-  - id: document-and-integrate
+  - id: document
     requires: [refactor-phase]
     inline-prompt: |
-      Finalize the feature with documentation, coverage, and integration verification.
+      Add documentation and style the code.
 
       1. Add roxygen2 documentation to {{params.function}}:
          - `@title`, `@description`, `@param`, `@returns`, `@examples`, `@export`
@@ -172,7 +182,16 @@ steps:
          styler::style_file("R/{{params.function}}.R")
          styler::style_file("tests/testthat/test-{{params.function}}.R")
          ```
-      4. Measure test coverage for the new function:
+
+      Report: documentation added, code styled.
+    output: doc_result
+
+  - id: validate-and-commit
+    requires: [document]
+    inline-prompt: |
+      Run the full quality gate and commit.
+
+      1. Measure test coverage for the new function:
          ```r
          covr::file_coverage(
            source_files = "R/{{params.function}}.R",
@@ -181,11 +200,11 @@ steps:
          ```
          Target: ≥ 90% line coverage. If below, identify uncovered branches
          (typically error paths or edge cases) and add tests for them.
-      5. Run FULL test suite: `devtools::test()`
-      6. Run: `devtools::check(args = c("--as-cran", "--no-manual", "--no-vignettes"))`
+      2. Run FULL test suite: `devtools::test()`
+      3. Run: `devtools::check(args = c("--as-cran", "--no-manual", "--no-vignettes"))`
          Must pass with 0 errors, 0 warnings.
-      7. If lintr is configured: `lintr::lint_package()`
-      8. Commit the completed feature:
+      4. If lintr is configured: `lintr::lint_package()`
+      5. Commit the completed feature:
          ```bash
          git add R/{{params.function}}.R tests/testthat/test-{{params.function}}.R man/
          git commit -m "feat: implement {{params.function}} via TDD ({{params.feature}})"
@@ -205,7 +224,7 @@ steps:
       ```
 
       If R CMD check has issues, fix them before completing.
-    gate: Review
+    gate: Approve
     output: final_result
 
 tags:
@@ -266,3 +285,16 @@ You follow the Red → Green → Refactor cycle rigorously.
 - Use `desc::desc_get_deps()` to check if needed packages are in DESCRIPTION.
 - Run tests with `devtools::test(filter = "<function-name>")` during TDD,
   `devtools::test()` for final verification.
+
+## TDD Feature vs Quick Package Function
+
+This playbook is for rigorous multi-cycle TDD on complex features in any R context
+(packages, Shiny, Plumber, scripts). For adding a simple function to an R package
+with optional single-cycle TDD and package-specific verification (name conflict
+checking, NAMESPACE exports, @param matching, non-TDD mode), use:
+
+`/run_playbook r-pkg-add-function --name "<function>" --tdd true`
+
+Choose r-pkg-add-function when you want quick, well-integrated package functions.
+Choose this playbook when you want disciplined red-green-refactor across multiple
+cycles for complex features.

@@ -2,12 +2,14 @@
 name: r-targets-crew
 version: 1.0.0
 context-mode: Fork
-description: Configure the crew parallel backend for a targets pipeline (mirai-based, replaces future)
+description: "Configure the crew parallel backend for a targets pipeline (mirai-based, replaces future). Use mori for zero-copy shared memory on large reference data"
 trigger: both
 trigger-patterns:
   - "crew *"
   - "parallel *"
   - "mirai *"
+  - "mori *"
+  - "shared memory *"
   - "configure crew *"
   - "crew backend *"
   - "set up crew *"
@@ -18,7 +20,7 @@ trigger-patterns:
 argument-hint: "[--workers <n>] [--migrate-from future|sequential] [--launcher local|slurm|sge|pbs]"
 parameters:
   workers:
-    type: Number
+    type: Integer
     required: false
     default: 4
     hint: "Number of parallel workers (default: 4, use detectCores() - 1 for max)"
@@ -262,6 +264,7 @@ You are a high-performance computing specialist for R pipelines, expert in the
 7. ALWAYS add `library(crew)` at the top of `_targets.R` when using crew.
 8. PREFER `crew_controller_group()` for heterogeneous workloads (light + heavy tasks).
 9. USE `seconds_idle = 60` as default to let idle workers terminate gracefully.
+10. USE `mori::share()` for large reference data (>100 MB) shared across crew workers — crew uses mirai under the hood, so mori's ALTREP serialization works transparently. Workers get 824 B references instead of 200 MB copies.
 10. RECOMMEND `tar_make(reporter = "crew")` for crew-aware progress reporting (crew >= 0.9.0).
 11. NEVER set `workers` higher than available cores without explicit user request.
 12. For HPC launchers, always include `script_lines` with resource requests.

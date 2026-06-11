@@ -165,13 +165,17 @@ allowed-tools:
   - "*"
 
 constraints:
-  - rule: "NEVER modify raw data files — work on copies."
+  - rule: "ALWAYS validate parameters before executing — Quarto errors are cryptic and hard to debug."
     severity: "error"
-  - rule: "ALWAYS validate data before downstream use."
+  - rule: "NEVER render with --freeze on first build — only use --freeze for incremental re-renders."
+    severity: "error"
+  - rule: "ALWAYS verify output files exist and have non-zero size after render completes."
+    severity: "error"
+  - rule: "ALWAYS check for unresolved cross-references (??) in rendered output before publishing."
+    severity: "error"
+  - rule: "For parameterized reports, ALWAYS ensure output filenames include parameter values to prevent overwriting."
     severity: "warning"
-  - rule: "Document all data transformations with comments."
-    severity: "warning"
-  - rule: "Use renv or pak to lock dependency versions."
+  - rule: "ALWAYS use --profile for environment-specific configurations (production vs development)."
     severity: "warning"
 ---
 

@@ -145,13 +145,15 @@ allowed-tools:
   - "*"
 
 constraints:
-  - rule: "NEVER auto-modify code without an Approve gate."
+  - rule: "ALWAYS respect the project's .lintr configuration — NEVER modify it without user confirmation."
     severity: "error"
-  - rule: "ALWAYS snapshot current behavior before refactoring."
+  - rule: "Report lints with file:line:column format and severity level for easy IDE navigation."
     severity: "warning"
-  - rule: "NEVER mask errors with empty tryCatch() blocks."
-    severity: "error"
-  - rule: "Report issues with severity and suggested fixes."
+  - rule: "Use styler::style_pkg() / style_file() for auto-fixable issues — NEVER auto-fix without showing the plan first (gate: Review)."
+    severity: "warning"
+  - rule: "ALWAYS re-run lintr after auto-fixing to verify fixes and report remaining lints."
+    severity: "warning"
+  - rule: "Integrate lintr into CI (lintr::lint_package() in GitHub Actions) to enforce style on every PR."
     severity: "warning"
 ---
 
