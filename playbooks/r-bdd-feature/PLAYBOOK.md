@@ -42,6 +42,15 @@ steps:
       Feature: {{params.feature}}
       Provided scenarios: {{params.scenarios}}
 
+      0. Verify the R environment is functional:
+         ```r
+         stopifnot(
+           requireNamespace("devtools", quietly = TRUE),
+           requireNamespace("testthat", quietly = TRUE)
+         )
+         if ({{params.context}} == "package") stopifnot(file.exists("DESCRIPTION"))
+         ```
+
       1. Write the feature statement in user-story format:
          ```
          Feature: <feature name>
@@ -161,7 +170,6 @@ steps:
       ```
 
       Report: test file created, N scenarios failing (expected at this stage).
-    gate: Review
     output: bdd_tests
 
   - id: implement-scenarios

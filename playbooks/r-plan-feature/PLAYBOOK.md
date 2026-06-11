@@ -72,15 +72,15 @@ steps:
          - Current test coverage in affected areas
          - Existing patterns/conventions that should be followed
          - Any architectural constraints (e.g., "this package uses S7 OOP")
-    output: context_analysis
 
-  - id: design-approach
-    requires: [understand-context]
-    inline-prompt: |
-      Design the implementation approach.
+      ---
+
+      **Part 2: Design the implementation approach.**
+
+      Based on the context analysis above, design the solution.
 
       Feature: {{params.feature}}
-      Context: {{state.context_analysis}}
+      Context: the project structure and conventions identified above
       Depth: {{params.depth}}
 
       **For all depths:**
@@ -131,10 +131,10 @@ steps:
 
       Report the complete design for user approval.
     gate: Confirm
-    output: design
+    output: analysis_and_design
 
-  - id: identify-affected-files
-    requires: [design-approach]
+  - id: plan-implementation
+    requires: [understand-context]
     inline-prompt: |
       Produce a precise list of every file that will be touched.
 
@@ -169,15 +169,14 @@ steps:
          - Low risk: new standalone files, documentation-only changes
 
       For each file, note the risk level and mitigation strategy.
-    gate: Review
-    output: file_plan
 
-  - id: estimate-effort
-    requires: [identify-affected-files]
-    inline-prompt: |
-      Estimate the implementation effort.
+      ---
 
-      File plan: {{state.file_plan}}
+      **Part 2: Estimate implementation effort.**
+
+      Based on the file plan above, estimate the work required.
+
+      File plan: from Part 1 above
       Depth: {{params.depth}}
 
       1. **Break down into implementation steps** (ordered by dependency):
@@ -204,17 +203,16 @@ steps:
 
       For quick depth: T-shirt sizes only. For standard/deep: detailed steps with estimates.
     gate: Review
-    output: effort_estimate
+    output: implementation_draft
 
   - id: generate-plan-summary
-    requires: [estimate-effort]
+    requires: [plan-implementation]
     inline-prompt: |
       Produce the final actionable implementation plan.
 
       Feature: {{params.feature}}
-      Design: {{state.design}}
-      File plan: {{state.file_plan}}
-      Effort estimate: {{state.effort_estimate}}
+      Analysis & Design: {{state.analysis_and_design}}
+      Implementation draft: {{state.implementation_draft}}
 
       Generate the complete implementation plan document:
 

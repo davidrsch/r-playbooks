@@ -12,12 +12,18 @@ trigger-patterns:
   - "ship feature *"
   - "deliver feature *"
   - "feature from start to finish *"
-argument-hint: "--feature <description> [--method bdd|tdd] [--review true|false] [--release patch|minor|major|false]"
+argument-hint: "--feature <description> --context package|shiny|rhino|plumber|script [--method bdd|tdd] [--review true|false] [--release patch|minor|major|false]"
 parameters:
   feature:
     type: String
     required: true
     hint: "Natural language description of the feature to build"
+  context:
+    type: String
+    required: false
+    default: "package"
+    enum: ["package", "shiny", "rhino", "plumber", "script", "targets"]
+    hint: "Project context — determines which quality gates apply"
   method:
     type: String
     required: false
@@ -86,20 +92,27 @@ steps:
       Methodology: {{params.method}}
 
       If methodology is `bdd`:
-      Invoke `/run_playbook r-bdd-feature --feature "{{params.feature}}"`.
+      Invoke `/run_playbook r-bdd-feature --feature "{{params.feature}}" --context "{{params.context}}"`.
       This will: write scenario tests → implement scenario-by-scenario → refactor → document.
 
       If methodology is `tdd`:
       Invoke `/run_playbook r-tdd-feature --feature "{{params.feature}}" --function "{{params.function}}"`.
       This will: write failing test → minimal implementation → refactor → document.
 
-      Track the implementation progress:
-      - After each TDD cycle or BDD scenario, note what was completed
-      - If any cycle fails, capture the failure reason and adjust
-      - Ensure all acceptance criteria from Phase 1 are covered
+      **Sub-playbook failure handling:**
+      If the sub-playbook fails (returns error or cannot complete):
+      1. Capture the failure reason from the sub-playbook's output
+      2. Report: `❌ Implementation blocked: <reason>`
+      3. Ask the user: Retry / Skip & continue / Abort workflow
+      4. If retry → re-invoke the sub-playbook with the same parameters
+      5. If skip → document what was NOT implemented, proceed to review phase
+         (review will flag missing implementation)
+      6. If abort → call `fail_step` and terminate the workflow
 
-      Gate condition: ALL tests must pass before proceeding. If tests fail, go back
-      and fix before continuing to the review phase.
+      **Implementation tracking:**
+      - After each TDD cycle or BDD scenario completes, note what was done
+      - Verify all acceptance criteria from Phase 1 are covered
+      - If any acceptance criterion is NOT covered, flag it before proceeding
     gate: Review
     output: implementation_result
 
@@ -148,32 +161,45 @@ steps:
     inline-prompt: |
       **PHASE 4: QUALITY GATE**
 
-      Final comprehensive quality check before release.
+      Run the quality checks appropriate for what was built and how.
 
-      Run the complete quality pipeline:
-      1. `devtools::document()` — regenerate documentation
-      2. `devtools::test()` — full test suite (all tests must pass)
-      3. `devtools::check(args = c("--as-cran", "--no-manual", "--no-vignettes"))`
-         — CRAN-compatible check, 0 errors, 0 warnings required
-      4. `covr::package_coverage()` — measure full package coverage
-         Compare coverage before and after this feature:
-         ```r
-         cov_before <- <coverage from before the feature>
-         cov_after  <- covr::package_coverage()
-         cat("Coverage:", round(mean(cov_after$value) * 100, 1), "%\n")
-         cat("Change:", round((mean(cov_after$value) - mean(cov_before$value)) * 100, 1), "pp\n")
-         ```
-         Coverage must not decrease by more than 2 percentage points.
-      5. `lintr::lint_package()` — style check (0 new lints)
-      6. `styler::style_pkg()` — auto-fix style issues if needed
-      7. If pkgdown is configured: `pkgdown::build_site()` — verify docs render
-      8. If renv is configured: `renv::snapshot()` — update lockfile
+      Context: {{params.context}}
+      Methodology: {{params.method}}
 
-      If ANY check fails, report the failure and do not proceed to release.
-      The user must fix issues before continuing.
+      Delegate to the domain-specific quality playbooks. The checks below are
+      cumulative — run ALL that apply to this project.
 
-      Report: quality gate results with pass/fail for each check.
-    gate: Review
+      **1. Universal checks (all contexts):**
+      - Run `r-code-review` on changed files: `/run_playbook r-code-review --scope all`
+      - Run `r-lint`: lint all modified files
+
+      **2. Context-specific quality gates:**
+
+      | Context | Quality Playbook | What It Checks |
+      |---------|-----------------|----------------|
+      | `package` | `/run_playbook r-pkg-check` | R CMD check, testthat, coverage, check_man |
+      | `shiny` | `/run_playbook r-shiny-e2e-test` | shinytest2 e2e tests, app load, reactive state |
+      | `rhino` | `/run_playbook r-rhino-check` | lint_r, test_r, diagnostics, build_sass, build_js |
+      | `plumber` | `/run_playbook r-api-testing --scope integration` | endpoint tests, schema validation, error handling |
+      | `script` | Manual: run `devtools::test()` + verify outputs | Test suite + output validation |
+      | `targets` | Manual: `targets::tar_make()` + `r-data-validate` | Pipeline completion + data quality |
+
+      **3. Methodology-specific verification:**
+      - If `bdd`: verify ALL acceptance criteria from Phase 1 spec are met
+      - If `tdd`: verify ALL tests pass and coverage on new code ≥ 90%
+
+      **4. Cross-cutting quality (if applicable):**
+      - If `r-package-audit` is relevant: `/run_playbook r-package-audit --scope quick`
+      - If the project has pkgdown: verify docs render with `pkgdown::build_site()`
+      - If the project uses renv: verify lockfile with `renv::status()`
+
+      **Gate rules:**
+      - If ANY context-specific quality playbook fails → fix and re-run before proceeding
+      - If methodology verification fails → return to implementation phase
+      - Only proceed to commit when ALL applicable checks pass
+
+      Report: per-playbook quality results, methodology verification, overall pass/fail.
+    gate: Approve
     output: quality_results
 
   - id: orchestrate-commit
@@ -230,10 +256,12 @@ steps:
       If release is not "false":
       Invoke `/run_playbook r-pkg-release --bump {{params.release}}`.
       This will: update NEWS.md → bump version → run checks → tag → optionally push.
+      **Gate: Approve** — releasing is irreversible.
 
       If release is "false":
       Report that the feature is committed but not released. The user can release
       manually with `r-pkg-release` when ready.
+      **Gate: None** — release was skipped, no gate needed. Call `complete_step` immediately.
 
       **FINAL WORKFLOW SUMMARY:**
 
@@ -305,20 +333,33 @@ quality assurance, and optional release.
 
 ```
 SPECIFICATION ──→ IMPLEMENTATION ──→ CODE REVIEW ──→ QUALITY GATE ──→ COMMIT ──→ RELEASE
-    (Confirm)        (Review)         (Review)        (Review)       (Confirm)    (Review)
+    (Confirm)        (Review)         (Review)        (Approve)      (Confirm)    (Conditional)
 ```
 
-Each phase can be re-entered if issues are found downstream. For example, if
-the quality gate finds a test failure, go back to implementation.
+Each phase can be re-entered if issues are found downstream.
+
+## Quality Gate Routing
+
+The quality gate delegates to domain-specific playbooks based on `--context`.
+Methodology verification (BDD acceptance criteria / TDD coverage) is always
+applied on top:
+
+| Context  | Quality Playbooks Invoked |
+|----------|--------------------------|
+| package  | r-pkg-check, r-code-review, r-lint |
+| shiny    | r-shiny-e2e-test, r-code-review, r-lint |
+| rhino    | r-rhino-check, r-code-review, r-lint |
+| plumber  | r-api-testing, r-code-review, r-lint |
+| targets  | r-data-validate + tar_make() verification |
+| script   | devtools::test() + output validation |
 
 ## Chained Playbooks
 
 This orchestrator invokes other playbooks for specific phases:
 - `r-bdd-feature` or `r-tdd-feature` for implementation
 - `r-code-review` for review
+- Context-specific quality playbooks for the quality gate (see above)
 - `r-pkg-release` for release
-
-You can also run each phase standalone if you only need part of the workflow.
 
 ## Methodology Selection Guide
 

@@ -57,7 +57,6 @@ steps:
          - File will be: `playbooks/{{params.name}}/PLAYBOOK.md`
 
       Report: validated name and confirmation of no conflicts.
-    gate: Confirm
     output: validated_name
 
   - id: define-purpose
@@ -317,12 +316,17 @@ steps:
 
       2. **Write the file to** `playbooks/{{params.name}}/PLAYBOOK.md`
 
-      3. **Validate against the schema:**
-         ```bash
-         # Check YAML frontmatter parses correctly
-         # Verify all required fields are present
-         # Check parameter types match schema
-         # Verify step IDs are unique and require refs are valid
+      3. **Validate against the schema** (executable):
+         ```r
+         # Parse and validate the playbook YAML frontmatter
+         source(".github/playbook-validate.R")
+         # This script validates: name format, version, trigger, description
+         # length, steps structure, gates, output names, and parameter types.
+         # It will exit with code 1 on any error.
+         ```
+         Also test with the MCP server if available:
+         ```
+         validate_playbook --name {{params.name}}
          ```
 
       4. **Self-review checklist:**
