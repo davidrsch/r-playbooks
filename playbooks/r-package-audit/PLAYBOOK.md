@@ -438,3 +438,19 @@ Reference: r-pkgs.org, CRAN Repository Policy, rOpenSci Packaging Guide.
 6. Dependencies are justified and version-constrained
 7. CI runs on multiple OS and R versions
 8. No code smells: long functions, deep nesting, sapply() type uncertainty
+
+## From Audit to Action
+
+This playbook is **read-only** — it diagnoses but does not fix. After the audit,
+use these playbooks to address the findings:
+
+| Audit Finding | Fix With |
+|---------------|----------|
+| R CMD check failures | `/run_playbook r-pkg-check --auto-fix true` |
+| Code logic or security issues | `/run_playbook r-code-review --scope all` |
+| Style violations | `/run_playbook r-lint` (auto-fixes with styler) |
+| Test gaps | `/run_playbook r-tdd-feature` or `/run_playbook r-property-test` |
+| Documentation gaps | Run `devtools::document()` + `/run_playbook r-code-review --scope docs` |
+| Dependency issues | `/run_playbook r-dependency-upgrade` |
+| CI/CD gaps | `/run_playbook r-ci-gha` |
+| Mutation score low | `/run_playbook r-mutation-test` |

@@ -303,95 +303,71 @@ steps:
 
       Notification method: {{params.notify}}
 
-      If notification is 'none', create a minimal log-based notification and skip
-      external integrations.
+      If notification is 'none', skip to log-based notification only.
 
-      **Email notifications (if notify = email):**
+      **Step A: Set up notification infrastructure** via the dedicated playbook:
+      Invoke `/run_playbook r-notification --channel {{params.notify}} --trigger pipeline`.
+      This sets up blastula (email) and/or Slack webhook functions in `R/notify.R`,
+      including `notify_email()`, `notify_slack()`, and the unified `notify()` router.
+      No need to duplicate that code here — the foundation is now in place.
+
+      **Step B: Add the pipeline-specific wrapper** that calls the foundation:
+
       ```r
-      library(gmailr)    # Gmail API
-      # Or: library(emayili)   # SMTP-based
-      # Or: library(blastula)  # Posit's email package
+      # R/run-pipeline.R
+      source("R/notify.R")  # from r-notification
 
-      notify_email <- function(subject, body, success = TRUE) {
-        library(blastula)
-
-        email <- compose_email(
-          body = md(body)
-        )
-
-        smtp_send(
-          email,
-          to = "data-team@company.com",
-          from = "pipeline-bot@company.com",
-          subject = sprintf("[%s] %s", if (success) "OK" else "FAIL", subject),
-          credentials = creds_env(
-            user = Sys.getenv("SMTP_USER"),
-            pass = Sys.getenv("SMTP_PASS"),
-            provider = "gmail"
-          )
-        )
-      }
-      ```
-
-      **Slack notifications (if notify = slack):**
-      ```r
-      notify_slack <- function(message, success = TRUE) {
-        webhook_url <- Sys.getenv("SLACK_WEBHOOK_URL")
-
-        payload <- list(
-          text = sprintf("%s %s",
-            if (success) "✅" else "❌",
-            message
-          ),
-          attachments = list(list(
-            color = if (success) "good" else "danger",
-            fields = list(
-              list(title = "Pipeline", value = basename(getwd()), short = TRUE),
-              list(title = "Time", value = as.character(Sys.time()), short = TRUE)
-            )
-          ))
-        )
-
-        httr2::request(webhook_url) %>%
-          httr2::req_body_json(payload) %>%
-          httr2::req_perform()
-      }
-      ```
-
-      **Integrated notification wrapper:**
-      ```r
-      run_pipeline_with_notifications <- function(pipeline_name) {
+      run_pipeline_with_notifications <- function(pipeline_name = basename(getwd())) {
         start_time <- Sys.time()
 
         tryCatch({
           targets::tar_make()
 
-          # Success notification
           elapsed <- difftime(Sys.time(), start_time, units = "mins")
-          msg <- sprintf("Pipeline '%s' completed successfully in %.1f min", pipeline_name, elapsed)
+          tar_count <- nrow(targets::tar_progress())
 
-          # Send notification based on configured method ({{params.notify}}):
-          #   email → notify_email(msg, msg, success = TRUE)
-          #   slack → notify_slack(msg, success = TRUE)
+          # Use r-notification's unified router
+          notify(
+            subject = sprintf("Pipeline '%s' completed", pipeline_name),
+            body = sprintf(
+              "**Pipeline:** %s\n**Status:** ✅ Completed\n**Duration:** %.1f min\n**Targets built:** %d",
+              pipeline_name, elapsed, tar_count
+            ),
+            success = TRUE,
+            channel = "{{params.notify}}"
+          )
 
-          log_info(msg)
+          log_info("Pipeline completed in %.1f min", elapsed)
 
         }, error = function(e) {
-          # Failure notification
           elapsed <- difftime(Sys.time(), start_time, units = "mins")
-          msg <- sprintf("Pipeline '%s' FAILED after %.1f min: %s", pipeline_name, elapsed, conditionMessage(e))
 
-          # Send failure notification based on configured method ({{params.notify}}):
-          #   email → notify_email(msg, msg, success = FALSE)
-          #   slack → notify_slack(msg, success = FALSE)
+          # Collect target errors for context
+          tar_errors <- targets::tar_meta() |>
+            dplyr::filter(!is.na(error))
+          error_details <- if (nrow(tar_errors) > 0) {
+            paste("-", tar_errors$name, ":", tar_errors$error, collapse = "\n")
+          } else {
+            conditionMessage(e)
+          }
 
-          log_error(msg)
+          notify(
+            subject = sprintf("Pipeline '%s' FAILED", pipeline_name),
+            body = sprintf(
+              "**Pipeline:** %s\n**Status:** ❌ FAILED after %.1f min\n**Error:** %s",
+              pipeline_name, elapsed, error_details
+            ),
+            success = FALSE,
+            channel = "{{params.notify}}"
+          )
+
+          log_error("Pipeline failed: %s", conditionMessage(e))
           quit(status = 1)
         })
       }
       ```
 
-      Report: notification configuration tested (send a test message).
+      Report: notification configuration tested (send a test message via `notify()`).
     gate: Review
     output: notification_config
 

@@ -460,3 +460,15 @@ model deployment and `pins` for versioning.
 | `data/processed/` | Post-recipe data — for debugging the pipeline |
 | `models/` | Pinned vetiver models — versioned |
 | `reports/` | Quarto reports — EDA, model comparison, final report |
+
+## Where to Go Next
+
+After scaffolding with this playbook, continue with:
+
+| Stage | Playbook |
+|-------|----------|
+| Train your first model | `/run_playbook r-tidymodels-workflow --outcome <target> --task {{params.task}}` |
+| Tune hyperparameters | `/run_playbook r-tidymodels-tune` |
+| Validate and explain | `/run_playbook r-ml-validate --model <model_path> --explainer all` |
+| Deploy as API | `/run_playbook r-vetiver-deploy` |
+| Monitor in production | `/run_playbook r-model-monitor` |

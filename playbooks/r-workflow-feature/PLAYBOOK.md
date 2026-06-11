@@ -172,23 +172,34 @@ steps:
       **1. Universal checks (all contexts):**
       - Run `r-code-review` on changed files: `/run_playbook r-code-review --scope all`
       - Run `r-lint`: lint all modified files
+      - Run `r-security`: `/run_playbook r-security --scope package`
 
       **2. Context-specific quality gates:**
 
-      | Context | Quality Playbook | What It Checks |
-      |---------|-----------------|----------------|
+      | Context | Quality Playbook(s) | What It Checks |
+      |---------|-------------------|----------------|
       | `package` | `/run_playbook r-pkg-check` | R CMD check, testthat, coverage, check_man |
-      | `shiny` | `/run_playbook r-shiny-e2e-test` | shinytest2 e2e tests, app load, reactive state |
-      | `rhino` | `/run_playbook r-rhino-check` | lint_r, test_r, diagnostics, build_sass, build_js |
-      | `plumber` | `/run_playbook r-api-testing --scope integration` | endpoint tests, schema validation, error handling |
-      | `script` | Manual: run `devtools::test()` + verify outputs | Test suite + output validation |
-      | `targets` | Manual: `targets::tar_make()` + `r-data-validate` | Pipeline completion + data quality |
+      | `shiny` | `/run_playbook r-shiny-e2e-test`<br>`/run_playbook r-shiny-perf --scope reactlog` | shinytest2 e2e tests, reactivity profiling |
+      | `rhino` | `/run_playbook r-rhino-check`<br>`/run_playbook r-shiny-perf --scope all --users 20` | lint_r, test_r, diagnostics, build, load testing |
+      | `plumber` | `/run_playbook r-api-testing --scope all` | contract, integration, and load tests |
+      | `targets` | `/run_playbook r-schedule-pipeline`<br>`/run_playbook r-data-validate` | Pipeline scheduling config + data quality validation |
+      | `script` | Manual: `devtools::test()` + verify outputs | Test suite + output validation |
 
-      **3. Methodology-specific verification:**
+      **3. Context-aware additional checks:**
+      - If context is `shiny` or `rhino` AND the project has auth:
+        `/run_playbook r-shiny-auth` — verify auth still works after changes
+      - If context is `targets`:
+        `/run_playbook r-notification` — verify failure alerts are configured
+      - If the project has a database:
+        `/run_playbook r-test-database --scope schema` — verify schema integrity
+      - If the project uses Docker:
+        `/run_playbook r-docker-build` — verify container still builds
+
+      **4. Methodology-specific verification:**
       - If `bdd`: verify ALL acceptance criteria from Phase 1 spec are met
       - If `tdd`: verify ALL tests pass and coverage on new code ≥ 90%
 
-      **4. Cross-cutting quality (if applicable):**
+      **5. Cross-cutting quality (if applicable):**
       - If `r-package-audit` is relevant: `/run_playbook r-package-audit --scope quick`
       - If the project has pkgdown: verify docs render with `pkgdown::build_site()`
       - If the project uses renv: verify lockfile with `renv::status()`

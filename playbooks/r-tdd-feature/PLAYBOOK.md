@@ -285,3 +285,16 @@ You follow the Red → Green → Refactor cycle rigorously.
 - Use `desc::desc_get_deps()` to check if needed packages are in DESCRIPTION.
 - Run tests with `devtools::test(filter = "<function-name>")` during TDD,
   `devtools::test()` for final verification.
+
+## TDD Feature vs Quick Package Function
+
+This playbook is for rigorous multi-cycle TDD on complex features in any R context
+(packages, Shiny, Plumber, scripts). For adding a simple function to an R package
+with optional single-cycle TDD and package-specific verification (name conflict
+checking, NAMESPACE exports, @param matching, non-TDD mode), use:
+
+`/run_playbook r-pkg-add-function --name "<function>" --tdd true`
+
+Choose r-pkg-add-function when you want quick, well-integrated package functions.
+Choose this playbook when you want disciplined red-green-refactor across multiple
+cycles for complex features.

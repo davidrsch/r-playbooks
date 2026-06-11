@@ -222,3 +222,21 @@ function design following tidyverse conventions.
     Exported functions MUST generate .Rd documentation.
 14. Use `@family` to group related functions (e.g., `@family data-transform`).
     This adds "See also" links in .Rd files.
+
+## TDD Mode vs Full TDD Workflow
+
+When `tdd: true`, this playbook follows a single-cycle TDD pattern suitable for
+straightforward functions. For complex features requiring multiple red-green-refactor
+cycles, strict refactoring review, or non-package contexts (Shiny modules, Plumber
+endpoints, standalone scripts), use the dedicated TDD playbook instead:
+
+`/run_playbook r-tdd-feature --feature "<description>" --function "{{params.name}}" --max-cycles 3`
+
+This playbook adds value beyond r-tdd-feature by handling:
+- Name conflict checking against base R and existing NAMESPACE
+- Interface design before test writing (design the signature first)
+- Package-specific verification (@param matching, NAMESPACE exports)
+- Non-TDD mode for trivial utility functions
+
+Use r-pkg-add-function when you want quick, well-integrated package functions.
+Use r-tdd-feature when you want rigorous TDD discipline across multiple cycles.
